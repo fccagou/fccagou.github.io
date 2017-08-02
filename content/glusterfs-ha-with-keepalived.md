@@ -1,6 +1,7 @@
 Title: How to make HA GlusterFs using Keepalived
 Date: 2017-08-02 01:01
-Category: HA,Gluster,Keepalived,distributedfs
+Category: IT
+Tags: Linux, HA, Gluster, Keepalived, distributedfs
 
 Example tested on 2 CentOS7 VM
 
@@ -37,4 +38,11 @@ Example tested on 2 CentOS7 VM
            check_glusterd
         }
     }
+
+
+Some links
+
+* RedHat [loadbalancing](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/ch-lvs-overview-VSA.html)
+* Keepalived [User Guide](http://www.keepalived.org/pdf/UserGuide.pdf)
+* Unicsolution [blog](http://blog.unicsolution.com/2015/01/kamailio-high-availability-with.html)
 
