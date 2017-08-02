@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
         <meta charset="utf-8" />
-        <title>The Cagou's Blog - Authors</title>
+        <title>The Cagou's Blog - distributedfs</title>
         <link rel="stylesheet" href="https://fccagou.github.io/theme/css/main.css" />
         <link href="https://fccagou.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Atom Feed" />
 
@@ -19,13 +19,63 @@
                 </ul></nav>
         </header><!-- /#banner -->
 
-<section id="content" class="body">
-    <h1>Authors on The Cagou's Blog</h1>
-    <ul>
-        <li><a href="https://fccagou.github.io/author/fccagou.html">fccagou</a> (1)</li>
-    </ul>
-</section>
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://fccagou.github.io/how-to-make-ha-glusterfs-using-keepalived.html">How to make HA GlusterFs using Keepalived</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-08-02T01:01:00+02:00">
+                Published: mer. 02 août 2017
+        </abbr>
 
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://fccagou.github.io/author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="https://fccagou.github.io/category/it.html">IT</a>.</p>
+<p>tags: <a href="https://fccagou.github.io/tag/linux.html">Linux</a> <a href="https://fccagou.github.io/tag/ha.html">HA</a> <a href="https://fccagou.github.io/tag/gluster.html">Gluster</a> <a href="https://fccagou.github.io/tag/keepalived.html">Keepalived</a> <a href="https://fccagou.github.io/tag/distributedfs.html">distributedfs</a> </p>
+</footer><!-- /.post-info --><p>Example tested on 2 CentOS7 VM</p>
+<div class="highlight"><pre>! Configuration File for keepalived
+
+vrrp_script check_glusterd {
+  script       &quot;/usr/sbin/pidof glusterd&quot;
+  interval 5
+  fall 1
+  rise 1
+!  timeout t
+!  weight w
+}
+
+global_defs {
+}
+
+vrrp_instance gfs01 {
+!    state MASTER
+    interface eth0
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    nopreempt
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.122.100/24
+    }
+
+    track_script {
+       check_glusterd
+    }
+}
+</pre></div>
+
+
+<p>Some links</p>
+<ul>
+<li>RedHat <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Load_Balancer_Administration/ch-lvs-overview-VSA.html">loadbalancing</a></li>
+<li>Keepalived <a href="http://www.keepalived.org/pdf/UserGuide.pdf">User Guide</a></li>
+<li>Unicsolution <a href="http://blog.unicsolution.com/2015/01/kamailio-high-availability-with.html">blog</a></li>
+</ul>                </article>
+            </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
