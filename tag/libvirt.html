@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>The Cagou's Blog - virtualization</title>
+        <title>The Cagou's Blog - libvirt</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
         <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
@@ -209,57 +209,6 @@ fi
 </div>
 
         </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
-        
- 
-        <li><article class="hentry">    
-                <header>
-                        <h1><a href="../docker-on-centos-7.html" rel="bookmark" title="Permalien vers «Docker on CentOS 7»">Docker on CentOS 7</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="2018-09-23T00:49:00+02:00">
-                                Publié le 23/09/2018 &agrave; 00:49
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">fccagou</a>
-                        </address>
-                        <p> Dans <a href="../category/it.html">IT</a></p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">Virtualization</a><a href="../tag/container.html">Container</a><a href="../tag/centos.html">CentOS</a></p></p>                    <p></p>
-                </footer><!-- /.post-info -->
-                <h1>Installation</h1>
-<div class="highlight"><pre><span></span>$ yum install docker
-$ systemctl <span class="nb">enable</span> docker
-$ systemctl start docker
-</pre></div>
-
-
-<h1>Configuration</h1>
-<p>Autorisation d'un utilisateur lambda</p>
-<div class="highlight"><pre><span></span><span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="n">docker</span> <span class="n">francois</span>
-</pre></div>
-
-
-<h1>Utilisation</h1>
-<p>Liste des images</p>
-<div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">images</span>
-</pre></div>
-
-
-<h1>Créer sa propre image de base</h1>
-<div class="highlight"><pre><span></span><span class="n">curl</span> <span class="c1">--insecure -O https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-yum.sh</span>
-</pre></div>
-
-
-<p>Apport de modifications.</p>
-<h1>Exemple d'utilisation de …</h1>
-                <a class="readmore" href="../docker-on-centos-7.html">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
 
