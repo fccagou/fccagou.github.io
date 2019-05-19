@@ -43,44 +43,50 @@
                 <p>Dans <a href="./category/it.html">IT</a>.
 <p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/cups.html">Cups</a><a href="./tag/arch.html">Arch</a><a href="./tag/french.html">French</a></p></p>        </footer><!-- /.post-info -->
         <h2>Installation</h2>
-<p>pacman -Sy cups cups-pdf hplip
-  systemctl start org.cups.cupsd.socket</p>
+<div class="highlight"><pre><span></span>$ pacman -Sy cups cups-pdf hplip
+$ systemctl start org.cups.cupsd.socket
+</pre></div>
+
+
 <h2>Configuration d'une imprimante</h2>
 <p>List all devices:</p>
-<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="o">-</span><span class="n">v</span>
-<span class="o">=&gt;</span> <span class="n">résultat</span> <span class="n">utilisé</span> <span class="n">pour</span> <span class="k">option</span> <span class="o">-</span><span class="n">v</span> <span class="n">de</span> <span class="n">lpadmin</span>
+<div class="highlight"><pre><span></span>$ lpinfo -v
+<span class="o">=</span>&gt; résultat utilisé pour option -v de lpadmin
 </pre></div>
 
 
 <p>List all drivers:</p>
-<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="o">-</span><span class="n">m</span>
-<span class="o">=&gt;</span> <span class="n">résultat</span> <span class="n">utilisé</span> <span class="n">pour</span> <span class="k">option</span> <span class="o">-</span><span class="n">m</span> <span class="n">de</span> <span class="n">lpadmin</span>
+<div class="highlight"><pre><span></span>$ lpinfo -m
+<span class="o">=</span>&gt; résultat utilisé pour option -m de lpadmin
 </pre></div>
 
 
 <p>List drivers matching "HP LaserJet":</p>
-<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="c1">--make-and-model &quot;HP LaserJet&quot; -m</span>
-<span class="n">lpinfo</span> <span class="o">-</span><span class="n">m</span> <span class="o">|</span> <span class="n">grep</span> <span class="mi">4380</span>
+<div class="highlight"><pre><span></span>$ lpinfo --make-and-model <span class="s2">&quot;HP LaserJet&quot;</span> -m
+$ lpinfo -m <span class="p">|</span> grep <span class="m">4380</span>
 </pre></div>
 
 
 <p>Ajouter une imprimante</p>
-<div class="highlight"><pre><span></span><span class="n">lpadmin</span> <span class="o">-</span><span class="n">p</span> <span class="n">PhotoSmartC4380</span> <span class="o">-</span><span class="n">E</span> <span class="o">-</span><span class="n">v</span> <span class="s1">&#39;usb://HP/Photosmart%20C4380%20series?serial=CN87TF51BC051Q&amp;interface=1&#39;</span> <span class="o">-</span><span class="n">m</span> <span class="n">drv</span><span class="p">:</span><span class="o">///</span><span class="n">hp</span><span class="o">/</span><span class="n">hpcups</span><span class="p">.</span><span class="n">drv</span><span class="o">/</span><span class="n">hp</span><span class="o">-</span><span class="n">photosmart_c4380_series</span><span class="p">.</span><span class="n">ppd</span>
+<div class="highlight"><pre><span></span>$ lpadmin -p PhotoSmartC4380 -E -v <span class="s1">&#39;usb://HP/Photosmart%20C4380%20series?serial=CN87TF51BC051Q&amp;interface=1&#39;</span> -m drv:///hp/hpcups.drv/hp-photosmart_c4380_series.ppd
 </pre></div>
 
 
 <p>Changement des options, page par défaut A4 </p>
-<div class="highlight"><pre><span></span><span class="n">lpoptions</span> <span class="o">-</span><span class="n">p</span> <span class="n">PhotoSmartC4380</span> <span class="o">-</span><span class="n">o</span> <span class="n">PageSize</span><span class="o">=</span><span class="n">A4</span>
+<div class="highlight"><pre><span></span>$ lpoptions -p PhotoSmartC4380 -o <span class="nv">PageSize</span><span class="o">=</span>A4
 </pre></div>
 
 
 <h2>Configuration utilisateur</h2>
 <p>Imprimante par défaut</p>
-<p>lpoptions -d PhotoSmartC4380 
-  cat ~/.cups/lpoptions 
-  # Default PhotoSmartC4380</p>
-<p>ou </p>
-<p>export PRINTER=PhotoSmartC4380</p>
+<div class="highlight"><pre><span></span>$ lpoptions -d PhotoSmartC4380 
+$ cat ~/.cups/lpoptions 
+Default PhotoSmartC4380
+</pre></div>
+
+
+<p>ou 
+    export PRINTER=PhotoSmartC4380</p>
         </div><!-- /.entry-content -->
 
 </article>

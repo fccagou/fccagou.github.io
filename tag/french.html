@@ -396,24 +396,27 @@ sur l'ISO.</p>
 <p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/cups.html">Cups</a><a href="../tag/arch.html">Arch</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
                 </footer><!-- /.post-info -->
                 <h2>Installation</h2>
-<p>pacman -Sy cups cups-pdf hplip
-  systemctl start org.cups.cupsd.socket</p>
+<div class="highlight"><pre><span></span>$ pacman -Sy cups cups-pdf hplip
+$ systemctl start org.cups.cupsd.socket
+</pre></div>
+
+
 <h2>Configuration d'une imprimante</h2>
 <p>List all devices:</p>
-<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="o">-</span><span class="n">v</span>
-<span class="o">=&gt;</span> <span class="n">résultat</span> <span class="n">utilisé</span> <span class="n">pour</span> <span class="k">option</span> <span class="o">-</span><span class="n">v</span> <span class="n">de</span> <span class="n">lpadmin</span>
+<div class="highlight"><pre><span></span>$ lpinfo -v
+<span class="o">=</span>&gt; résultat utilisé pour option -v de lpadmin
 </pre></div>
 
 
 <p>List all drivers:</p>
-<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="o">-</span><span class="n">m</span>
-<span class="o">=&gt;</span> <span class="n">résultat</span> <span class="n">utilisé</span> <span class="n">pour</span> <span class="k">option</span> <span class="o">-</span><span class="n">m</span> <span class="n">de</span> <span class="n">lpadmin</span>
+<div class="highlight"><pre><span></span>$ lpinfo -m
+<span class="o">=</span>&gt; résultat utilisé pour option -m de lpadmin
 </pre></div>
 
 
 <p>List drivers matching "HP LaserJet":</p>
-<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="c1">--make-and-model &quot;HP LaserJet&quot; -m</span>
-<span class="n">lpinfo …</span></pre></div>
+<div class="highlight"><pre><span></span>$ lpinfo --make-and-model <span class="s2">&quot;HP LaserJet&quot;</span> -m
+$ lpinfo …</pre></div>
                 <a class="readmore" href="../cups-under-arch.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>
