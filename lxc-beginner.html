@@ -56,13 +56,13 @@
 
 
 <h1>Creation container</h1>
-<p>TODO: voir comment faire un template local</p>
+<p>TODO: voir comment faire un <em>template</em> local</p>
 <div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="k">create</span> <span class="o">-</span><span class="n">t</span> <span class="n">download</span> <span class="o">-</span><span class="n">n</span> <span class="n">lxc</span><span class="o">-</span><span class="n">debian</span>
 </pre></div>
 
 
-<p>Les donnés du container seront dans /srv/containers/lxc/lxc-debian</p>
-<p>Lancer une instance éphemère, c'est à dire qu'elle se supprime après le stop.</p>
+<p>Les donnés du container seront dans <em>/srv/containers/lxc/lxc-debian</em></p>
+<p>Lancer une instance éphémère, c'est à dire qu'elle se supprime après le stop.</p>
 <div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="k">copy</span> <span class="c1">--name lxc-debian -N p1</span>
 </pre></div>
 
@@ -136,9 +136,9 @@ Site 2
 
 <h2>Résolution de nom</h2>
 <p>Par défaut, lxc lance dnsmasq pour le réseau des conteneurs. Par défaut depuis
-le début c'est le réseau 10.0.3.0/24. L'adresse de l'hote est 10.0.3.1. C'est 
+le début c'est le réseau 10.0.3.0/24. L'adresse de l'hôte est 10.0.3.1. C'est 
 à cette adresse que la résolution se fait. Si on souhaite résoudre les sites
-en dehors d'un conteneur, si rien n'est oncfiguré, il faut donner explicitement
+en dehors d'un conteneur, si rien n'est configuré, il faut donner explicitement
 le nom du serveur dns aux commandes de résolution :</p>
 <div class="highlight"><pre><span></span><span class="k">host</span> <span class="n">site1</span> <span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">1</span>
 <span class="k">Using</span> <span class="k">domain</span> <span class="n">server</span><span class="p">:</span>
@@ -151,14 +151,15 @@ le nom du serveur dns aux commandes de résolution :</p>
 
 
 <p>On voit que pour monter du site à la demande, il faut faire des ajustements :
-- du NAT/PAT ou bridge depuis le serveur hôte ou alors un mod_proxy
-- configurer le dns de l'hôte pour utiliser les noms des sites plutôt que leur
+* du NAT/PAT ou bridge depuis le serveur hôte ou alors un mod_proxy
+* configurer le dns de l'hôte pour utiliser les noms des sites plutôt que leur
   @IP</p>
 <p>Pour forcer les @IP des serveurs, soit on le fixe dans les conteneurs, soit
 on le fixe dans la configuration de dnsmasq. </p>
 <p>Pour continuer, j'ai choisi la seconde solution plus flexible.Sur la Debian,
-il faut éditer le fichier /etc/default/lxc-net et décommenter la ligne 
-contenant la déclaration de la variable LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf</p>
+il faut éditer le fichier <em>/etc/default/lxc-net</em> et dé commenter la ligne 
+contenant la déclaration de la variable
+<em>LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf</em></p>
 <p>Puis définir les @ip en fonction des noms de conteneurs</p>
 <div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="p">.</span><span class="n">conf</span>
 <span class="n">dhcp</span><span class="o">-</span><span class="k">host</span><span class="o">=</span><span class="n">site1</span><span class="p">,</span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">101</span>
@@ -172,10 +173,10 @@ contenant la déclaration de la variable LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf<
 
 
 <p>En relançant les conteneurs site1 et site2, on vérifie bien que les @IP sont
-celle affectées dans le fichier de conf de DNSMASQ.</p>
+celles affectées dans le fichier de conf de DNSMASQ.</p>
 <h2>HAPROXY</h2>
 <p>Pour tester un mécanisme de HA avec les deux sites web, j'ai décidé de tester 
-haproxy dans un conteneur.</p>
+<em>haproxy</em> dans un conteneur.</p>
 <p>Je décide de fixer l'@IP du conteneur :</p>
 <div class="highlight"><pre><span></span><span class="n">echo</span> <span class="ss">&quot;dhcp-host=haproxy,10.0.3.100&quot;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="p">.</span><span class="n">conf</span><span class="err">&#39;</span>
 <span class="n">sudo</span> <span class="n">systemctl</span> <span class="k">restart</span> <span class="n">lxc</span><span class="o">-</span><span class="n">net</span><span class="p">.</span><span class="n">service</span>
@@ -194,7 +195,7 @@ pour l'installation de haproxy.</p>
 
 
 <p>La configuration de haproxy se fait à l'aide du fichier de configuration 
-/etc/haproxy/haproxy.cfg</p>
+<em>/etc/haproxy/haproxy.cfg</em></p>
 <p>Pur permettre une configuration en dehors du conteneur, on va créer un fichier
 de configuration dans l'environnement de tests et l'utiliser via un point de 
 montage lors du lancement du conteneur.</p>
@@ -202,7 +203,7 @@ montage lors du lancement du conteneur.</p>
 </pre></div>
 
 
-<p>Créer le fichier ${HOME}/src/LXC-CONF/web/haproxy/haproxy.cfg avec la
+<p>Créer le fichier <em>${HOME}/src/LXC-CONF/web/haproxy/haproxy.cfg</em> avec la
 configuration souhaitée (cf exemple en Annexes) puis lancer le service
 haproxy</p>
 <div class="highlight"><pre><span></span> lxc-copy -n lxc-haproxy -e -m bind=<span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/haproxy:/etc/haproxy:ro -N haproxy
@@ -253,11 +254,10 @@ haproxy</p>
 
 <p>Test de reprise</p>
 <div class="highlight"><pre><span></span>lxc-copy -n lxc-webserver -e -m bind=<span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site2:/var/www/html:ro -N site2
-
-/o\ le retour de Site2 ne fonctionne pas.
 </pre></div>
 
 
+<p><strong>/o\ le retour de Site2 ne fonctionne pas.</strong></p>
 <p>FIXME:</p>
 <div class="highlight"><pre><span></span><span class="n">En</span> <span class="n">se</span> <span class="n">connectant</span> <span class="p">(</span><span class="n">lxc</span><span class="o">-</span><span class="n">attach</span><span class="p">)</span> <span class="n">au</span> <span class="n">site</span> <span class="mi">2</span><span class="p">,</span> <span class="n">le</span> <span class="n">tcpdump</span> <span class="n">montre</span> <span class="n">que</span> <span class="n">les</span> <span class="n">paquets</span>
 <span class="n">arrivent</span> <span class="n">mais</span> <span class="n">le</span> <span class="n">sevrice</span> <span class="n">nginx</span> <span class="n">ne</span> <span class="n">répond</span> <span class="n">pas</span><span class="p">.</span> <span class="n">arp</span> <span class="o">-</span><span class="n">a</span> <span class="n">ne</span> <span class="n">montre</span> <span class="n">aucune</span> <span class="n">entrée</span>
