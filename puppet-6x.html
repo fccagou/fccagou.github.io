@@ -238,9 +238,11 @@ $ puppet module install
 <p>Utiliser PuppetFile pour mettre les dépendances et la configuration de la
 forge. C'est utiliser par <code>puppet deploy</code> ...
 Il faut voir si c'est présent dans la version opensource</p>
-<p>L'idée est: 
-- configuration du pointeur vers le dépôt Git
-- puppet code deploy production --wait</p>
+<p>L'idée est: </p>
+<ul>
+<li>configuration du pointeur vers le dépôt Git</li>
+<li>puppet code deploy production --wait</li>
+</ul>
 <h1>puppet sur centOS 7</h1>
 <h2>Installation</h2>
 <div class="highlight"><pre><span></span> $ <span class="nv">sudo</span> <span class="nv">rpm</span> <span class="o">-</span><span class="nv">Uvh</span> <span class="nv">https</span>:<span class="o">//</span><span class="nv">yum</span>.<span class="nv">puppet</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">puppet6</span><span class="o">/</span><span class="nv">puppet6</span><span class="o">-</span><span class="nv">release</span><span class="o">-</span><span class="nv">el</span><span class="o">-</span><span class="mi">7</span>.<span class="nv">noarch</span>.<span class="nv">rpm</span>
