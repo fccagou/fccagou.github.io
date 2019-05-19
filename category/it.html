@@ -679,44 +679,6 @@ Udev is implemented by <a href="">systemd-udevd</a></p>
  
         <li><article class="hentry">    
                 <header>
-                        <h1><a href="../some-doc-about-libvirt.html" rel="bookmark" title="Permalien vers «Some doc about libvirt»">Some doc about libvirt</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="2018-11-05T01:23:00+01:00">
-                                Publié le 05/11/2018 &agrave; 01:23
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">fccagou</a>
-                        </address>
-                        <p> Dans <a href="../category/it.html">IT</a></p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">virtualization</a><a href="../tag/libvirt.html">libvirt</a></p></p>                    <p></p>
-                </footer><!-- /.post-info -->
-                <p>Installation de libvirt et virt-manager</p>
-<div class="section" id="dnsmasq">
-<h2>dnsmasq</h2>
-<p>libvirt utilise dnsmasq</p>
-<p>Exemple de fichier de configuration:</p>
-<pre class="literal-block">
-strict-order
-pid-file=/var/run/libvirt/network/default.pid
-except-interface=lo
-bind-dynamic
-interface=virbr0
-dhcp-range=192.168.122.2,192.168.122.254
-dhcp-no-override
-dhcp-leasefile=/var/lib/libvirt/dnsmasq/default.leases
-dhcp-lease-max=253
-dhcp-hostsfile=/var/lib/libvirt …</pre></div>
-                <a class="readmore" href="../some-doc-about-libvirt.html">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
-        
- 
-        <li><article class="hentry">    
-                <header>
                         <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark" title="Permalien vers «Apt conf on readonly system»">Apt conf on readonly system</a></h1>
                 </header>
                 

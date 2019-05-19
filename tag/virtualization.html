@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>The Cagou's Blog - virtualization</title>
+        <title>The Cagou's Blog - Virtualization</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
         <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
@@ -32,192 +32,7 @@
         
      <section id="content" class="body">
         <aside id="featured"><article>
-                <h1 class="entry-title"><a href="../some-doc-about-libvirt.html">Some doc about libvirt</a></h1> 
-                <footer class="post-info">
-                        <abbr class="published" title="2018-11-05T01:23:00+01:00">
-                                Publié le 05/11/2018 &agrave; 01:23
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">fccagou</a>
-                        </address>
-                <p>Dans <a href="../category/it.html">IT</a>. </p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">virtualization</a><a href="../tag/libvirt.html">libvirt</a></p></p>                </footer><!-- /.post-info -->
-                <p>Installation de libvirt et virt-manager</p>
-<div class="section" id="dnsmasq">
-<h2>dnsmasq</h2>
-<p>libvirt utilise dnsmasq</p>
-<p>Exemple de fichier de configuration:</p>
-<pre class="literal-block">
-strict-order
-pid-file=/var/run/libvirt/network/default.pid
-except-interface=lo
-bind-dynamic
-interface=virbr0
-dhcp-range=192.168.122.2,192.168.122.254
-dhcp-no-override
-dhcp-leasefile=/var/lib/libvirt/dnsmasq/default.leases
-dhcp-lease-max=253
-dhcp-hostsfile=/var/lib/libvirt/dnsmasq/default.hostsfile
-addn-hosts=/var/lib/libvirt/dnsmasq/default.addnhosts
-</pre>
-<p>dnsmasq est lancé par libvirt avec la ligne de commande :</p>
-<blockquote>
-/sbin/dnsmasq --conf-file=/var/lib/libvirt/dnsmasq/default.conf --dhcp-script=/usr/libexec/libvirt_leaseshelper</blockquote>
-<p><cite>/usr/libexec/libvirt_leaseshelper</cite> est un programme binaire</p>
-<p>A voir pour unne utilisation pour puppet autonome.</p>
-</div>
-<div class="section" id="creation-d-un-bridge">
-<h2>Creation d'un bridge</h2>
-<pre class="literal-block">
-# Creation du bridge avec NetworkManager
-nmcli connection add type bridge ifname br0
-nmcli connection add type bridge-slave ifname p4p2 master br0
-nmcli connection up bridge-br0
-# Declaration dans libvirt
-cat &gt; br0.xml&lt;&lt;EOF_NET
-&lt;network&gt;
-   &lt;name&gt;br0&lt;/name&gt;
-   &lt;forward mode=&quot;bridge&quot; /&gt;
-   &lt;bridge name=&quot;br0&quot; /&gt;
-&lt;/network&gt;
-EOF_NET
-virsh net-define br0.xml
-virsh net-start br0
-virsh net-autostart br0
-virsh net-list
-</pre>
-</div>
-<div class="section" id="installation-centos-7-minimal">
-<h2>Installation Centos 7 minimal</h2>
-<p>J'utilise le Cd d'installation de CentOS.
-Je choisis l'installation minimal.
-Le kickstart contient l'installation du group de paquets <cite>&#64;core</cite>
-Le réseau est configuré mais pas lancé au démarrage.
-Le système utilise env 1GB de dd.</p>
-<pre class="literal-block">
-[user&#64;localhost ~]$ df -H
-Sys. de fichiers        Taille Utilisé Dispo Uti% Monté sur
-/dev/mapper/centos-root   4,3G    833M  3,5G  20% /
-devtmpfs                  515M       0  515M   0% /dev
-tmpfs                     522M       0  522M   0% /dev/shm
-tmpfs                     522M    7,0M  515M   2% /run
-tmpfs                     522M       0  522M   0% /sys/fs/cgroup
-/dev/vda1                 521M    101M  420M  20% /boot
-</pre>
-</div>
-<div class="section" id="creation-d-une-vm-centos">
-<h2>Création d'une VM centOS</h2>
-<pre class="literal-block">
-virt-install --name srv01 --ram 1024  --vcpus=1 --os-variant=rhel7 --boot cdrom,network --disk /home/depots/Virtu/Kvm/srv01.qcow2,size=5 --initrd-inject=/tmp/srv01.ks  --extra-args &quot;ks=file:/my.ks&quot; --location http://mirror.centos.org/centos/7/os/x86_64/
-</pre>
-<p>ou</p>
-<pre class="literal-block">
-sudo  mount -oloop /home/depots/ISO/CentOS-7-x86_64.iso /mnt
-virt-install --name srv01 --ram 1024  --vcpus=1 --os-variant=rhel7 --boot cdrom,network --disk /home/depots/Virtu/Kvm/srv01.qcow2,size=5 --initrd-inject=/tmp/srv01.ks  --extra-args &quot;ks=file:/my.ks&quot; --location  /mnt
-</pre>
-</div>
-<div class="section" id="annexes">
-<h2>Annexes</h2>
-<div class="section" id="fichier-kickstart">
-<h3>Fichier kickstart</h3>
-<pre class="literal-block">
-#version=RHEL7
-# System authorization information
-auth --enableshadow --passalgo=sha512
-
-# Use CDROM installation media
-cdrom
-# Run the Setup Agent on first boot
-firstboot --enable
-ignoredisk --only-use=vda
-# Keyboard layouts
-keyboard --vckeymap=fr --xlayouts='fr (oss)'
-# System language
-lang fr_FR.UTF-8
-
-# Network information
-network  --bootproto=dhcp --device=eth0 --onboot=off --ipv6=auto
-network  --hostname=localhost.localdomain
-# Root password: {tootoor}!
-rootpw --iscrypted $6$0rWj5wdTTvCfY4ak$uTBvgroOoeqHqjO.kvgBN2kyLaDvw7pmTzsY8c3MjA9LLllL3gmo4f5vAEZpdj75Eic06LByjCb0lg.i2K.lT.
-# System timezone
-timezone Europe/Paris --isUtc
-# user passwd is : +install00!
-user --groups=wheel --homedir=/home/user --name=user --password=$6$7C4NqqetkHmanVCv$LqQnmhs9Py8JaYXEOBg6ct47gn/n1VsEBvjmFQLzqjjGDr3V.FpMfWjeARySG07ycPHIb.MYyhIhmUJW.Z4KS0 --iscrypted --gecos=&quot;user&quot;
-# System bootloader configuration
-bootloader --location=mbr --boot-drive=vda
-autopart --type=lvm
-# Partition clearing information
-clearpart --none --initlabel
-
-%packages
-&#64;core
-
-# network is down
-# to launch it, just run sudo ifup eth0
-# set --onboot parameter to on to enable interface on boot.
-# sshd is launched
-
-
-%end
-</pre>
-</div>
-</div>
-<div class="section" id="les-hooks-dans-libvirt">
-<h2>Les hooks dans LIbvirt</h2>
-<p>TODO: vérifié cette histoire de hooks !!</p>
-<p>Créer le fichier dans /etc/libvirt/hooks/qemu</p>
-<pre class="literal-block">
-!/bin/bash
-# used some from advanced script to have multiple ports: use an equal number of guest and host ports
-
-
-echo `date` hook/qemu &quot;${1}&quot; &quot;${2}&quot; &gt;&gt;/root/hook.log
-
-
-# Update the following variables to fit your setup
-
-
-### First VM
-Guest_name=VM_1_NAME
-Guest_ipaddr=192.168.122.4
-Host_port=(  '1234' )
-Guest_port=( '22' )
-
-
-length=$(( ${#Host_port[&#64;]} - 1 ))
-if [ &quot;${1}&quot; = &quot;${Guest_name}&quot; ]; then
-if [ &quot;${2}&quot; = &quot;stopped&quot; ] || [ &quot;${2}&quot; = &quot;reconnect&quot; ]; then
-    for i in `seq 0 $length`; do
-            echo &quot;kvm-Ho.&quot; &gt;&gt;/root/hook.log
-            /sbin/iptables -D FORWARD -o virbr0 -d  ${Guest_ipaddr} -j ACCEPT
-            /sbin/iptables -t nat -D PREROUTING -p tcp --dport ${Host_port[$i]} -j DNAT --to ${Guest_ipaddr}:${Guest_port[$i]}
-    done
-fi
-if [ &quot;${2}&quot; = &quot;start&quot; ] || [ &quot;${2}&quot; = &quot;reconnect&quot; ]; then
-    for i in `seq 0 $length`; do
-            echo &quot;kvm-Hey.&quot; &gt;&gt;/root/hook.log
-            /sbin/iptables -I FORWARD -o virbr0 -d  ${Guest_ipaddr} -j ACCEPT
-            /sbin/iptables -t nat -I PREROUTING -p tcp --dport ${Host_port[$i]} -j DNAT --to ${Guest_ipaddr}:${Guest_port[$i]}
-    done
-fi
-fi
-</pre>
-</div>
-
-        </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
-        
- 
-        <li><article class="hentry">    
-                <header>
-                        <h1><a href="../docker-on-centos-7.html" rel="bookmark" title="Permalien vers «Docker on CentOS 7»">Docker on CentOS 7</a></h1>
-                </header>
-                
-                <div class="entry-content">
+                <h1 class="entry-title"><a href="../docker-on-centos-7.html">Docker on CentOS 7</a></h1> 
                 <footer class="post-info">
                         <abbr class="published" title="2018-09-23T00:49:00+02:00">
                                 Publié le 23/09/2018 &agrave; 00:49
@@ -226,9 +41,8 @@ fi
                         <address class="vcard author">
                                 Par <a class="url fn" href="#">fccagou</a>
                         </address>
-                        <p> Dans <a href="../category/it.html">IT</a></p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">Virtualization</a><a href="../tag/container.html">Container</a><a href="../tag/centos.html">CentOS</a></p></p>                    <p></p>
-                </footer><!-- /.post-info -->
+                <p>Dans <a href="../category/it.html">IT</a>. </p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">Virtualization</a><a href="../tag/container.html">Container</a><a href="../tag/centos.html">CentOS</a></p></p>                </footer><!-- /.post-info -->
                 <h1>Installation</h1>
 <div class="highlight"><pre><span></span>$ yum install docker
 $ systemctl <span class="nb">enable</span> docker
@@ -254,10 +68,38 @@ $ systemctl start docker
 
 
 <p>Apport de modifications.</p>
-<h1>Exemple d'utilisation de …</h1>
-                <a class="readmore" href="../docker-on-centos-7.html">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
+<h1>Exemple d'utilisation de docker</h1>
+<div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="c1">--rm -i -t --name test -w /tmp -v /home/depots/ISO:/ISO --privileged=true -e TOTO=TOTO centos-bare:6.6  ls -al /ISO</span>
+</pre></div>
+
+
+<p>Si on ne veut pas mettre de privilège, il faut mettre à jour
+<a href="https://selinuxproject.org/page/Main_Page">selinux</a> en analysant les blocages
+à al'aides des commandes <em>audit2why</em> et <em>audit2allow</em></p>
+<div class="highlight"><pre><span></span><span class="n">chcon</span> <span class="o">-</span><span class="n">Rt</span> <span class="n">svirt_sandbox_file_t</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">volume</span>
+</pre></div>
+
+
+<h1>Liens externes</h1>
+<p><a href="https://docs.docker.com/get-started/part2/#conclusion-of-part-two">Docker</a></p>
+<div class="highlight"><pre><span></span><span class="nv">docker</span> <span class="nv">build</span> <span class="o">-</span><span class="nv">t</span> <span class="nv">friendlyhello</span> .  # <span class="nv">Create</span> <span class="nv">image</span> <span class="nv">using</span> <span class="nv">this</span> <span class="nv">directory</span><span class="s1">&#39;</span><span class="s">s Dockerfile</span>
+<span class="nv">docker</span> <span class="nv">run</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">4000</span>:<span class="mi">80</span> <span class="nv">friendlyhello</span>  # <span class="nv">Run</span> <span class="s2">&quot;</span><span class="s">friendlyname</span><span class="s2">&quot;</span> <span class="nv">mapping</span> <span class="nv">port</span> <span class="mi">4000</span> <span class="nv">to</span> <span class="mi">80</span>
+<span class="nv">docker</span> <span class="nv">run</span> <span class="o">-</span><span class="nv">d</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">4000</span>:<span class="mi">80</span> <span class="nv">friendlyhello</span>         # <span class="nv">Same</span> <span class="nv">thing</span>, <span class="nv">but</span> <span class="nv">in</span> <span class="nv">detached</span> <span class="nv">mode</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">ls</span>                                # <span class="nv">List</span> <span class="nv">all</span> <span class="nv">running</span> <span class="nv">containers</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span>             # <span class="nv">List</span> <span class="nv">all</span> <span class="nv">containers</span>, <span class="nv">even</span> <span class="nv">those</span> <span class="nv">not</span> <span class="nv">running</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">stop</span> <span class="o">&lt;</span><span class="nv">hash</span><span class="o">&gt;</span>           # <span class="nv">Gracefully</span> <span class="nv">stop</span> <span class="nv">the</span> <span class="nv">specified</span> <span class="nv">container</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">kill</span> <span class="o">&lt;</span><span class="nv">hash</span><span class="o">&gt;</span>         # <span class="nv">Force</span> <span class="nv">shutdown</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">specified</span> <span class="nv">container</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">rm</span> <span class="o">&lt;</span><span class="nv">hash</span><span class="o">&gt;</span>        # <span class="nv">Remove</span> <span class="nv">specified</span> <span class="nv">container</span> <span class="nv">from</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">rm</span> $<span class="ss">(</span><span class="nv">docker</span> <span class="nv">container</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span> <span class="o">-</span><span class="nv">q</span><span class="ss">)</span>         # <span class="nv">Remove</span> <span class="nv">all</span> <span class="nv">containers</span>
+<span class="nv">docker</span> <span class="nv">image</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span>                             # <span class="nv">List</span> <span class="nv">all</span> <span class="nv">images</span> <span class="nv">on</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">image</span> <span class="nv">rm</span> <span class="o">&lt;</span><span class="nv">image</span> <span class="nv">id</span><span class="o">&gt;</span>            # <span class="nv">Remove</span> <span class="nv">specified</span> <span class="nv">image</span> <span class="nv">from</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">image</span> <span class="nv">rm</span> $<span class="ss">(</span><span class="nv">docker</span> <span class="nv">image</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span> <span class="o">-</span><span class="nv">q</span><span class="ss">)</span>   # <span class="nv">Remove</span> <span class="nv">all</span> <span class="nv">images</span> <span class="nv">from</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">login</span>             # <span class="nv">Log</span> <span class="nv">in</span> <span class="nv">this</span> <span class="nv">CLI</span> <span class="nv">session</span> <span class="nv">using</span> <span class="nv">your</span> <span class="nv">Docker</span> <span class="nv">credentials</span>
+<span class="nv">docker</span> <span class="nv">tag</span> <span class="o">&lt;</span><span class="nv">image</span><span class="o">&gt;</span> <span class="nv">username</span><span class="o">/</span><span class="nv">repository</span>:<span class="nv">tag</span>  # <span class="nv">Tag</span> <span class="o">&lt;</span><span class="nv">image</span><span class="o">&gt;</span> <span class="k">for</span> <span class="nv">upload</span> <span class="nv">to</span> <span class="nv">registry</span>
+<span class="nv">docker</span> <span class="nv">push</span> <span class="nv">username</span><span class="o">/</span><span class="nv">repository</span>:<span class="nv">tag</span>            # <span class="nv">Upload</span> <span class="nv">tagged</span> <span class="nv">image</span> <span class="nv">to</span> <span class="nv">registry</span>
+<span class="nv">docker</span> <span class="nv">run</span> <span class="nv">username</span><span class="o">/</span><span class="nv">repository</span>:<span class="nv">tag</span>                   # <span class="nv">Run</span> <span class="nv">image</span> <span class="nv">from</span> <span class="nv">a</span> <span class="nv">registry</span>
+</pre></div>
+        </article></aside><!-- /#featured -->
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
 
