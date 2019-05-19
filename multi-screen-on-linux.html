@@ -43,37 +43,38 @@
                 <p>Dans <a href="./category/it.html">IT</a>.
 <p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/custom.html">Custom</a><a href="./tag/screen.html">Screen</a><a href="./tag/french.html">French</a></p></p>        </footer><!-- /.post-info -->
         <h1>Choisir le bon moniteur au boot</h1>
-<p>https://www.centos.org/forums/viewtopic.php?t=62575
-https://forums.fedoraforum.org/showthread.php?239526-GDM-login-on-wrong-Monitor</p>
+<p>Des références dans les forum:
+<a href="https://www.centos.org/forums/viewtopic.php?t=62575">CentOS</a>
+<a href="https://forums.fedoraforum.org/showthread.php?239526-GDM-login-on-wrong-Monitor">Fedora</a></p>
 <p>Essayer l'ordre de connexion sur la carte</p>
 <p>TIPS: Simply move your mouse to the monitor you want the GDM greeter to show
       and press Enter; IS THAT SIMPLE!!!  SOLVED</p>
-<p>De manière dynamique, utiliser xrandr</p>
-<div class="highlight"><pre><span></span><span class="n">xrandr</span>
-<span class="n">xrandr</span> <span class="o">-</span><span class="n">q</span>
-<span class="n">xrandr</span> <span class="c1">--prop</span>
-<span class="n">xrandr</span> <span class="c1">--verbose</span>
+<p>De manière dynamique, utiliser <code>xrandr</code></p>
+<div class="highlight"><pre><span></span>$ xrandr
+$ xrandr -q
+$ xrandr --prop
+$ xrandr --verbose
 </pre></div>
 
 
-<p>Lister les ecrans connectés</p>
-<div class="highlight"><pre><span></span><span class="n">xrandr</span> <span class="o">|</span> <span class="n">grep</span> <span class="s1">&#39; connected&#39;</span>
-
-<span class="o">*</span><span class="n">eDP1</span><span class="o">*</span> <span class="n">connected</span> <span class="k">primary</span> <span class="mi">1920</span><span class="n">x1080</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">0</span> <span class="p">(</span><span class="n">normal</span> <span class="k">left</span> <span class="n">inverted</span> <span class="k">right</span> <span class="n">x</span> <span class="n">axis</span> <span class="n">y</span> <span class="n">axis</span><span class="p">)</span> <span class="mi">309</span><span class="n">mm</span> <span class="n">x</span> <span class="mi">174</span><span class="n">mm</span>
+<p>Lister les écrans connectés</p>
+<div class="highlight"><pre><span></span>$ xrandr <span class="p">|</span> grep <span class="s1">&#39; connected&#39;</span>
+*eDP1* connected primary 1920x1080+0+0 <span class="o">(</span>normal left inverted right x axis y axis<span class="o">)</span> 309mm x 174mm
 </pre></div>
 
 
 <p>Positionner les écrans les un par rapport aux autres avec la résolution</p>
-<div class="highlight"><pre><span></span><span class="n">xrandr</span> <span class="c1">--auto --output eDP1 --mode 1680x1050 --right-of LVDS</span>
-<span class="n">xrandr</span> <span class="c1">--auto --output VGA-0 --mode 1680x1050 --left-of LVDS</span>
+<div class="highlight"><pre><span></span>$ xrandr --auto --output eDP1 --mode 1680x1050 --right-of LVDS
+$ xrandr --auto --output VGA-0 --mode 1680x1050 --left-of LVDS
 </pre></div>
 
 
-<p>Il est donc possible de voir pour executer ces scripts au boot de la machine.</p>
-<p>Il semble aussi possible, en CentOS7, la rendre automatique en faisant la conf à l'aide de gnome
-puis en copiant le fichier monitors.xml dans la conf gdm</p>
-<div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">monitors</span><span class="p">.</span><span class="n">xml</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">gdm</span><span class="o">/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">monitors</span><span class="p">.</span><span class="n">xml</span>
-<span class="n">chown</span> <span class="n">gdm</span><span class="p">:</span><span class="n">gdm</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">gdm</span><span class="o">/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">monitors</span><span class="p">.</span><span class="n">xml</span>
+<p>Il est donc possible de voir pour exécuter ces scripts au boot de la machine.</p>
+<p>Il semble aussi possible, en CentOS7, de rendre la configuration automatique en
+faisant la conf à l'aide de gnome puis en copiant le fichier <em>monitors.xml</em>
+dans la conf gdm</p>
+<div class="highlight"><pre><span></span>$ cp ~/.config/monitors.xml /var/lib/gdm/.config/monitors.xml
+$ chown gdm:gdm /var/lib/gdm/.config/monitors.xml
 </pre></div>
         </div><!-- /.entry-content -->
 

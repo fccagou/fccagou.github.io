@@ -462,11 +462,15 @@ dhcp-hostsfile=/var/lib/libvirt …</pre></div>
 <p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/custom.html">Custom</a><a href="./tag/screen.html">Screen</a><a href="./tag/french.html">French</a></p></p>                    <p></p>
                 </footer><!-- /.post-info -->
                 <h1>Choisir le bon moniteur au boot</h1>
-<p>https://www.centos.org/forums/viewtopic.php?t=62575
-https://forums.fedoraforum.org/showthread.php?239526-GDM-login-on-wrong-Monitor</p>
+<p>Des références dans les forum:
+<a href="https://www.centos.org/forums/viewtopic.php?t=62575">CentOS</a>
+<a href="https://forums.fedoraforum.org/showthread.php?239526-GDM-login-on-wrong-Monitor">Fedora</a></p>
 <p>Essayer l'ordre de connexion sur la carte</p>
 <p>TIPS: Simply move your mouse to the monitor you want the GDM greeter to show
-      and press Enter; IS THAT SIMPLE …</p>
+      and press Enter; IS THAT SIMPLE!!!  SOLVED</p>
+<p>De manière dynamique, utiliser <code>xrandr</code></p>
+<div class="highlight"><pre><span></span>$ xrandr
+$ xrandr -q …</pre></div>
                 <a class="readmore" href="./multi-screen-on-linux.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>
