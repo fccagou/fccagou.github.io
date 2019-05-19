@@ -3,67 +3,65 @@
 <head>
         <meta charset="utf-8" />
         <title>The Cagou's Blog - HA</title>
-        <link rel="stylesheet" href="https://fccagou.github.io/theme/css/main.css" />
-        <link href="https://fccagou.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Atom Feed" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+        <link rel="stylesheet" href="../theme/css/main.css" />
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="https://fccagou.github.io/">The Cagou's Blog </a></h1>
+                <h1><a href="../">The Cagou's Blog </a></h1>
                 <nav><ul>
-                    <li><a href="https://fccagou.github.io/category/it.html">IT</a></li>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="https://fccagou.github.io/how-to-make-ha-glusterfs-using-keepalived.html">How to make HA GlusterFs using Keepalived</a></h1>
+                    <h1 class="entry-title"><a href="../how-to-make-ha-glusterfs-using-keepalived.html">How to make HA GlusterFs using Keepalived</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2017-08-02T01:01:00+02:00">
                 Published: mer. 02 août 2017
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="https://fccagou.github.io/author/fccagou.html">fccagou</a>
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
         </address>
-<p>In <a href="https://fccagou.github.io/category/it.html">IT</a>.</p>
-<p>tags: <a href="https://fccagou.github.io/tag/linux.html">Linux</a> <a href="https://fccagou.github.io/tag/ha.html">HA</a> <a href="https://fccagou.github.io/tag/gluster.html">Gluster</a> <a href="https://fccagou.github.io/tag/keepalived.html">Keepalived</a> <a href="https://fccagou.github.io/tag/distributedfs.html">distributedfs</a> </p>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/ha.html">HA</a> <a href="../tag/gluster.html">Gluster</a> <a href="../tag/keepalived.html">Keepalived</a> <a href="../tag/distributedfs.html">distributedfs</a> </p>
 </footer><!-- /.post-info --><p>Example tested on 2 CentOS7 VM</p>
-<div class="highlight"><pre>! Configuration File for keepalived
+<div class="highlight"><pre><span></span><span class="o">!</span> <span class="nv">Configuration</span> <span class="nv">File</span> <span class="k">for</span> <span class="nv">keepalived</span>
 
-vrrp_script check_glusterd {
-  script       &quot;/usr/sbin/pidof glusterd&quot;
-  interval 5
-  fall 1
-  rise 1
-!  timeout t
-!  weight w
+<span class="nv">vrrp_script</span> <span class="nv">check_glusterd</span> {
+  <span class="nv">script</span>       <span class="s2">&quot;</span><span class="s">/usr/sbin/pidof glusterd</span><span class="s2">&quot;</span>
+  <span class="nv">interval</span> <span class="mi">5</span>
+  <span class="nv">fall</span> <span class="mi">1</span>
+  <span class="nv">rise</span> <span class="mi">1</span>
+<span class="o">!</span>  <span class="nb">timeout</span> <span class="nv">t</span>
+<span class="o">!</span>  <span class="nv">weight</span> <span class="nv">w</span>
 }
 
-global_defs {
+<span class="nv">global_defs</span> {
 }
 
-vrrp_instance gfs01 {
-!    state MASTER
-    interface eth0
-    virtual_router_id 51
-    priority 100
-    advert_int 1
-    nopreempt
-    authentication {
-        auth_type PASS
-        auth_pass 1111
+<span class="nv">vrrp_instance</span> <span class="nv">gfs01</span> {
+<span class="o">!</span>    <span class="nv">state</span> <span class="nv">MASTER</span>
+    <span class="nv">interface</span> <span class="nv">eth0</span>
+    <span class="nv">virtual_router_id</span> <span class="mi">51</span>
+    <span class="nv">priority</span> <span class="mi">100</span>
+    <span class="nv">advert_int</span> <span class="mi">1</span>
+    <span class="nv">nopreempt</span>
+    <span class="nv">authentication</span> {
+        <span class="nv">auth_type</span> <span class="nv">PASS</span>
+        <span class="nv">auth_pass</span> <span class="mi">1111</span>
     }
-    virtual_ipaddress {
-        192.168.122.100/24
+    <span class="nv">virtual_ipaddress</span> {
+        <span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">122</span>.<span class="mi">100</span><span class="o">/</span><span class="mi">24</span>
     }
 
-    track_script {
-       check_glusterd
+    <span class="nv">track_script</span> {
+       <span class="nv">check_glusterd</span>
     }
 }
 </pre></div>
@@ -77,16 +75,9 @@ vrrp_instance gfs01 {
 </ul>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="https://test-fccagou.rhcloud.com/">Some stuff</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="https://fccagou.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                             <li><a href="https://twitter.com/fccagou">twitter</a></li>
                             <li><a href="https://github.com/fccagou">github</a></li>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>Notes about Vim</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="./category/editors.html">Editors</a></li>
+                    <li><a href="./category/it.html">IT</a></li>
+                    <li><a href="./category/rhel8.html">rhel8</a></li>
+                    <li><a href="./category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./notes-about-vim.html" rel="bookmark"
+           title="Permalink to Notes about Vim">Notes about Vim</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2019-05-19T15:50:00+02:00">
+                Published: dim. 19 mai 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="./category/editors.html">Editors</a>.</p>
+<p>tags: <a href="./tag/editors.html">Editors</a> <a href="./tag/vim.html">Vim</a> </p>
+</footer><!-- /.post-info -->      <h1>Correction orthographique</h1>
+<h2>Pré requis</h2>
+<p>Sur <em>ArchLinux</em>, il faut installer la paquet <em>vim-spell-fr</em> qui contient les
+fichiers de dictionnaire:</p>
+<div class="highlight"><pre><span></span><span class="n">vim</span><span class="o">-</span><span class="n">spell</span><span class="o">-</span><span class="n">fr</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">share</span><span class="o">/</span><span class="n">licenses</span><span class="o">/</span><span class="n">vim</span><span class="o">-</span><span class="n">spell</span><span class="o">-</span><span class="n">fr</span><span class="o">/</span><span class="n">README</span>
+<span class="n">vim</span><span class="o">-</span><span class="n">spell</span><span class="o">-</span><span class="n">fr</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">share</span><span class="o">/</span><span class="n">vim</span><span class="o">/</span><span class="n">vimfiles</span><span class="o">/</span><span class="n">spell</span><span class="o">/</span><span class="n">fr</span><span class="p">.</span><span class="n">latin1</span><span class="p">.</span><span class="n">spl</span>
+<span class="n">vim</span><span class="o">-</span><span class="n">spell</span><span class="o">-</span><span class="n">fr</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">share</span><span class="o">/</span><span class="n">vim</span><span class="o">/</span><span class="n">vimfiles</span><span class="o">/</span><span class="n">spell</span><span class="o">/</span><span class="n">fr</span><span class="p">.</span><span class="n">latin1</span><span class="p">.</span><span class="n">sug</span>
+<span class="n">vim</span><span class="o">-</span><span class="n">spell</span><span class="o">-</span><span class="n">fr</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">share</span><span class="o">/</span><span class="n">vim</span><span class="o">/</span><span class="n">vimfiles</span><span class="o">/</span><span class="n">spell</span><span class="o">/</span><span class="n">fr</span><span class="p">.</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="p">.</span><span class="n">spl</span>
+<span class="n">vim</span><span class="o">-</span><span class="n">spell</span><span class="o">-</span><span class="n">fr</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">share</span><span class="o">/</span><span class="n">vim</span><span class="o">/</span><span class="n">vimfiles</span><span class="o">/</span><span class="n">spell</span><span class="o">/</span><span class="n">fr</span><span class="p">.</span><span class="n">utf</span><span class="o">-</span><span class="mi">8</span><span class="p">.</span><span class="n">sug</span>
+</pre></div>
+
+
+<h2>Les commandes dans vim</h2>
+<p>Passer en dictionnaire Français</p>
+<div class="highlight"><pre><span></span><span class="p">:</span><span class="n">setlocal</span> <span class="n">spell</span> <span class="n">spelllang</span><span class="o">=</span><span class="n">fr</span>
+</pre></div>
+
+
+<p>Les commandes intéressantes :</p>
+<p><strong>]s</strong>: va au prochain mot en erreur</p>
+<p><strong>[s</strong>: va au suivant</p>
+<p><strong>z=</strong>: sur un mot, fait une proposition de correction</p>
+<p><strong>zg</strong>: ajoute un mot dans le dictionnaire de la langue.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>The Cagou's Blog - IT</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li class="active"><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+                <section id="content" class="body">
+                    <ol id="posts-list" class="hfeed" start="9">
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../how-to-make-ha-glusterfs-using-keepalived.html" rel="bookmark"
+                           title="Permalink to How to make HA GlusterFs using Keepalived">How to make HA GlusterFs using Keepalived</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-08-02T01:01:00+02:00">
+                Published: mer. 02 août 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/ha.html">HA</a> <a href="../tag/gluster.html">Gluster</a> <a href="../tag/keepalived.html">Keepalived</a> <a href="../tag/distributedfs.html">distributedfs</a> </p>
+</footer><!-- /.post-info -->                <p>Example tested on 2 CentOS7 VM</p>
+<div class="highlight"><pre><span></span><span class="o">!</span> <span class="nv">Configuration</span> <span class="nv">File</span> <span class="k">for</span> <span class="nv">keepalived</span>
+
+<span class="nv">vrrp_script</span> <span class="nv">check_glusterd</span> {
+  <span class="nv">script</span>       <span class="s2">&quot;</span><span class="s">/usr/sbin/pidof glusterd</span><span class="s2">&quot;</span>
+  <span class="nv">interval</span> <span class="mi">5</span>
+  <span class="nv">fall</span> <span class="mi">1</span>
+  <span class="nv">rise</span> <span class="mi">1</span>
+<span class="o">!</span>  <span class="nb">timeout</span> <span class="nv">t</span>
+<span class="o">!</span>  <span class="nv">weight</span> <span class="nv">w</span>
+}
+
+<span class="nv">global_defs</span> {
+}
+
+<span class="nv">vrrp_instance</span> <span class="nv">gfs01</span> {
+<span class="o">!</span>    <span class="nv">state</span> <span class="nv">MASTER</span>
+    <span class="nv">interface</span> <span class="nv">eth0</span>
+    <span class="nv">virtual_router_id</span> <span class="mi">51</span>
+    <span class="nv">priority</span> <span class="mi">100</span>
+    <span class="nv">advert_int</span> <span class="mi">1</span>
+    <span class="nv">nopreempt</span>
+    <span class="nv">authentication</span> {
+        <span class="nv">auth_type</span> <span class="nv">PASS</span>
+        <span class="nv">auth_pass</span> <span class="mi">1111</span>
+    }
+    <span class="nv">virtual_ipaddress</span> {
+        <span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">122 …</span></pre></div>
+                <a class="readmore" href="../how-to-make-ha-glusterfs-using-keepalived.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../lxc-beginner.html" rel="bookmark"
+                           title="Permalink to LXC beginner">LXC beginner</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-07-15T12:13:00+02:00">
+                Published: sam. 15 juillet 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/container.html">Container</a> <a href="../tag/lxc.html">LXC</a> <a href="../tag/french.html">French</a> </p>
+</footer><!-- /.post-info -->                <h1>Configuration environnement local</h1>
+<div class="highlight"><pre><span></span><span class="nv">mkdir</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.include = /etc/lxc/default.conf</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = u 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = g 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.lxcpath=/srv/containers/lxc</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">lxc</span>.<span class="nv">conf</span>
+
+<span class="nv">sudo …</span></pre></div>
+                <a class="readmore" href="../lxc-beginner.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="../installation-de-cobbler-sur-centos-66.html" rel="bookmark"
+                           title="Permalink to Installation de cobbler sur CentOS 6.6">Installation de cobbler sur CentOS 6.6</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2014-11-29T20:59:00+01:00">
+                Published: sam. 29 novembre 2014
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/admin.html">Admin</a> <a href="../tag/cobbler.html">Cobbler</a> <a href="../tag/french.html">French</a> </p>
+</footer><!-- /.post-info -->                <h1>Introduction</h1>
+<p>Ce texte explique comment installer cobbler sur un système CentOS 6.6.</p>
+<p>La solution est testée sur la plate forme vituelle :</p>
+<ul>
+<li>hôte CentOS 7</li>
+<li>solution de virtualisation: libvirt</li>
+</ul>
+<h1>Préparation de l'hôte</h1>
+<h2>Configuration NFS</h2>
+<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span>
+<span class="n">printf</span> <span class="c1">-- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="n">printf</span> <span class="c1">-- &quot;/home …</span></pre></div>
+                <a class="readmore" href="../installation-de-cobbler-sur-centos-66.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+<p class="paginator">
+        <a href="../category/it.html">&laquo;</a>
+    Page 2 / 2
+</p>
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>Yubikey et GPG</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li class="active"><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="../drafts/yubikey-et-gpg.html" rel="bookmark"
+           title="Permalink to Yubikey et GPG">Yubikey et GPG</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-09-23T00:49:00+02:00">
+                Published: dim. 23 septembre 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/security.html">Security</a> <a href="../tag/yubikey.html">Yubikey</a> </p>
+</footer><!-- /.post-info -->      <h1>Test bon fonctionnement</h1>
+<div class="highlight"><pre><span></span><span class="n">echo</span> <span class="ss">&quot;$(uname -a)&quot;</span> <span class="o">|</span> <span class="n">gpg2</span> <span class="c1">--encrypt --armor  --recipient $KEYID | gpg2 --decrypt --armor</span>
+</pre></div>
+
+
+<h1>gpg distant</h1>
+<p>Références</p>
+<ul>
+<li>https://wiki.gnupg.org/AgentForwarding</li>
+</ul>
+<p>Local host</p>
+<div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">gnupg</span><span class="o">/</span><span class="n">gpg</span><span class="o">-</span><span class="n">agent</span><span class="p">.</span><span class="n">conf</span> <span class="o">&lt;&lt;</span><span class="n">EOF_AGENT</span>
+<span class="n">enable</span><span class="o">-</span><span class="n">ssh</span><span class="o">-</span><span class="n">support</span>
+<span class="o">#</span><span class="n">pinentry</span><span class="o">-</span><span class="n">program</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">pinentry</span><span class="o">-</span><span class="n">curses</span>
+<span class="n">pinentry</span><span class="o">-</span><span class="n">program</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">pinentry</span>
+<span class="k">write</span><span class="o">-</span><span class="n">env</span><span class="o">-</span><span class="n">file</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">fccago</span><span class="o">/</span><span class="p">.</span><span class="n">gpg</span><span class="o">-</span><span class="n">agent</span><span class="o">-</span><span class="n">info</span>
+<span class="k">default</span><span class="o">-</span><span class="k">cache</span><span class="o">-</span><span class="n">ttl</span> <span class="mi">600</span>
+<span class="k">max</span><span class="o">-</span><span class="k">cache</span><span class="o">-</span><span class="n">ttl</span> <span class="mi">7200</span>
+<span class="k">default</span><span class="o">-</span><span class="k">cache</span><span class="o">-</span><span class="n">ttl</span><span class="o">-</span><span class="n">ssh</span> <span class="mi">1800</span>
+<span class="k">max</span><span class="o">-</span><span class="k">cache</span><span class="o">-</span><span class="n">ttl</span><span class="o">-</span><span class="n">ssh</span> <span class="mi">7200</span>
+<span class="n">keep</span><span class="o">-</span><span class="n">display</span>
+<span class="n">extra</span><span class="o">-</span><span class="n">socket</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">fccagou</span><span class="o">/</span><span class="p">.</span><span class="n">gnupg</span><span class="o">/</span><span class="n">S</span><span class="p">.</span><span class="n">gpg</span><span class="o">-</span><span class="n">agent</span><span class="p">.</span><span class="n">remote</span>
+<span class="n">EOF_AGENT</span>
+
+<span class="n">cat</span> <span class="o">&gt;&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">config</span> <span class="o">&lt;&lt;</span><span class="n">EOF_SSH</span>
+
+<span class="k">Host</span> <span class="n">agent</span>
+    <span class="n">Hostname</span> <span class="k">host</span><span class="p">.</span><span class="n">fqdn</span>
+    <span class="n">ExitOnForwardFailure</span> <span class="n">yes</span>
+    <span class="n">RemoteForward</span> <span class="o">/</span><span class="n">home</span><span class="o">/&lt;</span><span class="n">remote_user</span><span class="o">&gt;/</span><span class="p">.</span><span class="n">gnupg</span><span class="o">/</span><span class="n">S</span><span class="p">.</span><span class="n">gpg</span><span class="o">-</span><span class="n">agent</span> <span class="o">/</span><span class="n">home</span><span class="o">/&lt;</span><span class="n">local_user</span><span class="o">&gt;/</span><span class="p">.</span><span class="n">gnupg</span><span class="o">/</span><span class="n">S</span><span class="p">.</span><span class="n">gpg</span><span class="o">-</span><span class="n">agent</span><span class="p">.</span><span class="n">remote</span>
+<span class="n">EOF_SSH</span>
+</pre></div>
+
+
+<p>remote host</p>
+<div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">-&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">sshd_config</span> <span class="o">&lt;&lt;</span><span class="n">EOF_SSHD</span>
+
+<span class="n">StreamLocalBindUnlink</span> <span class="n">yes</span>
+
+<span class="n">EOF_SSHD</span>
+</pre></div>
+
+
+<h1>REMARQUES</h1>
+<ul>
+<li>il faut que le répertoire .gnupg distant existe donc pour une première, il faut créer le répertoire.</li>
+<li>utiliser pinentry-curses en dur déconne quand on est en remote... les caractères apparaîssent.</li>
+<li>Pour accéder aux clefs de la yubikey, il faut importer la clé publique dans son magasin.<div class="highlight"><pre><span></span><span class="n">gpg2</span> <span class="o">--</span><span class="kn">import</span> <span class="o">&lt;</span> <span class="o">/</span><span class="n">truc</span><span class="o">/</span><span class="n">pouet</span><span class="o">/</span><span class="n">key</span><span class="o">.</span><span class="n">pub</span>
+</pre></div>
+
+
+</li>
+</ul>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

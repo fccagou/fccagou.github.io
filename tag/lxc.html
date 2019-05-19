@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>The Cagou's Blog - LXC</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../lxc-beginner.html">LXC beginner</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-07-15T12:13:00+02:00">
+                Published: sam. 15 juillet 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/container.html">Container</a> <a href="../tag/lxc.html">LXC</a> <a href="../tag/french.html">French</a> </p>
+</footer><!-- /.post-info --><h1>Configuration environnement local</h1>
+<div class="highlight"><pre><span></span><span class="nv">mkdir</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.include = /etc/lxc/default.conf</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = u 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = g 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.lxcpath=/srv/containers/lxc</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">lxc</span>.<span class="nv">conf</span>
+
+<span class="nv">sudo</span> <span class="nv">mkdir</span> <span class="o">-</span><span class="nv">p</span> <span class="o">/</span><span class="nv">srv</span><span class="o">/</span><span class="nv">containers</span><span class="o">/</span><span class="nv">lxc</span>
+<span class="nv">sudo</span> <span class="nv">chown</span> <span class="mi">10000</span> <span class="o">/</span><span class="nv">srv</span><span class="o">/</span><span class="nv">containers</span><span class="o">/</span><span class="nv">lxc</span>
+<span class="nv">sudo</span> <span class="nv">chmod</span> <span class="nv">g</span><span class="o">+</span><span class="nv">w</span> <span class="o">/</span><span class="nv">srv</span><span class="o">/</span><span class="nv">containers</span><span class="o">/</span><span class="nv">lxc</span>
+</pre></div>
+
+
+<h1>Creation container</h1>
+<p>TODO: voir comment faire un template local</p>
+<div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="k">create</span> <span class="o">-</span><span class="n">t</span> <span class="n">download</span> <span class="o">-</span><span class="n">n</span> <span class="n">lxc</span><span class="o">-</span><span class="n">debian</span>
+</pre></div>
+
+
+<p>Les donnés du container seront dans /srv/containers/lxc/lxc-debian</p>
+<p>Lancer une instance éphemère, c'est à dire qu'elle se supprime après le stop.</p>
+<div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="k">copy</span> <span class="c1">--name lxc-debian -N p1</span>
+</pre></div>
+
+
+<p>Connaître les données de configuration de p1 (@IP ...)</p>
+<div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="n">ls</span> <span class="c1">--fancy</span>
+</pre></div>
+
+
+<p>Se connecter à la machine en mode admin</p>
+<div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="n">attach</span> <span class="c1">--name p1</span>
+</pre></div>
+
+
+<p>Arrêter la machine p1</p>
+<div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="n">stop</span> <span class="c1">--name p1</span>
+</pre></div>
+
+
+<h1>Exemple de workflow : créer un service web</h1>
+<h2>On clone la base</h2>
+<div class="highlight"><pre><span></span><span class="n">lxc</span><span class="o">-</span><span class="k">copy</span> <span class="c1">--name lxc-debian -N lxc-webserver</span>
+</pre></div>
+
+
+<h2>On installe et configure le service web : DocumentRoot par défaut /var/www/html</h2>
+<div class="highlight"><pre><span></span><span class="nv">lxc</span><span class="o">-</span><span class="nv">start</span> <span class="o">-</span><span class="nv">n</span> <span class="nv">lxc</span><span class="o">-</span><span class="nv">webserver</span>
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">attach</span> <span class="o">-</span><span class="nv">n</span> <span class="nv">lxc</span><span class="o">-</span><span class="nv">webserver</span>
+<span class="nv">apt</span> <span class="nv">install</span> <span class="nv">nginx</span>
+<span class="k">exit</span>
+
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">ls</span> <span class="o">--</span><span class="nv">fancy</span>
+<span class="nv">NAME</span>          <span class="nv">STATE</span>   <span class="nv">AUTOSTART</span> <span class="nv">GROUPS</span> <span class="nv">IPV4</span>       <span class="nv">IPV6</span> 
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">debian</span>    <span class="nv">STOPPED</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="o">-</span>          <span class="o">-</span>    
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">webserver</span> <span class="nv">RUNNING</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">250</span> <span class="o">-</span>
+
+# <span class="nv">Test</span>
+<span class="nv">curl</span> <span class="nv">http</span>:<span class="o">//</span><span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">250</span>
+# \<span class="nv">o</span><span class="o">/</span>
+</pre></div>
+
+
+<h2>On crée les env de test</h2>
+<div class="highlight"><pre><span></span>mkdir -p <span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site{1,2}
+echo &quot;site 1&quot; &gt; <span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site1/index.html
+echo &quot;site 2&quot; &gt; <span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site2/index.html
+</pre></div>
+
+
+<h2>on lance une instance pour chaque site</h2>
+<div class="highlight"><pre><span></span>lxc-copy -n lxc-webserver -e -m bind=<span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site1:/var/www/html:ro -N site1
+lxc-copy -n lxc-webserver -e -m bind=<span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site2:/var/www/html:ro -N site2
+
+lxc-ls --fancy
+NAME          STATE   AUTOSTART GROUPS IPV4       IPV6
+lxc-debian    STOPPED 0         -      -          -
+lxc-webserver STOPPED 0         -      -          -
+site1         RUNNING 0         -      10.0.3.250 -
+site2         RUNNING 0         -      10.0.3.127 -
+
+
+# tests
+curl http://10.0.3.250
+Site 1
+
+curl http://10.0.3.127
+Site 2
+# \o/
+</pre></div>
+
+
+<h2>Résolution de nom</h2>
+<p>Par défaut, lxc lance dnsmasq pour le réseau des conteneurs. Par défaut depuis
+le début c'est le réseau 10.0.3.0/24. L'adresse de l'hote est 10.0.3.1. C'est 
+à cette adresse que la résolution se fait. Si on souhaite résoudre les sites
+en dehors d'un conteneur, si rien n'est oncfiguré, il faut donner explicitement
+le nom du serveur dns aux commandes de résolution :</p>
+<div class="highlight"><pre><span></span><span class="k">host</span> <span class="n">site1</span> <span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">1</span>
+<span class="k">Using</span> <span class="k">domain</span> <span class="n">server</span><span class="p">:</span>
+<span class="n">Name</span><span class="p">:</span> <span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">1</span>
+<span class="n">Address</span><span class="p">:</span> <span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">1</span><span class="o">#</span><span class="mi">53</span>
+<span class="n">Aliases</span><span class="p">:</span>
+
+<span class="n">site1</span> <span class="n">has</span> <span class="n">address</span> <span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">250</span>
+</pre></div>
+
+
+<p>On voit que pour monter du site à la demande, il faut faire des ajustements :
+- du NAT/PAT ou bridge depuis le serveur hôte ou alors un mod_proxy
+- configurer le dns de l'hôte pour utiliser les noms des sites plutôt que leur
+  @IP</p>
+<p>Pour forcer les @IP des serveurs, soit on le fixe dans les conteneurs, soit
+on le fixe dans la configuration de dnsmasq. </p>
+<p>Pour continuer, j'ai choisi la seconde solution plus flexible.Sur la Debian,
+il faut éditer le fichier /etc/default/lxc-net et décommenter la ligne 
+contenant la déclaration de la variable LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf</p>
+<p>Puis définir les @ip en fonction des noms de conteneurs</p>
+<div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="k">host</span><span class="o">=</span><span class="n">site1</span><span class="p">,</span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">101</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="k">host</span><span class="o">=</span><span class="n">site2</span><span class="p">,</span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">102</span>
+</pre></div>
+
+
+<p>... et on relance le service réseau de lxc</p>
+<div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="k">restart</span> <span class="n">lxc</span><span class="o">-</span><span class="n">net</span><span class="p">.</span><span class="n">service</span>
+</pre></div>
+
+
+<p>En relançant les conteneurs site1 et site2, on vérifie bien que les @IP sont
+celle affectées dans le fichier de conf de DNSMASQ.</p>
+<h2>HAPROXY</h2>
+<p>Pour tester un mécanisme de HA avec les deux sites web, j'ai décidé de tester 
+haproxy dans un conteneur.</p>
+<p>Je décide de fixer l'@IP du conteneur :</p>
+<div class="highlight"><pre><span></span><span class="n">echo</span> <span class="ss">&quot;dhcp-host=haproxy,10.0.3.100&quot;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="p">.</span><span class="n">conf</span><span class="err">&#39;</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="k">restart</span> <span class="n">lxc</span><span class="o">-</span><span class="n">net</span><span class="p">.</span><span class="n">service</span>
+</pre></div>
+
+
+<p>Comme pour les serveurs web, je fais une copie du conteneur lxc-debian en 
+lxc-haproxy qui va me servir de modèle. Ce nouveau modèle doit être exécuté 
+pour l'installation de haproxy.</p>
+<div class="highlight"><pre><span></span><span class="nv">lxc</span><span class="o">-</span><span class="nv">copy</span> <span class="o">-</span><span class="nv">n</span> <span class="nv">lxc</span><span class="o">-</span><span class="nv">debian</span> <span class="o">-</span><span class="nv">N</span> <span class="nv">lxc</span><span class="o">-</span><span class="nv">haproxy</span>
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">start</span> <span class="o">-</span><span class="nv">n</span> <span class="nv">lxc</span><span class="o">-</span><span class="nv">haproxy</span>
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">attach</span> <span class="o">-</span><span class="nv">n</span> <span class="nv">lxc</span><span class="o">-</span><span class="nv">haproxy</span>
+<span class="nv">apt</span> <span class="nv">install</span> <span class="nv">haproxy</span> <span class="nv">haproxyctl</span>
+<span class="k">exit</span>
+</pre></div>
+
+
+<p>La configuration de haproxy se fait à l'aide du fichier de configuration 
+/etc/haproxy/haproxy.cfg</p>
+<p>Pur permettre une configuration en dehors du conteneur, on va créer un fichier
+de configuration dans l'environnement de tests et l'utiliser via un point de 
+montage lors du lancement du conteneur.</p>
+<div class="highlight"><pre><span></span>mkdir -p <span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/haproxy
+</pre></div>
+
+
+<p>Créer le fichier ${HOME}/src/LXC-CONF/web/haproxy/haproxy.cfg avec la
+configuration souhaitée (cf exemple en Annexes) puis lancer le service
+haproxy</p>
+<div class="highlight"><pre><span></span> lxc-copy -n lxc-haproxy -e -m bind=<span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/haproxy:/etc/haproxy:ro -N haproxy
+</pre></div>
+
+
+<p>Test de bon fonctionnement:</p>
+<div class="highlight"><pre><span></span><span class="nv">lxc</span><span class="o">-</span><span class="nv">ls</span> <span class="o">--</span><span class="nv">fancy</span>
+<span class="nv">NAME</span>          <span class="nv">STATE</span>   <span class="nv">AUTOSTART</span> <span class="nv">GROUPS</span> <span class="nv">IPV4</span>       <span class="nv">IPV6</span>
+<span class="nv">haproxy</span>       <span class="nv">RUNNING</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">100</span> <span class="o">-</span>
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">debian</span>    <span class="nv">STOPPED</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="o">-</span>          <span class="o">-</span>
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">haproxy</span>   <span class="nv">STOPPED</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="o">-</span>          <span class="o">-</span>
+<span class="nv">lxc</span><span class="o">-</span><span class="nv">webserver</span> <span class="nv">STOPPED</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="o">-</span>          <span class="o">-</span>
+<span class="nv">site1</span>         <span class="nv">RUNNING</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">101</span> <span class="o">-</span>
+<span class="nv">site2</span>         <span class="nv">RUNNING</span> <span class="mi">0</span>         <span class="o">-</span>      <span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">102</span> <span class="o">-</span>
+
+
+<span class="k">for</span> <span class="nv">i</span> <span class="nv">in</span> $<span class="ss">(</span><span class="nv">seq</span> <span class="mi">1</span> <span class="mi">10</span><span class="ss">)</span><span class="c1">; do curl http://10.0.3.100/; done</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">2</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">2</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">2</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">2</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">2</span>
+</pre></div>
+
+
+<p>Test de failover</p>
+<div class="highlight"><pre><span></span><span class="nv">lxc</span><span class="o">-</span><span class="nv">stop</span> <span class="o">-</span><span class="nv">n</span> <span class="nv">site2</span>
+
+<span class="k">for</span> <span class="nv">i</span> <span class="nv">in</span> $<span class="ss">(</span><span class="nv">seq</span> <span class="mi">1</span> <span class="mi">10</span><span class="ss">)</span><span class="c1">; do curl http://10.0.3.100/; done</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+<span class="nv">Site</span> <span class="mi">1</span>
+</pre></div>
+
+
+<p>Test de reprise</p>
+<div class="highlight"><pre><span></span>lxc-copy -n lxc-webserver -e -m bind=<span class="cp">${</span><span class="n">HOME</span><span class="cp">}</span>/src/LXC-CONF/web/site2:/var/www/html:ro -N site2
+
+/o\ le retour de Site2 ne fonctionne pas.
+</pre></div>
+
+
+<p>FIXME:</p>
+<div class="highlight"><pre><span></span><span class="n">En</span> <span class="n">se</span> <span class="n">connectant</span> <span class="p">(</span><span class="n">lxc</span><span class="o">-</span><span class="n">attach</span><span class="p">)</span> <span class="n">au</span> <span class="n">site</span> <span class="mi">2</span><span class="p">,</span> <span class="n">le</span> <span class="n">tcpdump</span> <span class="n">montre</span> <span class="n">que</span> <span class="n">les</span> <span class="n">paquets</span>
+<span class="n">arrivent</span> <span class="n">mais</span> <span class="n">le</span> <span class="n">sevrice</span> <span class="n">nginx</span> <span class="n">ne</span> <span class="n">répond</span> <span class="n">pas</span><span class="p">.</span> <span class="n">arp</span> <span class="o">-</span><span class="n">a</span> <span class="n">ne</span> <span class="n">montre</span> <span class="n">aucune</span> <span class="n">entrée</span>
+<span class="n">pour</span> <span class="n">haproxy</span><span class="p">.</span>
+<span class="n">En</span> <span class="n">faisant</span> <span class="n">un</span> <span class="n">ping</span> <span class="n">vers</span> <span class="n">haparoxy</span><span class="p">,</span> <span class="n">la</span> <span class="k">table</span> <span class="n">arp</span> <span class="n">est</span> <span class="n">bonne</span> <span class="n">et</span> <span class="n">les</span> <span class="n">flux</span> <span class="n">sont</span> <span class="n">ok</span><span class="p">.</span>
+<span class="o">=&gt;</span> <span class="n">Y</span><span class="err">&#39;</span><span class="n">a</span> <span class="n">un</span> <span class="n">schmole</span> <span class="n">dans</span> <span class="n">la</span> <span class="n">conf</span> <span class="n">lxc</span> <span class="n">ou</span> <span class="n">est</span><span class="o">-</span><span class="n">ce</span> <span class="n">un</span> <span class="n">bug</span> <span class="o">?</span>
+</pre></div>
+
+
+<h2>TODO</h2>
+<ul>
+<li>configurer le syslog</li>
+<li>configurer iptables</li>
+</ul>
+<h1>Annexes</h1>
+<h2>Fichier de coonfiguration haproxy.cfg</h2>
+<div class="highlight"><pre><span></span><span class="nv">global</span>
+    <span class="nv">log</span> <span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">log</span>    <span class="nv">local0</span>
+    <span class="nv">log</span> <span class="o">/</span><span class="nv">dev</span><span class="o">/</span><span class="nv">log</span>    <span class="nv">local1</span> <span class="nv">notice</span>
+    <span class="nv">chroot</span> <span class="o">/</span><span class="nv">var</span><span class="o">/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">haproxy</span>
+    <span class="nv">stats</span> <span class="nv">socket</span> <span class="o">/</span><span class="nv">run</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">admin</span>.<span class="nv">sock</span> <span class="nv">mode</span> <span class="mi">660</span> <span class="nv">level</span> <span class="nv">admin</span>
+    <span class="nv">stats</span> <span class="nb">timeout</span> <span class="mi">30</span><span class="nv">s</span>
+    <span class="nv">user</span> <span class="nv">haproxy</span>
+    <span class="nv">group</span> <span class="nv">haproxy</span>
+    <span class="nv">daemon</span>
+
+    # <span class="nv">Default</span> <span class="nv">SSL</span> <span class="nv">material</span> <span class="nv">locations</span>
+    <span class="nv">ca</span><span class="o">-</span><span class="nv">base</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">ssl</span><span class="o">/</span><span class="nv">certs</span>
+    <span class="nv">crt</span><span class="o">-</span><span class="nv">base</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">ssl</span><span class="o">/</span><span class="nv">private</span>
+
+    # <span class="nv">Default</span> <span class="nv">ciphers</span> <span class="nv">to</span> <span class="nv">use</span> <span class="nv">on</span> <span class="nv">SSL</span><span class="o">-</span><span class="nv">enabled</span> <span class="nv">listening</span> <span class="nv">sockets</span>.
+    # <span class="k">For</span> <span class="nv">more</span> <span class="nv">information</span>, <span class="nv">see</span> <span class="nv">ciphers</span><span class="ss">(</span><span class="mi">1</span><span class="nv">SSL</span><span class="ss">)</span>. <span class="nv">This</span> <span class="nv">list</span> <span class="nv">is</span> <span class="nv">from</span>:
+    #  <span class="nv">https</span>:<span class="o">//</span><span class="nv">hynek</span>.<span class="nv">me</span><span class="o">/</span><span class="nv">articles</span><span class="o">/</span><span class="nv">hardening</span><span class="o">-</span><span class="nv">your</span><span class="o">-</span><span class="nv">web</span><span class="o">-</span><span class="nv">servers</span><span class="o">-</span><span class="nv">ssl</span><span class="o">-</span><span class="nv">ciphers</span><span class="o">/</span>
+    # <span class="nv">An</span> <span class="nv">alternative</span> <span class="nv">list</span> <span class="nv">with</span> <span class="nv">additional</span> <span class="nv">directives</span> <span class="nv">can</span> <span class="nv">be</span> <span class="nv">obtained</span> <span class="nv">from</span>
+    #  <span class="nv">https</span>:<span class="o">//</span><span class="nv">mozilla</span>.<span class="nv">github</span>.<span class="nv">io</span><span class="o">/</span><span class="nv">server</span><span class="o">-</span><span class="nv">side</span><span class="o">-</span><span class="nv">tls</span><span class="o">/</span><span class="nv">ssl</span><span class="o">-</span><span class="nv">config</span><span class="o">-</span><span class="nv">generator</span><span class="o">/</span>?<span class="nv">server</span><span class="o">=</span><span class="nv">haproxy</span>
+    <span class="nv">ssl</span><span class="o">-</span><span class="nv">default</span><span class="o">-</span><span class="nv">bind</span><span class="o">-</span><span class="nv">ciphers</span> <span class="nv">ECDH</span><span class="o">+</span><span class="nv">AESGCM</span>:<span class="nv">DH</span><span class="o">+</span><span class="nv">AESGCM</span>:<span class="nv">ECDH</span><span class="o">+</span><span class="nv">AES256</span>:<span class="nv">DH</span><span class="o">+</span><span class="nv">AES256</span>:<span class="nv">ECDH</span><span class="o">+</span><span class="nv">AES128</span>:<span class="nv">DH</span><span class="o">+</span><span class="nv">AES</span>:<span class="nv">RSA</span><span class="o">+</span><span class="nv">AESGCM</span>:<span class="nv">RSA</span><span class="o">+</span><span class="nv">AES</span>:<span class="o">!</span><span class="nv">aNULL</span>:<span class="o">!</span><span class="nv">MD5</span>:<span class="o">!</span><span class="nv">DSS</span>
+    <span class="nv">ssl</span><span class="o">-</span><span class="nv">default</span><span class="o">-</span><span class="nv">bind</span><span class="o">-</span><span class="nv">options</span> <span class="nv">no</span><span class="o">-</span><span class="nv">sslv3</span>
+
+<span class="nv">defaults</span>
+    <span class="nv">log</span> <span class="nv">global</span>
+    <span class="nv">mode</span>    <span class="nv">http</span>
+    <span class="nv">option</span>  <span class="nv">httplog</span>
+    <span class="nv">option</span>  <span class="nv">dontlognull</span>
+        <span class="nb">timeout</span> <span class="k">connect</span> <span class="mi">5000</span>
+        <span class="nb">timeout</span> <span class="nv">client</span>  <span class="mi">50000</span>
+        <span class="nb">timeout</span> <span class="nv">server</span>  <span class="mi">50000</span>
+#   <span class="nv">errorfile</span> <span class="mi">400</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">400</span>.<span class="nv">http</span>
+#   <span class="nv">errorfile</span> <span class="mi">403</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">403</span>.<span class="nv">http</span>
+#   <span class="nv">errorfile</span> <span class="mi">408</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">408</span>.<span class="nv">http</span>
+#   <span class="nv">errorfile</span> <span class="mi">500</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">500</span>.<span class="nv">http</span>
+#   <span class="nv">errorfile</span> <span class="mi">502</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">502</span>.<span class="nv">http</span>
+#   <span class="nv">errorfile</span> <span class="mi">503</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">503</span>.<span class="nv">http</span>
+#   <span class="nv">errorfile</span> <span class="mi">504</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">haproxy</span><span class="o">/</span><span class="nv">errors</span><span class="o">/</span><span class="mi">504</span>.<span class="nv">http</span>
+
+<span class="nv">frontend</span> <span class="nv">http</span><span class="o">-</span><span class="nv">in</span>
+    <span class="nv">bind</span> <span class="o">*</span>:<span class="mi">80</span>
+      <span class="nv">default_backend</span> <span class="nv">mybackend</span>
+
+      <span class="nv">backend</span> <span class="nv">mybackend</span>
+      <span class="nv">balance</span> <span class="nv">roundrobin</span>
+#     <span class="nv">option</span> <span class="nv">forceclose</span>
+#      <span class="nv">option</span> <span class="nv">tcp</span><span class="o">-</span><span class="nv">check</span>
+      <span class="nv">option</span> <span class="nv">httpchk</span> <span class="nv">GET</span> <span class="o">/</span>
+      <span class="nb">timeout</span> <span class="nv">check</span> <span class="mi">1</span><span class="nv">s</span>
+      <span class="nv">default</span><span class="o">-</span><span class="nv">server</span> <span class="nv">inter</span> <span class="mi">1</span><span class="nv">s</span> <span class="nv">fall</span> <span class="mi">1</span> <span class="nv">rise</span> <span class="mi">1</span>
+      <span class="nv">server</span> <span class="nv">srv1</span> <span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">101</span>:<span class="mi">80</span> <span class="nv">check</span>
+      <span class="nv">server</span> <span class="nv">srv2</span> <span class="mi">10</span>.<span class="mi">0</span>.<span class="mi">3</span>.<span class="mi">102</span>:<span class="mi">80</span> <span class="nv">check</span>
+</pre></div>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

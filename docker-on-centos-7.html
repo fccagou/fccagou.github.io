@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>Docker on CentOS 7</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="./category/editors.html">Editors</a></li>
+                    <li class="active"><a href="./category/it.html">IT</a></li>
+                    <li><a href="./category/rhel8.html">rhel8</a></li>
+                    <li><a href="./category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./docker-on-centos-7.html" rel="bookmark"
+           title="Permalink to Docker on CentOS 7">Docker on CentOS 7</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-09-23T00:49:00+02:00">
+                Published: dim. 23 septembre 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="./category/it.html">IT</a>.</p>
+<p>tags: <a href="./tag/linux.html">Linux</a> <a href="./tag/virtualization.html">Virtualization</a> <a href="./tag/container.html">Container</a> <a href="./tag/centos.html">CentOS</a> </p>
+</footer><!-- /.post-info -->      <h1>Installation</h1>
+<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">docker</span>
+<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span>
+<span class="n">systemctl</span> <span class="k">start</span> <span class="n">docker</span>
+</pre></div>
+
+
+<h1>Configuration</h1>
+<p>Autorisation d'un utilisateur lambda</p>
+<div class="highlight"><pre><span></span><span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="n">docker</span> <span class="n">francois</span>
+</pre></div>
+
+
+<h1>Utilisation</h1>
+<p>Liste des images</p>
+<div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">images</span>
+</pre></div>
+
+
+<h1>Créer sa propre image de base</h1>
+<div class="highlight"><pre><span></span><span class="n">curl</span> <span class="c1">--insecure -O https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-yum.sh</span>
+</pre></div>
+
+
+<p>Apport de modifications.</p>
+<h1>Exemple d'utilisation de docker</h1>
+<div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="c1">--rm -i -t --name test -w /tmp -v /home/depots/ISO:/ISO --privileged=true -e TOTO=TOTO centos-bare:6.6  ls -al /ISO</span>
+</pre></div>
+
+
+<p>Si on ne veut pas mettre de privilège, il faut mettre à jour selinux :</p>
+<div class="highlight"><pre><span></span><span class="n">setenforce</span> <span class="n">Permissive</span>
+</pre></div>
+
+
+<p>ou</p>
+<div class="highlight"><pre><span></span><span class="n">chcon</span> <span class="o">-</span><span class="n">Rt</span> <span class="n">svirt_sandbox_file_t</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">volume</span>
+</pre></div>
+
+
+<h1>Liens externes</h1>
+<p>https://docs.docker.com/get-started/part2/#conclusion-of-part-two</p>
+<div class="highlight"><pre><span></span><span class="nv">docker</span> <span class="nv">build</span> <span class="o">-</span><span class="nv">t</span> <span class="nv">friendlyhello</span> .  # <span class="nv">Create</span> <span class="nv">image</span> <span class="nv">using</span> <span class="nv">this</span> <span class="nv">directory</span><span class="s1">&#39;</span><span class="s">s Dockerfile</span>
+<span class="nv">docker</span> <span class="nv">run</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">4000</span>:<span class="mi">80</span> <span class="nv">friendlyhello</span>  # <span class="nv">Run</span> <span class="s2">&quot;</span><span class="s">friendlyname</span><span class="s2">&quot;</span> <span class="nv">mapping</span> <span class="nv">port</span> <span class="mi">4000</span> <span class="nv">to</span> <span class="mi">80</span>
+<span class="nv">docker</span> <span class="nv">run</span> <span class="o">-</span><span class="nv">d</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">4000</span>:<span class="mi">80</span> <span class="nv">friendlyhello</span>         # <span class="nv">Same</span> <span class="nv">thing</span>, <span class="nv">but</span> <span class="nv">in</span> <span class="nv">detached</span> <span class="nv">mode</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">ls</span>                                # <span class="nv">List</span> <span class="nv">all</span> <span class="nv">running</span> <span class="nv">containers</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span>             # <span class="nv">List</span> <span class="nv">all</span> <span class="nv">containers</span>, <span class="nv">even</span> <span class="nv">those</span> <span class="nv">not</span> <span class="nv">running</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">stop</span> <span class="o">&lt;</span><span class="nv">hash</span><span class="o">&gt;</span>           # <span class="nv">Gracefully</span> <span class="nv">stop</span> <span class="nv">the</span> <span class="nv">specified</span> <span class="nv">container</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">kill</span> <span class="o">&lt;</span><span class="nv">hash</span><span class="o">&gt;</span>         # <span class="nv">Force</span> <span class="nv">shutdown</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">specified</span> <span class="nv">container</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">rm</span> <span class="o">&lt;</span><span class="nv">hash</span><span class="o">&gt;</span>        # <span class="nv">Remove</span> <span class="nv">specified</span> <span class="nv">container</span> <span class="nv">from</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">container</span> <span class="nv">rm</span> $<span class="ss">(</span><span class="nv">docker</span> <span class="nv">container</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span> <span class="o">-</span><span class="nv">q</span><span class="ss">)</span>         # <span class="nv">Remove</span> <span class="nv">all</span> <span class="nv">containers</span>
+<span class="nv">docker</span> <span class="nv">image</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span>                             # <span class="nv">List</span> <span class="nv">all</span> <span class="nv">images</span> <span class="nv">on</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">image</span> <span class="nv">rm</span> <span class="o">&lt;</span><span class="nv">image</span> <span class="nv">id</span><span class="o">&gt;</span>            # <span class="nv">Remove</span> <span class="nv">specified</span> <span class="nv">image</span> <span class="nv">from</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">image</span> <span class="nv">rm</span> $<span class="ss">(</span><span class="nv">docker</span> <span class="nv">image</span> <span class="nv">ls</span> <span class="o">-</span><span class="nv">a</span> <span class="o">-</span><span class="nv">q</span><span class="ss">)</span>   # <span class="nv">Remove</span> <span class="nv">all</span> <span class="nv">images</span> <span class="nv">from</span> <span class="nv">this</span> <span class="nv">machine</span>
+<span class="nv">docker</span> <span class="nv">login</span>             # <span class="nv">Log</span> <span class="nv">in</span> <span class="nv">this</span> <span class="nv">CLI</span> <span class="nv">session</span> <span class="nv">using</span> <span class="nv">your</span> <span class="nv">Docker</span> <span class="nv">credentials</span>
+<span class="nv">docker</span> <span class="nv">tag</span> <span class="o">&lt;</span><span class="nv">image</span><span class="o">&gt;</span> <span class="nv">username</span><span class="o">/</span><span class="nv">repository</span>:<span class="nv">tag</span>  # <span class="nv">Tag</span> <span class="o">&lt;</span><span class="nv">image</span><span class="o">&gt;</span> <span class="k">for</span> <span class="nv">upload</span> <span class="nv">to</span> <span class="nv">registry</span>
+<span class="nv">docker</span> <span class="nv">push</span> <span class="nv">username</span><span class="o">/</span><span class="nv">repository</span>:<span class="nv">tag</span>            # <span class="nv">Upload</span> <span class="nv">tagged</span> <span class="nv">image</span> <span class="nv">to</span> <span class="nv">registry</span>
+<span class="nv">docker</span> <span class="nv">run</span> <span class="nv">username</span><span class="o">/</span><span class="nv">repository</span>:<span class="nv">tag</span>                   # <span class="nv">Run</span> <span class="nv">image</span> <span class="nv">from</span> <span class="nv">a</span> <span class="nv">registry</span>
+</pre></div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

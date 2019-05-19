@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>Custom boot</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="./category/editors.html">Editors</a></li>
+                    <li class="active"><a href="./category/it.html">IT</a></li>
+                    <li><a href="./category/rhel8.html">rhel8</a></li>
+                    <li><a href="./category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./custom-boot.html" rel="bookmark"
+           title="Permalink to Custom boot">Custom boot</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2019-01-29T22:33:00+01:00">
+                Published: mar. 29 janvier 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="./category/it.html">IT</a>.</p>
+<p>tags: <a href="./tag/linux.html">Linux</a> <a href="./tag/custom.html">Custom</a> <a href="./tag/boot.html">boot</a> <a href="./tag/grub.html">grub</a> <a href="./tag/plymouth.html">plymouth</a> </p>
+</footer><!-- /.post-info -->      <h2>Pour changer l'image sur le menu grub</h2>
+<p>Choisir une image et remplacer /boot/grub2/splatch.png</p>
+<p>Modifier /etc/default/grub</p>
+<div class="highlight"><pre><span></span>   <span class="n">GRUB_TIMEOUT</span><span class="o">=</span><span class="mi">5</span>
+   <span class="n">GRUB_DISTRIBUTOR</span><span class="o">=</span><span class="ss">&quot;$(sed &#39;s, release .*$,,g&#39; /etc/system-release)&quot;</span>
+   <span class="n">GRUB_DEFAULT</span><span class="o">=</span><span class="n">saved</span>
+   <span class="n">GRUB_DISABLE_SUBMENU</span><span class="o">=</span><span class="k">true</span>
+<span class="o">-&gt;</span> <span class="o">#</span><span class="n">GRUB_TERMINAL_OUTPUT</span><span class="o">=</span><span class="ss">&quot;console&quot;</span>
+   <span class="n">GRUB_CMDLINE_LINUX</span><span class="o">=</span><span class="ss">&quot;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet&quot;</span>
+   <span class="n">GRUB_DISABLE_RECOVERY</span><span class="o">=</span><span class="ss">&quot;true&quot;</span>
+<span class="o">-&gt;</span> <span class="n">GRUB_BACKGROUND</span><span class="o">=</span><span class="ss">&quot;/boot/grub2/splash.png&quot;</span>
+</pre></div>
+
+
+<p>Regenérer le grub</p>
+<div class="highlight"><pre><span></span><span class="n">grub2</span><span class="o">-</span><span class="n">mkconfig</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">grub2</span><span class="o">/</span><span class="n">grub</span><span class="p">.</span><span class="n">cfg</span>
+</pre></div>
+
+
+<h2>Pour l'animation plymouth</h2>
+<p>Plymouth utilise les themes situés dans /usr/share/plymouth/themes/</p>
+<p>Pour choisir  le thème par défaut, </p>
+<div class="highlight"><pre><span></span><span class="n">plymouth</span><span class="o">-</span><span class="k">set</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">theme</span> <span class="o">-</span><span class="n">R</span> <span class="o">&lt;</span><span class="n">nom_du_thee</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<p>L'option -r refabrique le initrd immédiatement pour y inclure le thème.</p>
+<p>Plymouth uilise le fichier de configuration /etc/plymouth/plymouth.conf</p>
+<div class="highlight"><pre><span></span><span class="k">[Daemon]</span>
+<span class="na">Theme</span><span class="o">=</span><span class="s">&lt;nom_du_theme&gt;</span>
+</pre></div>
+
+
+<p>TODO: voir si la commande du dessus met à jour ce fichier !!!</p>
+<p>Un thème contient son fichier de desription <nom_du_theme>/<nom_du_theme>.plymouth.</p>
+<div class="highlight"><pre><span></span> <span class="p">[</span><span class="n">Plymouth</span> <span class="n">Theme</span><span class="p">]</span>
+ <span class="n">Name</span><span class="o">=</span><span class="n">UN_TRUC</span>
+ <span class="n">Description</span><span class="o">=</span><span class="n">une</span> <span class="n">doc</span>
+ <span class="n">ModuleName</span><span class="o">=</span><span class="p">(</span><span class="n">script</span><span class="o">|</span><span class="n">base</span><span class="o">|</span><span class="n">charge</span><span class="o">|</span><span class="n">two</span><span class="o">-</span><span class="n">step</span><span class="p">)</span>
+
+ <span class="cp"># La suite de la conf dépend du type de module (ModuleName)</span>
+ <span class="cp"># Dans le cas de script</span>
+
+ <span class="p">[</span><span class="n">script</span><span class="p">]</span>
+ <span class="n">ImageDir</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">plymouth</span><span class="o">/</span><span class="n">themes</span><span class="o">/</span><span class="n">fc</span>
+ <span class="n">ScriptFile</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">plymouth</span><span class="o">/</span><span class="n">themes</span><span class="o">/</span><span class="n">fc</span><span class="o">/</span><span class="n">fc</span><span class="p">.</span><span class="n">script</span>
+</pre></div>
+
+
+<p>Thats' all</p>
+<h2>Voir aussi</h2>
+<ul>
+<li>plymouth-core-libs</li>
+<li>plymouth-theme-charge</li>
+<li>plymouth-system-theme</li>
+<li>plymouth-plugin-two-step</li>
+<li>plymouth-plugin-script</li>
+</ul>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

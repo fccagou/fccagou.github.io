@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>The Cagou's Blog - Cobbler</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../installation-de-cobbler-sur-centos-66.html">Installation de cobbler sur CentOS 6.6</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-11-29T20:59:00+01:00">
+                Published: sam. 29 novembre 2014
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/admin.html">Admin</a> <a href="../tag/cobbler.html">Cobbler</a> <a href="../tag/french.html">French</a> </p>
+</footer><!-- /.post-info --><h1>Introduction</h1>
+<p>Ce texte explique comment installer cobbler sur un système CentOS 6.6.</p>
+<p>La solution est testée sur la plate forme vituelle :</p>
+<ul>
+<li>hôte CentOS 7</li>
+<li>solution de virtualisation: libvirt</li>
+</ul>
+<h1>Préparation de l'hôte</h1>
+<h2>Configuration NFS</h2>
+<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span>
+<span class="n">printf</span> <span class="c1">-- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="n">printf</span> <span class="c1">-- &quot;/home/depots    192.168.122.2(ro,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="n">exportfs</span> <span class="o">-</span><span class="n">r</span>
+</pre></div>
+
+
+<h2>Installation du serveur</h2>
+<ul>
+<li>Création d'une machine virtuelle standard : CentOS 6</li>
+<li>Réseau : NAT le temps de l'installation</li>
+<li>Installation du système: minimal</li>
+</ul>
+<h2>Fixer une @ip pour le serveur</h2>
+<div class="highlight"><pre><span></span>virsh  dumpxml  cobbler | grep &#39;mac address&#39;
+virsh edit default
+
+<span class="nt">&lt;dhcp&gt;</span>
+  ...
+  <span class="nt">&lt;host</span> <span class="na">mac=</span><span class="s">&#39;52:54:00:d6:ea:e3&#39;</span> <span class="na">name=</span><span class="s">&#39;god&#39;</span> <span class="na">ip=</span><span class="s">&#39;192.168.122.2&#39;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/dhcp&gt;</span>
+
+virsh net-destroy default
+virsh net-start default
+</pre></div>
+
+
+<h2>Configuration du serveur</h2>
+<p>Configuration du réseau : DHCP</p>
+<p>Installation de dépot EPEL</p>
+<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">epel</span><span class="o">-</span><span class="n">release</span> <span class="n">facter</span>
+</pre></div>
+
+
+<p>Desactivation de selinux</p>
+<div class="highlight"><pre><span></span><span class="n">setenforce</span> <span class="n">permissive</span>
+<span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/^SELINUX=.*$/SELINUX=permissive/&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sysconfig</span><span class="o">/</span><span class="n">selinux</span>
+<span class="n">NOTE</span><span class="p">:</span> <span class="n">BAD</span> <span class="n">IDEA</span> <span class="n">but</span> <span class="n">the</span> <span class="n">article</span> <span class="n">was</span> <span class="n">written</span> <span class="k">in</span> <span class="mi">2014</span><span class="p">.</span> <span class="n">What</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">up</span> <span class="n">now</span> <span class="o">?</span>
+</pre></div>
+
+
+<h2>Installation de paquets de confort</h2>
+<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">vim</span> <span class="n">man</span> <span class="n">task</span>
+<span class="n">task</span> <span class="n">config</span> <span class="n">locale</span> <span class="n">fr</span><span class="o">-</span><span class="n">FR</span>
+</pre></div>
+
+
+<h1>Installation de cobbler</h1>
+<h2>Installation</h2>
+<p>Installation de cobbler serveur + web</p>
+<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">cobbler</span> <span class="n">cobbler</span><span class="o">-</span><span class="n">web</span> <span class="n">git</span>
+</pre></div>
+
+
+<p>Configuration pour un démarrage au boot</p>
+<div class="highlight"><pre><span></span><span class="n">chkconfig</span> <span class="n">cobbler</span> <span class="k">on</span>
+<span class="n">chkconfig</span> <span class="n">httpd</span> <span class="k">on</span>
+<span class="n">service</span> <span class="n">cobbler</span> <span class="k">start</span>
+<span class="n">service</span> <span class="n">httpd</span> <span class="k">start</span>
+</pre></div>
+
+
+<p>Installation des paquets pour le pxe</p>
+<div class="highlight"><pre><span></span>    <span class="n">yum</span> <span class="n">install</span> <span class="n">syslinux</span><span class="p">.</span><span class="n">x86_64</span>
+</pre></div>
+
+
+<h2>Configuration</h2>
+<p>Serveur kickstart</p>
+<div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="ss">&quot;s/^server:.*/server: $(facter ipaddress)/&quot;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">cobblers</span><span class="o">/</span><span class="n">settings</span>
+</pre></div>
+
+
+<p>Serveur tftp</p>
+<div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="ss">&quot;s/^next_server:.*/next_server: $(facter ipaddress)/&quot;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">cobblers</span><span class="o">/</span><span class="n">settings</span>
+</pre></div>
+
+
+<p>utilisation de git</p>
+<div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/^scm_track_mode/scm_track_mode: &quot;git&quot;/&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">cobblers</span><span class="o">/</span><span class="n">settings</span>
+</pre></div>
+
+
+<p>notes</p>
+<ul>
+<li>faire la configuration des variabbles 'GIT_' pour cobbler</li>
+<li>UTILISER cobbler setting edit --name=foo --value=bar pour faire de la config plutôt que sed !!</li>
+</ul>
+<p>On applique les modifications</p>
+<div class="highlight"><pre><span></span><span class="n">cobbler</span> <span class="n">sync</span>
+</pre></div>
+
+
+<h2>Test de la configuration</h2>
+<div class="highlight"><pre><span></span><span class="n">cobbler</span> <span class="k">check</span>
+</pre></div>
+
+
+<h2>Test Web</h2>
+<p>login/pass: cobbler/cobbler</p>
+<div class="highlight"><pre><span></span><span class="n">firefox</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">122</span><span class="p">.</span><span class="mi">1</span><span class="o">/</span><span class="n">cobbler_web</span>
+</pre></div>
+
+
+<h1>Utilisation montage nfs pour le stockage de cobbler</h1>
+<p>Creation de l'alias datastore pour une utilisation par autofs</p>
+<div class="highlight"><pre><span></span><span class="n">printf</span> <span class="c1">-- &#39;192.168.122.1 datasrore&#39; &gt;&gt; /etc/hosts</span>
+</pre></div>
+
+
+<p>Installation des paquets nécessaires pour autofs</p>
+<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">utils</span> <span class="n">autofs</span>
+<span class="n">service</span> <span class="n">autofs</span> <span class="k">start</span>
+<span class="n">chkconfig</span> <span class="n">autofs</span> <span class="k">on</span>
+</pre></div>
+
+
+<p>Comme la VM serveur n'a pas beaucoup de place, on utilise un montage nfs 
+sur l'hôte pour l'environnement cobbler. Il faut donc déplacer l'éxistant:</p>
+<div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span>
+<span class="n">mv</span> <span class="n">cobbler</span> <span class="n">cobbler_ori</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">sf</span> <span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">datastore</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span> <span class="p">.</span>
+<span class="n">rsync</span> <span class="o">-</span><span class="n">av</span> <span class="n">cobbler_ori</span> <span class="n">cobbler</span>
+</pre></div>
+
+
+<p>.. note::
+   - etudier l'arborescence pour ne pas tout monter
+   - il semble que ce soit ks_mirror qui prend de la place car il contient les distrib.</p>
+<p>Verification</p>
+<div class="highlight"><pre><span></span><span class="n">cobbler</span> <span class="k">check</span>
+</pre></div>
+
+
+<h1>Import dune distribution</h1>
+<p>Montage de l'iso</p>
+<div class="highlight"><pre><span></span><span class="nv">ls</span> <span class="o">-</span><span class="nv">al</span> <span class="o">/</span><span class="nv">net</span><span class="o">/</span><span class="nv">datastore</span><span class="o">/</span><span class="nv">home</span><span class="o">/</span><span class="nv">depots</span><span class="o">/</span><span class="nv">ISO</span>
+<span class="nv">mount</span> <span class="o">-</span><span class="nv">t</span> <span class="nv">iso9660</span> <span class="o">-</span><span class="nv">o</span> <span class="k">loop</span>,<span class="nv">ro</span> <span class="o">/</span><span class="nv">net</span><span class="o">/</span><span class="nv">datastore</span><span class="o">/</span><span class="nv">home</span><span class="o">/</span><span class="nv">depots</span><span class="o">/</span><span class="nv">ISO</span><span class="o">/</span><span class="nv">CentOS</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="nv">x86_64</span>.<span class="nv">iso</span> <span class="o">/</span><span class="nv">mnt</span>
+</pre></div>
+
+
+<p>Import d'une ditribution</p>
+<div class="highlight"><pre><span></span><span class="c1"># cobbler import --name=CentOS7 --arch=x86_64 --path=/mnt</span>
+<span class="n">task</span> <span class="n">started</span><span class="p">:</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">29</span><span class="n">_004454_import</span>
+<span class="n">task</span> <span class="n">started</span> <span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">Media</span> <span class="n">import</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Sat</span> <span class="n">Nov</span> <span class="mi">29</span> <span class="mo">00</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">54</span> <span class="mi">2014</span><span class="p">)</span>
+<span class="n">Found</span> <span class="n">a</span> <span class="n">candidate</span> <span class="n">signature</span><span class="p">:</span> <span class="n">breed</span><span class="o">=</span><span class="n">redhat</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">rhel6</span>
+<span class="n">Found</span> <span class="n">a</span> <span class="n">candidate</span> <span class="n">signature</span><span class="p">:</span> <span class="n">breed</span><span class="o">=</span><span class="n">redhat</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">rhel7</span>
+<span class="n">Found</span> <span class="n">a</span> <span class="n">matching</span> <span class="n">signature</span><span class="p">:</span> <span class="n">breed</span><span class="o">=</span><span class="n">redhat</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">rhel7</span>
+<span class="n">Adding</span> <span class="n">distros</span> <span class="kn">from</span> <span class="nn">path</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span><span class="p">:</span>
+<span class="n">creating</span> <span class="n">new</span> <span class="n">distro</span><span class="p">:</span> <span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span>
+<span class="n">trying</span> <span class="n">symlink</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span> <span class="o">-&gt;</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">links</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span>
+<span class="n">creating</span> <span class="n">new</span> <span class="n">profile</span><span class="p">:</span> <span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span>
+<span class="n">associating</span> <span class="n">repos</span>
+<span class="n">checking</span> <span class="k">for</span> <span class="n">rsync</span> <span class="n">repo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">checking</span> <span class="k">for</span> <span class="n">rhn</span> <span class="n">repo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">checking</span> <span class="k">for</span> <span class="n">yum</span> <span class="n">repo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">starting</span> <span class="n">descent</span> <span class="n">into</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span> <span class="k">for</span> <span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span>
+<span class="n">processing</span> <span class="n">repo</span> <span class="n">at</span> <span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span>
+<span class="n">need</span> <span class="n">to</span> <span class="n">process</span> <span class="n">repo</span><span class="o">/</span><span class="n">comps</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span>
+<span class="n">looking</span> <span class="k">for</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span><span class="o">/</span><span class="n">repodata</span><span class="o">/*</span><span class="n">comps</span><span class="o">*.</span><span class="n">xml</span>
+<span class="n">Keeping</span> <span class="n">repodata</span> <span class="k">as</span><span class="o">-</span><span class="ow">is</span> <span class="p">:</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">cobbler</span><span class="o">/</span><span class="n">ks_mirror</span><span class="o">/</span><span class="n">CentOS7</span><span class="o">-</span><span class="n">x86_64</span><span class="o">/</span><span class="n">repodata</span>
+<span class="o">***</span> <span class="n">TASK</span> <span class="n">COMPLETE</span> <span class="o">***</span>
+</pre></div>
+
+
+<p>Cette action crée une nouvelle distribution et un profile par défaut ayant
+le même nom.</p>
+<h1>TODO</h1>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

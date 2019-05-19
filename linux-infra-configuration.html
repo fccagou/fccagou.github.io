@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>Linux infra configuration</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="./category/editors.html">Editors</a></li>
+                    <li class="active"><a href="./category/it.html">IT</a></li>
+                    <li><a href="./category/rhel8.html">rhel8</a></li>
+                    <li><a href="./category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./linux-infra-configuration.html" rel="bookmark"
+           title="Permalink to Linux infra configuration">Linux infra configuration</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2017-12-11T18:31:00+01:00">
+                Published: lun. 11 décembre 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="./author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="./category/it.html">IT</a>.</p>
+<p>tags: <a href="./tag/linux.html">Linux</a> </p>
+</footer><!-- /.post-info -->      <h1>Description</h1>
+<p>This document show a way to configure Linux services to manage Linux hosts from
+deployment to usage.</p>
+<p>The configurations have been tested on CentOS &gt;=6 system but can be adapted to
+others GNU/Linux distributions.</p>
+<h1>Name resolution service</h1>
+<p>Bind uses named.conf as default configuration file. On CentOS, the file is in
+/etc directory, on debian, it's in /etc/bind directory.</p>
+<p>While debian use include feature to separate the configuration, CentOS use
+only named.conf.  But You can use include feature to.</p>
+<p>The next sample listen on localhost and public IP the define a VIEW to restrict
+access.</p>
+<div class="highlight"><pre><span></span><span class="o">//</span>
+<span class="o">//</span> <span class="nv">Fichier</span> <span class="nv">de</span> <span class="nv">configuration</span> <span class="nv">DNS</span>
+<span class="o">//</span>
+<span class="nv">options</span> {
+    <span class="nv">check</span><span class="o">-</span><span class="nv">names</span> <span class="nv">master</span> <span class="nv">ignore</span><span class="c1">;</span>
+    <span class="nv">directory</span> <span class="s2">&quot;</span><span class="s">/somewhere/local/named</span><span class="s2">&quot;</span><span class="c1">;</span>
+    <span class="nv">dump</span><span class="o">-</span><span class="nv">file</span> <span class="s2">&quot;</span><span class="s">/somewhere/local/named/data/cache_dump.db</span><span class="s2">&quot;</span><span class="c1">;</span>
+    <span class="nv">statistics</span><span class="o">-</span><span class="nv">file</span> <span class="s2">&quot;</span><span class="s">/somewhere/local/named/data/named_stats.txt</span><span class="s2">&quot;</span><span class="c1">;</span>
+
+    <span class="nv">version</span> <span class="s2">&quot;</span><span class="s">not currently available</span><span class="s2">&quot;</span><span class="c1">;</span>
+    <span class="nv">listen</span><span class="o">-</span><span class="nv">on</span><span class="o">-</span><span class="nv">v6</span> { <span class="nv">none</span><span class="c1">; };</span>
+    <span class="nv">notify</span> <span class="nv">explicit</span><span class="c1">;</span>
+
+    <span class="o">//</span> <span class="nv">forward</span> <span class="nv">only</span> <span class="nv">oblige</span> <span class="nv">a</span> <span class="nv">interroger</span> <span class="nv">les</span> <span class="nv">serveurs</span> <span class="nv">forwarders</span>
+    <span class="o">//</span> <span class="nv">forward</span> <span class="nv">only</span><span class="c1">;</span>
+
+    <span class="nv">listen</span><span class="o">-</span><span class="nv">on</span> { <span class="mi">127</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">1</span><span class="c1">; LOCAL_IP; };</span>
+
+}<span class="c1">;</span>
+
+<span class="k">include</span> <span class="s2">&quot;</span><span class="s">/etc/rndc.key</span><span class="s2">&quot;</span><span class="c1">;</span>
+<span class="nv">controls</span> {
+    <span class="nv">inet</span> <span class="mi">127</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">1</span> <span class="nv">port</span> <span class="mi">953</span>
+    <span class="nv">allow</span> { <span class="mi">127</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">1</span><span class="c1">; } keys { &quot;rndc-key&quot;; };</span>
+}<span class="c1">;</span>
+<span class="o">//</span> <span class="nv">Toutes</span> <span class="nv">les</span> <span class="nv">categories</span> <span class="nv">sont</span> <span class="nv">prevues</span> <span class="nv">mais</span> <span class="nv">trop</span> <span class="nv">verbeux</span> <span class="nv">si</span> <span class="nv">on</span> <span class="nv">logge</span> <span class="nv">tout</span>
+<span class="o">//</span> <span class="nv">Decommenter</span> <span class="nv">uniquement</span> <span class="nv">les</span> <span class="nv">categories</span> <span class="nv">souhaitees</span> <span class="s2">&quot;</span><span class="s">a la demande</span><span class="s2">&quot;</span>
+
+<span class="nv">logging</span> {
+    <span class="nv">channel</span> <span class="nv">vers_fichier</span> {
+        <span class="nv">file</span> <span class="s2">&quot;</span><span class="s">/somewhere/local/named/log/named.log</span><span class="s2">&quot;</span> <span class="nv">versions</span> <span class="mi">50</span> <span class="nv">size</span> <span class="mi">100</span><span class="nv">m</span><span class="c1">;</span>
+        <span class="nv">severity</span> <span class="nv">dynamic</span><span class="c1">;</span>
+        <span class="nv">print</span><span class="o">-</span><span class="nv">category</span> <span class="nv">yes</span><span class="c1">;</span>
+        <span class="nv">print</span><span class="o">-</span><span class="nv">severity</span> <span class="nv">yes</span><span class="c1">;</span>
+        <span class="nv">print</span><span class="o">-</span><span class="nv">time</span> <span class="nv">yes</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+    <span class="nv">channel</span> <span class="nv">vers_syslog</span> {
+        <span class="nv">syslog</span> <span class="nv">local2</span><span class="c1">;</span>
+        <span class="nv">severity</span> <span class="nv">info</span><span class="c1">;</span>
+        <span class="nv">print</span><span class="o">-</span><span class="nv">category</span> <span class="nv">yes</span><span class="c1">;</span>
+        <span class="nv">print</span><span class="o">-</span><span class="nv">severity</span> <span class="nv">yes</span><span class="c1">;</span>
+        <span class="nv">print</span><span class="o">-</span><span class="nv">time</span> <span class="nv">yes</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+
+
+    <span class="o">//</span><span class="nv">category</span> <span class="nv">panic</span> { <span class="nv">vers_syslog</span><span class="c1">; vers_fichier; };</span>
+    <span class="o">//</span><span class="nv">category</span> <span class="nv">packet</span> { <span class="nv">vers_fichier</span><span class="c1">; };</span>
+    <span class="o">//</span><span class="nv">category</span> <span class="nv">eventlib</span> { <span class="nv">vers_fichier</span><span class="c1">; };</span>
+
+    <span class="nv">category</span> <span class="nv">default</span>        { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">general</span>        { <span class="nv">vers_syslog</span><span class="c1">; vers_fichier; };</span>
+    <span class="nv">category</span> <span class="nv">client</span>         { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">config</span>         { <span class="nv">vers_syslog</span><span class="c1">; vers_fichier; };</span>
+    <span class="nv">category</span> <span class="nv">database</span>       { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">dnssec</span>         { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">lame</span><span class="o">-</span><span class="nv">servers</span>   { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">network</span>        { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">notify</span>         { <span class="nv">vers_syslog</span><span class="c1">; vers_fichier; };</span>
+    <span class="nv">category</span> <span class="nv">queries</span>        { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">resolver</span>       { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">security</span>       { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">update</span>         { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">unmatched</span>      { <span class="nv">vers_syslog</span><span class="c1">; vers_fichier; };</span>
+    <span class="nv">category</span> <span class="nv">xfer</span><span class="o">-</span><span class="nv">in</span>        { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+    <span class="nv">category</span> <span class="nv">xfer</span><span class="o">-</span><span class="nv">out</span>       { <span class="nv">vers_syslog</span><span class="c1">; };</span>
+}<span class="c1">;</span>
+
+<span class="o">//</span> <span class="nv">Definition</span> <span class="nv">des</span> <span class="nv">acls</span> <span class="nv">pour</span> <span class="nv">les</span> <span class="nv">vues</span>
+<span class="nv">acl</span> <span class="s2">&quot;</span><span class="s">MYNETWORK</span><span class="s2">&quot;</span> {
+    <span class="mi">127</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">1</span><span class="o">/</span><span class="mi">32</span><span class="c1">;</span>
+    #<span class="nv">CIDR</span><span class="o">/</span>
+}<span class="c1">;</span>
+
+<span class="nv">view</span> <span class="s2">&quot;</span><span class="s">MYNETWORK</span><span class="s2">&quot;</span> {
+    <span class="nv">match</span><span class="o">-</span><span class="nv">clients</span> { <span class="s2">&quot;</span><span class="s">MYNETWORK</span><span class="s2">&quot;</span><span class="c1">; };</span>
+
+    <span class="o">//</span><span class="nv">Section</span> <span class="nv">globale</span> <span class="nv">pour</span> <span class="nv">les</span> <span class="nv">vues</span>
+    <span class="nv">transfer</span><span class="o">-</span><span class="nv">source</span> <span class="nv">LOCAL_IP</span><span class="c1">; </span>
+    <span class="nv">query</span><span class="o">-</span><span class="nv">source</span> <span class="nv">address</span> <span class="nv">LOCAL_IP</span><span class="c1">;</span>
+    <span class="nv">notify</span><span class="o">-</span><span class="nv">source</span> <span class="nv">LOCAL_IP</span><span class="c1">;</span>
+
+    <span class="nv">also</span><span class="o">-</span><span class="nv">notify</span>  { <span class="nv">BACKUP_SRV_IP</span><span class="c1">; }</span>
+    <span class="nv">allow</span><span class="o">-</span><span class="nv">transfer</span>  { <span class="nv">BACKUP_SRV_IP</span><span class="c1">; }</span>
+    <span class="nv">allow</span><span class="o">-</span><span class="nv">query</span> {
+        <span class="mi">127</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">1</span><span class="c1">;</span>
+        #<span class="nv">CIDR</span><span class="o">/</span>
+    }<span class="c1">;</span>
+    <span class="nv">forwarders</span>  {
+        #<span class="nv">FORWARDER_IP1</span><span class="c1">;</span>
+        #<span class="nv">FORWARDER_IP2</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+
+    <span class="nv">zone</span> <span class="s2">&quot;</span><span class="s">.</span><span class="s2">&quot;</span>    <span class="nv">IN</span> {
+        <span class="nv">type</span> <span class="nv">hint</span><span class="c1">;</span>
+        <span class="nv">file</span> <span class="s2">&quot;</span><span class="s">primary/dummy-block</span><span class="s2">&quot;</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+    <span class="nv">zone</span> <span class="s2">&quot;</span><span class="s">0.0.127.in-addr.arpa</span><span class="s2">&quot;</span> <span class="nv">IN</span> {
+        <span class="nv">type</span> <span class="nv">master</span><span class="c1">;</span>
+        <span class="nv">file</span> <span class="s2">&quot;</span><span class="s">primary/named.0.0.127</span><span class="s2">&quot;</span><span class="c1">;</span>
+        <span class="nv">allow</span><span class="o">-</span><span class="nv">transfer</span> { <span class="nv">none</span><span class="c1">; };</span>
+    }<span class="c1">;</span>
+
+    <span class="nv">zone</span> <span class="s2">&quot;</span><span class="s">IP.in-addr.arpa</span><span class="s2">&quot;</span> <span class="nv">IN</span> {
+        <span class="nv">type</span> <span class="nv">master</span><span class="c1">;</span>
+        <span class="nv">file</span> <span class="s2">&quot;</span><span class="s">primary/named.IP</span><span class="s2">&quot;</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+
+    <span class="nv">zone</span> <span class="s2">&quot;</span><span class="s">domain.name</span><span class="s2">&quot;</span> <span class="nv">IN</span> {
+        <span class="nv">type</span> <span class="nv">master</span><span class="c1">;</span>
+        <span class="nv">file</span> <span class="s2">&quot;</span><span class="s">primary/named.domain.name</span><span class="s2">&quot;</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+
+}<span class="c1">;</span>
+</pre></div>
+
+
+<h1>DHCP and BOOTP service</h1>
+<p>The service use isc-dcp server. The next sample allow Network deployment and
+DHCP service only for know hosts. For security reason, the dynamic dns update
+eis not set. The omapi-port is defined to allow system query tools.</p>
+<h2>dhcp server configurattion</h2>
+<p>TODO: add ipxe conofiguration</p>
+<div class="highlight"><pre><span></span><span class="nv">allow</span> <span class="nv">bootp</span><span class="c1">;</span>
+<span class="nv">allow</span> <span class="nv">booting</span><span class="c1">;</span>
+# <span class="nv">boot</span><span class="o">-</span><span class="nv">unknown</span><span class="o">-</span><span class="nv">clients</span>  <span class="nv">false</span><span class="c1">;</span>
+# <span class="nv">ddns</span><span class="o">-</span><span class="nv">update</span><span class="o">-</span><span class="nv">style</span>     <span class="nv">ad</span><span class="o">-</span><span class="nv">hoc</span><span class="c1">;</span>
+<span class="nv">ddns</span><span class="o">-</span><span class="nv">update</span><span class="o">-</span><span class="nv">style</span>       <span class="nv">none</span><span class="c1">;</span>
+<span class="nv">authoritative</span><span class="c1">;</span>
+
+<span class="nv">default</span><span class="o">-</span><span class="nv">lease</span><span class="o">-</span><span class="nv">time</span>  <span class="mi">259200</span><span class="c1">;</span>
+<span class="nv">deny</span>            <span class="nv">client</span><span class="o">-</span><span class="nv">updates</span><span class="c1">;</span>
+<span class="nv">deny</span>            <span class="nv">declines</span><span class="c1">;</span>
+<span class="nv">deny</span>            <span class="nv">duplicates</span><span class="c1">;</span>
+#<span class="nv">deny</span>           <span class="nv">leasequery</span><span class="c1">;</span>
+<span class="nv">filename</span>        <span class="s2">&quot;</span><span class="s">linux-install/pxelinux.0</span><span class="s2">&quot;</span><span class="c1">;</span>
+
+<span class="nv">ignore</span>          <span class="nv">unknown</span><span class="o">-</span><span class="nv">clients</span><span class="c1">;</span>
+
+# <span class="nv">boot</span><span class="o">-</span><span class="nv">unknown</span><span class="o">-</span><span class="nv">clients</span>      <span class="nv">false</span><span class="c1">;</span>
+
+# <span class="nv">max</span><span class="o">-</span><span class="nv">lease</span><span class="o">-</span><span class="nv">time</span>        <span class="mi">43200</span><span class="c1">;  # CentOS default</span>
+<span class="nv">max</span><span class="o">-</span><span class="nv">lease</span><span class="o">-</span><span class="nv">time</span> <span class="mi">259200</span><span class="c1">;</span>
+<span class="nv">omapi</span><span class="o">-</span><span class="nv">port</span>      <span class="mi">7911</span><span class="c1">;</span>
+<span class="nv">one</span><span class="o">-</span><span class="nv">lease</span><span class="o">-</span><span class="nv">per</span><span class="o">-</span><span class="nv">client</span>    <span class="nv">true</span><span class="c1">;</span>
+
+
+<span class="nv">option</span> <span class="nv">space</span> <span class="nv">PXE</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">ip</span>     <span class="nv">code</span> <span class="mi">1</span> <span class="o">=</span> <span class="nv">ip</span><span class="o">-</span><span class="nv">address</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">cport</span>      <span class="nv">code</span> <span class="mi">2</span> <span class="o">=</span> <span class="nv">unsigned</span> <span class="nv">integer</span> <span class="mi">16</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">sport</span>      <span class="nv">code</span> <span class="mi">3</span> <span class="o">=</span> <span class="nv">unsigned</span> <span class="nv">integer</span> <span class="mi">16</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">tmout</span>      <span class="nv">code</span> <span class="mi">4</span> <span class="o">=</span> <span class="nv">unsigned</span> <span class="nv">integer</span> <span class="mi">8</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">delay</span>      <span class="nv">code</span> <span class="mi">5</span> <span class="o">=</span> <span class="nv">unsigned</span> <span class="nv">integer</span> <span class="mi">8</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">discovery</span><span class="o">-</span><span class="nv">control</span>    <span class="nv">code</span> <span class="mi">6</span> <span class="o">=</span> <span class="nv">unsigned</span> <span class="nv">integer</span> <span class="mi">8</span><span class="c1">;</span>
+<span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">discovery</span><span class="o">-</span><span class="nv">mcast</span><span class="o">-</span><span class="nv">addr</span> <span class="nv">code</span> <span class="mi">7</span> <span class="o">=</span> <span class="nv">ip</span><span class="o">-</span><span class="nv">address</span><span class="c1">;</span>
+
+<span class="nv">class</span> <span class="s2">&quot;</span><span class="s">pxeclients</span><span class="s2">&quot;</span> {
+
+    # <span class="nv">match</span> <span class="k">if</span> <span class="nv">substring</span> <span class="ss">(</span><span class="nv">option</span> <span class="nv">vendor</span><span class="o">-</span><span class="nv">class</span><span class="o">-</span><span class="nv">identifier</span>,<span class="mi">0</span>,<span class="mi">9</span><span class="ss">)</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">PXEClient</span><span class="s2">&quot;</span><span class="c1">;</span>
+    # <span class="nv">Ajout</span> <span class="nv">de</span> <span class="nv">Etherboot</span> <span class="nv">pour</span> <span class="nv">les</span> <span class="nv">boot</span> <span class="nv">de</span> <span class="nv">machines</span> <span class="nv">virtuelles</span> <span class="nv">libvirt</span>.
+    <span class="nv">match</span> <span class="k">if</span> <span class="nv">substring</span> <span class="ss">(</span><span class="nv">option</span> <span class="nv">vendor</span><span class="o">-</span><span class="nv">class</span><span class="o">-</span><span class="nv">identifier</span>,<span class="mi">0</span>,<span class="mi">9</span><span class="ss">)</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">PXEClient</span><span class="s2">&quot;</span> <span class="nv">or</span> <span class="nv">substring</span> <span class="ss">(</span><span class="nv">option</span> <span class="nv">vendor</span><span class="o">-</span><span class="nv">class</span><span class="o">-</span><span class="nv">identifier</span>,<span class="mi">0</span>,<span class="mi">9</span><span class="ss">)</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">Etherboot</span><span class="s2">&quot;</span><span class="c1">;</span>
+
+    #<span class="nv">option</span> <span class="nv">vendor</span><span class="o">-</span><span class="nv">class</span><span class="o">-</span><span class="nv">identifier</span> <span class="s2">&quot;</span><span class="s">PXEClient</span><span class="s2">&quot;</span><span class="c1">;</span>
+    <span class="nv">vendor</span><span class="o">-</span><span class="nv">option</span><span class="o">-</span><span class="nv">space</span> <span class="nv">PXE</span><span class="c1">;</span>
+    <span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">ip</span> <span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">0</span>.<span class="mi">0</span><span class="c1">;</span>
+    <span class="k">next</span><span class="o">-</span><span class="nv">server</span> <span class="nv">TFTP_SERVER_IP</span><span class="c1">;</span>
+}
+
+
+<span class="nv">group</span> <span class="nv">LINUX</span> {
+    <span class="k">next</span><span class="o">-</span><span class="nv">server</span> <span class="nv">instsrv</span><span class="c1">;</span>
+    <span class="nv">server</span><span class="o">-</span><span class="nv">name</span> <span class="s2">&quot;</span><span class="s">TFTP_SERVER_IP</span><span class="s2">&quot;</span><span class="c1">;</span>
+    <span class="nv">filename</span>    <span class="s2">&quot;</span><span class="s">linux-install/pxelinux.0</span><span class="s2">&quot;</span><span class="c1">;</span>
+}
+
+<span class="nv">subnet</span> <span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">0</span>.<span class="mi">0</span> <span class="nv">netmask</span> <span class="mi">255</span>.<span class="mi">255</span>.<span class="mi">255</span>.<span class="mi">0</span> {
+        <span class="nv">ignore</span>                          <span class="nv">unknown</span><span class="o">-</span><span class="nv">clients</span><span class="c1">;</span>
+        <span class="nv">option</span> <span class="nv">routers</span>                  <span class="nv">DEFAULT_GW_IP</span><span class="c1">;</span>
+        <span class="nv">option</span> <span class="nv">domain</span><span class="o">-</span><span class="nv">name</span>              <span class="s2">&quot;</span><span class="s">domain.name</span><span class="s2">&quot;</span><span class="c1">;</span>
+        <span class="nv">option</span> <span class="nv">domain</span><span class="o">-</span><span class="nv">name</span><span class="o">-</span><span class="nv">servers</span>      <span class="nv">SERVERNAME_IP1</span> <span class="nv">SERVERNAME_IP2</span><span class="c1">;</span>
+}
+
+<span class="nv">host</span> <span class="nv">_some_host_name_</span> { <span class="nv">hardware</span> <span class="nv">ethernet</span>   <span class="mi">11</span>:<span class="mi">22</span>:<span class="mi">33</span>:<span class="mi">44</span>:<span class="mi">55</span>:<span class="mi">66</span><span class="c1">; fixed-address _host_ip_; group LINUX; }</span>
+</pre></div>
+
+
+<h2>tftp configuration for rhel kickstart net installation</h2>
+<div class="highlight"><pre><span></span><span class="n">PROMPT</span> <span class="mi">0</span>
+<span class="n">timeout</span> <span class="mi">200</span>
+
+<span class="n">SAY</span> <span class="o">============================</span>
+<span class="n">SAY</span> <span class="o">-</span> <span class="p">:</span><span class="k">host</span><span class="p">:</span> <span class="n">_some_host_name_</span>
+<span class="n">SAY</span> <span class="o">-</span> <span class="p">:</span><span class="n">profile</span><span class="p">:</span> <span class="n">puppet</span> <span class="n">profile</span>
+<span class="n">SAY</span> <span class="o">-</span> <span class="p">:</span><span class="n">id</span><span class="p">:</span> <span class="n">_some_ref_</span>
+<span class="n">SAY</span> <span class="o">-</span> <span class="p">:</span><span class="n">mac</span><span class="p">:</span> <span class="n">_host_mac_addr_</span>
+<span class="n">SAY</span> <span class="o">-</span> <span class="p">:</span><span class="k">desc</span><span class="p">:</span> <span class="n">_host_description</span>
+<span class="n">SAY</span> <span class="o">-</span> <span class="p">:</span><span class="nb">date</span><span class="p">:</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">06</span><span class="n">T11</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">40</span><span class="p">.</span><span class="mi">706179</span>
+<span class="n">SAY</span> <span class="o">============================</span>
+
+<span class="k">default</span> <span class="n">_some_host_name_</span>
+<span class="n">label</span> <span class="n">_some_host_name_</span>
+   <span class="n">kernel</span> <span class="n">kernels</span><span class="o">/</span><span class="n">vmlinuz</span>
+   <span class="n">APPEND</span> <span class="n">initrd</span><span class="o">=</span><span class="n">kernels</span><span class="o">/</span><span class="n">initrd</span><span class="p">.</span><span class="n">img</span> <span class="n">ks</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">_kickstart_server_</span><span class="o">/</span><span class="n">_some_host_name_</span><span class="p">.</span><span class="n">cfg</span>  <span class="n">ksdevice</span><span class="o">=</span><span class="n">eth0</span>  <span class="n">network</span>  <span class="n">net</span><span class="p">.</span><span class="n">ifnames</span><span class="o">=</span><span class="mi">0</span>  <span class="n">biosdevname</span><span class="o">=</span><span class="mi">0</span>  <span class="n">devfs</span><span class="o">=</span><span class="n">nomount</span>  <span class="n">noshell</span>  <span class="n">device</span><span class="o">=</span><span class="n">eth0</span>
+</pre></div>
+
+
+<h2>ssh admin server</h2>
+<div class="highlight"><pre><span></span><span class="n">Port</span><span class="w"> </span><span class="mi">422</span><span class="w"></span>
+<span class="n">AddressFamily</span><span class="w"> </span><span class="n">inet</span><span class="w"></span>
+<span class="n">ListenAddress</span><span class="w"> </span><span class="mf">0.0.0.0</span><span class="w"></span>
+<span class="n">AcceptEnv</span><span class="w"> </span><span class="n">LANG</span><span class="w"> </span><span class="n">LC_CTYPE</span><span class="w"> </span><span class="n">USERLOGIN</span><span class="w"></span>
+<span class="n">AllowAgentForwarding</span><span class="w"> </span><span class="k">no</span><span class="w"></span>
+<span class="n">AllowTcpForwarding</span><span class="w"> </span><span class="k">no</span><span class="w"></span>
+<span class="n">ChallengeResponseAuthentication</span><span class="w"> </span><span class="k">no</span><span class="w"></span>
+<span class="n">ClientAliveInterval</span><span class="w"> </span><span class="mi">60</span><span class="w"></span>
+<span class="n">GSSAPIAuthentication</span><span class="w"> </span><span class="n">yes</span><span class="w"></span>
+<span class="n">GSSAPICleanupCredentials</span><span class="w"> </span><span class="n">yes</span><span class="w"></span>
+<span class="n">IgnoreUserKnownHosts</span><span class="w"> </span><span class="n">yes</span><span class="w"></span>
+<span class="n">MaxAuthTries</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="n">PasswordAuthentication</span><span class="w"> </span><span class="k">no</span><span class="w"></span>
+<span class="n">PermitRootLogin</span><span class="w"> </span><span class="k">without</span><span class="o">-</span><span class="n">password</span><span class="w"></span>
+<span class="n">PidFile</span><span class="w"> </span><span class="o">/</span><span class="nf">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">sshd_admin</span><span class="p">.</span><span class="n">pid</span><span class="w"></span>
+<span class="n">PrintMotd</span><span class="w"> </span><span class="k">no</span><span class="w"></span>
+<span class="n">Protocol</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="n">RSAAuthentication</span><span class="w"> </span><span class="k">no</span><span class="w"></span>
+<span class="n">RSAAuthentication</span><span class="w"> </span><span class="n">yes</span><span class="w"></span>
+<span class="n">SyslogFacility</span><span class="w"> </span><span class="n">AUTHPRIV</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="n">ssh</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">secours</span><span class="w"></span>
+<span class="n">PubkeyAuthentication</span><span class="w"> </span><span class="n">yes</span><span class="w"></span>
+<span class="n">Subsystem</span><span class="w">   </span><span class="n">sftp</span><span class="w">    </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">openssh</span><span class="o">/</span><span class="n">sftp</span><span class="o">-</span><span class="n">server</span><span class="w"></span>
+<span class="n">AllowUsers</span><span class="w"> </span><span class="n">root</span><span class="nv">@_host_1</span><span class="p">,</span><span class="w"> </span><span class="n">userx</span><span class="nv">@host_2</span><span class="w"></span>
+</pre></div>
+
+
+<h2>SSh for users service</h2>
+<div class="highlight"><pre><span></span><span class="n">Protocol</span> <span class="mi">2</span>
+<span class="n">SyslogFacility</span> <span class="n">AUTHPRIV</span>
+<span class="n">PermitRootLogin</span> <span class="k">no</span>
+<span class="n">PubkeyAuthentication</span> <span class="k">no</span>
+<span class="n">PasswordAuthentication</span> <span class="n">yes</span>
+<span class="n">ChallengeResponseAuthentication</span> <span class="k">no</span>
+<span class="n">KerberosOrLocalPasswd</span> <span class="k">no</span>
+<span class="n">GSSAPIAuthentication</span> <span class="n">yes</span>
+<span class="n">GSSAPICleanupCredentials</span> <span class="n">yes</span>
+<span class="n">GSSAPIStoreCredentialsOnRekey</span> <span class="n">yes</span>
+<span class="n">GSSAPIKeyExchange</span> <span class="n">yes</span>
+<span class="n">UsePAM</span> <span class="n">yes</span>
+<span class="n">AcceptEnv</span> <span class="n">LANG</span> <span class="n">LC_CTYPE</span> <span class="n">LC_NUMERIC</span> <span class="n">LC_TIME</span> <span class="n">LC_COLLATE</span> <span class="n">LC_MONETARY</span> <span class="n">LC_MESSAGES</span> 
+<span class="n">AcceptEnv</span> <span class="n">LC_PAPER</span> <span class="n">LC_NAME</span> <span class="n">LC_ADDRESS</span> <span class="n">LC_TELEPHONE</span> <span class="n">LC_MEASUREMENT</span> 
+<span class="n">AcceptEnv</span> <span class="n">LC_IDENTIFICATION</span> <span class="n">LC_ALL</span>
+<span class="n">AllowTcpForwarding</span> <span class="k">no</span>
+<span class="n">X11Forwarding</span> <span class="n">yes</span>
+<span class="n">Subsystem</span>   <span class="n">sftp</span>    <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">openssh</span><span class="o">/</span><span class="n">sftp</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+
+
+<h2>Autofs NFS configuration</h2>
+<div class="highlight"><pre><span></span><span class="n">mountpoint1</span> <span class="o">-</span><span class="n">fstype</span><span class="o">=</span><span class="n">nfs</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span><span class="n">proto</span><span class="o">=</span><span class="n">tcp</span><span class="p">,</span><span class="n">nodev</span><span class="p">,</span><span class="n">nosuid</span><span class="p">,</span><span class="n">rw</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">bg</span><span class="p">,</span><span class="n">intr</span><span class="p">,</span><span class="n">retry</span><span class="o">=</span><span class="mi">10000</span>  <span class="n">NFS_SRV</span><span class="p">:</span><span class="o">/</span><span class="n">export</span><span class="o">/</span><span class="n">directory</span>
+<span class="n">mountpoint2</span> <span class="o">-</span><span class="n">fstype</span><span class="o">=</span><span class="n">nfs</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">krb5</span><span class="p">,</span><span class="n">proto</span><span class="o">=</span><span class="n">tcp</span><span class="p">,</span><span class="n">nodev</span><span class="p">,</span><span class="n">nosuid</span><span class="p">,</span><span class="n">rw</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">bg</span><span class="p">,</span><span class="n">intr</span><span class="p">,</span><span class="n">retry</span><span class="o">=</span><span class="mi">10000</span> <span class="n">NFS_SRV</span><span class="p">:</span><span class="o">/</span><span class="n">export</span><span class="o">/</span><span class="n">directory</span>
+</pre></div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

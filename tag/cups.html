@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>The Cagou's Blog - Cups</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../cups-under-arch.html">CUPS under Arch</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2019-04-11T22:33:00+02:00">
+                Published: jeu. 11 avril 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/cups.html">Cups</a> <a href="../tag/arch.html">Arch</a> <a href="../tag/french.html">French</a> </p>
+</footer><!-- /.post-info --><h2>Installation</h2>
+<p>pacman -Sy cups cups-pdf hplip
+  systemctl start org.cups.cupsd.socket</p>
+<h2>Configuration d'une imprimante</h2>
+<p>List all devices:</p>
+<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="o">-</span><span class="n">v</span>
+<span class="o">=&gt;</span> <span class="n">résultat</span> <span class="n">utilisé</span> <span class="n">pour</span> <span class="k">option</span> <span class="o">-</span><span class="n">v</span> <span class="n">de</span> <span class="n">lpadmin</span>
+</pre></div>
+
+
+<p>List all drivers:</p>
+<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="o">-</span><span class="n">m</span>
+<span class="o">=&gt;</span> <span class="n">résultat</span> <span class="n">utilisé</span> <span class="n">pour</span> <span class="k">option</span> <span class="o">-</span><span class="n">m</span> <span class="n">de</span> <span class="n">lpadmin</span>
+</pre></div>
+
+
+<p>List drivers matching "HP LaserJet":</p>
+<div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="c1">--make-and-model &quot;HP LaserJet&quot; -m</span>
+<span class="n">lpinfo</span> <span class="o">-</span><span class="n">m</span> <span class="o">|</span> <span class="n">grep</span> <span class="mi">4380</span>
+</pre></div>
+
+
+<p>Ajouter une imprimante</p>
+<div class="highlight"><pre><span></span><span class="n">lpadmin</span> <span class="o">-</span><span class="n">p</span> <span class="n">PhotoSmartC4380</span> <span class="o">-</span><span class="n">E</span> <span class="o">-</span><span class="n">v</span> <span class="s1">&#39;usb://HP/Photosmart%20C4380%20series?serial=CN87TF51BC051Q&amp;interface=1&#39;</span> <span class="o">-</span><span class="n">m</span> <span class="n">drv</span><span class="p">:</span><span class="o">///</span><span class="n">hp</span><span class="o">/</span><span class="n">hpcups</span><span class="p">.</span><span class="n">drv</span><span class="o">/</span><span class="n">hp</span><span class="o">-</span><span class="n">photosmart_c4380_series</span><span class="p">.</span><span class="n">ppd</span>
+</pre></div>
+
+
+<p>Changement des options, page par défaut A4 </p>
+<div class="highlight"><pre><span></span><span class="n">lpoptions</span> <span class="o">-</span><span class="n">p</span> <span class="n">PhotoSmartC4380</span> <span class="o">-</span><span class="n">o</span> <span class="n">PageSize</span><span class="o">=</span><span class="n">A4</span>
+</pre></div>
+
+
+<h2>Configuration utilisateur</h2>
+<p>Imprimante par défaut</p>
+<p>lpoptions -d PhotoSmartC4380 
+  cat ~/.cups/lpoptions 
+  # Default PhotoSmartC4380</p>
+<p>ou </p>
+<p>export PRINTER=PhotoSmartC4380</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

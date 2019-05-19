@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>The Cagou's Blog - configuration</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../puppet-6x.html">Puppet 6.x</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2019-02-23T12:17:00+01:00">
+                Published: sam. 23 février 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/puppet.html">Puppet</a> <a href="../tag/devops.html">DevOPS</a> <a href="../tag/configuration.html">configuration</a> </p>
+</footer><!-- /.post-info --><h1>Pré-requis / Entrants</h1>
+<ul>
+<li>CentOS 7 minimal</li>
+<li>Partitionnement reco ANSSI : à fournir</li>
+<li>Selinux activé</li>
+<li>Sources<ul>
+<li>Repository CentOS</li>
+<li>Selection parmi EPEL</li>
+<li>puppet.com</li>
+<li>Produire des rpm et avoir les sources.</li>
+<li>Doit être signé</li>
+</ul>
+</li>
+</ul>
+<h1>Références documentaires</h1>
+<ul>
+<li><a href="https://puppet.com/docs/puppet/6.4/puppet_index.html">Documentation générale</a></li>
+<li><a href="https://forge.puppet.com/puppetlabs/puppetdb/readme">Documentation puppetdb</a></li>
+</ul>
+<h1>Architecture</h1>
+<p>On retrouve 4 éléments:</p>
+<ul>
+<li>puppet-agent sur les noeuds à configurer</li>
+<li>puppetserver : le puppetmaster</li>
+<li>puppetdb: optionnel mais permet de gérer des dashboard</li>
+<li>puppetdb-termini:  puppetserver &lt;-----&gt; puppetdb</li>
+</ul>
+<h2>Installation</h2>
+<p>En pré-requis, il faut récupérer paquets rpm depuis puppet.com</p>
+<p>L'agent et le serveurs s'installent avec yum install ...
+Puppetdb peut s'installer avec yum install. Il est aussi possible de
+l'installer en utilisant les modules puppetdb mis à disposition sur
+<a href="https://forge.puppet.com/puppetlabs/puppetdb/readme">puppetforge</a></p>
+<p>TODO: définir ces processus d'installation et de gestion des modules</p>
+<p>puppetserver</p>
+<div class="highlight"><pre><span></span><span class="n">rpm</span> <span class="o">-</span><span class="n">Uvh</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">yum</span><span class="p">.</span><span class="n">puppetlabs</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">puppet</span><span class="o">/</span><span class="n">puppet</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">el</span><span class="o">-</span><span class="mi">7</span><span class="p">.</span><span class="n">noarch</span><span class="p">.</span><span class="n">rpm</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">puppetserver</span>
+
+<span class="o">#</span> <span class="mi">206</span> <span class="n">MB</span> <span class="n">en</span> <span class="n">plus</span>
+<span class="o">#</span>  <span class="o">====================================================================================================================================================================================================================================</span>
+<span class="o">#</span>   <span class="n">Package</span>                                                              <span class="n">Architecture</span>                                    <span class="k">Version</span>                                                <span class="n">Dépôt</span>                                            <span class="n">Taille</span>
+<span class="o">#</span>  <span class="o">====================================================================================================================================================================================================================================</span>
+<span class="o">#</span>  <span class="n">Installation</span> <span class="p">:</span>
+<span class="o">#</span>   <span class="n">puppetserver</span>                                                         <span class="n">noarch</span>                                          <span class="mi">6</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="n">el7</span>                                            <span class="n">puppet</span>                                            <span class="mi">74</span> <span class="n">M</span>
+<span class="o">#</span>  <span class="n">Installation</span> <span class="n">pour</span> <span class="n">dépendances</span> <span class="p">:</span>
+<span class="o">#</span>   <span class="n">avahi</span><span class="o">-</span><span class="n">libs</span>                                                           <span class="n">x86_64</span>                                          <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="p">.</span><span class="mi">31</span><span class="o">-</span><span class="mi">19</span><span class="p">.</span><span class="n">el7</span>                                          <span class="n">base</span>                                              <span class="mi">61</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="k">copy</span><span class="o">-</span><span class="n">jdk</span><span class="o">-</span><span class="n">configs</span>                                                     <span class="n">noarch</span>                                          <span class="mi">3</span><span class="p">.</span><span class="mi">3</span><span class="o">-</span><span class="mi">10</span><span class="p">.</span><span class="n">el7_5</span>                                           <span class="n">base</span>                                              <span class="mi">21</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">cups</span><span class="o">-</span><span class="n">libs</span>                                                            <span class="n">x86_64</span>                                          <span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">6</span><span class="p">.</span><span class="mi">3</span><span class="o">-</span><span class="mi">35</span><span class="p">.</span><span class="n">el7</span>                                         <span class="n">base</span>                                             <span class="mi">357</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">java</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">8</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">openjdk</span><span class="o">-</span><span class="n">headless</span>                                          <span class="n">x86_64</span>                                          <span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">8</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">201</span><span class="p">.</span><span class="n">b09</span><span class="o">-</span><span class="mi">2</span><span class="p">.</span><span class="n">el7_6</span>                                <span class="n">updates</span>                                           <span class="mi">32</span> <span class="n">M</span>
+<span class="o">#</span>   <span class="n">javapackages</span><span class="o">-</span><span class="n">tools</span>                                                   <span class="n">noarch</span>                                          <span class="mi">3</span><span class="p">.</span><span class="mi">4</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="mi">11</span><span class="p">.</span><span class="n">el7</span>                                           <span class="n">base</span>                                              <span class="mi">73</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">libjpeg</span><span class="o">-</span><span class="n">turbo</span>                                                        <span class="n">x86_64</span>                                          <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">90</span><span class="o">-</span><span class="mi">6</span><span class="p">.</span><span class="n">el7</span>                                           <span class="n">base</span>                                             <span class="mi">134</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">libxslt</span>                                                              <span class="n">x86_64</span>                                          <span class="mi">1</span><span class="p">.</span><span class="mi">1</span><span class="p">.</span><span class="mi">28</span><span class="o">-</span><span class="mi">5</span><span class="p">.</span><span class="n">el7</span>                                           <span class="n">base</span>                                             <span class="mi">242</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">lksctp</span><span class="o">-</span><span class="n">tools</span>                                                         <span class="n">x86_64</span>                                          <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">17</span><span class="o">-</span><span class="mi">2</span><span class="p">.</span><span class="n">el7</span>                                           <span class="n">base</span>                                              <span class="mi">88</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">net</span><span class="o">-</span><span class="n">tools</span>                                                            <span class="n">x86_64</span>                                          <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">24</span><span class="p">.</span><span class="mi">20131004</span><span class="n">git</span><span class="p">.</span><span class="n">el7</span>                               <span class="n">base</span>                                             <span class="mi">306</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">pcsc</span><span class="o">-</span><span class="n">lite</span><span class="o">-</span><span class="n">libs</span>                                                       <span class="n">x86_64</span>                                          <span class="mi">1</span><span class="p">.</span><span class="mi">8</span><span class="p">.</span><span class="mi">8</span><span class="o">-</span><span class="mi">8</span><span class="p">.</span><span class="n">el7</span>                                            <span class="n">base</span>                                              <span class="mi">34</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">puppet</span><span class="o">-</span><span class="n">agent</span>                                                         <span class="n">x86_64</span>                                          <span class="mi">6</span><span class="p">.</span><span class="mi">4</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="n">el7</span>                                            <span class="n">puppet</span>                                            <span class="mi">22</span> <span class="n">M</span>
+<span class="o">#</span>   <span class="n">python</span><span class="o">-</span><span class="n">javapackages</span>                                                  <span class="n">noarch</span>                                          <span class="mi">3</span><span class="p">.</span><span class="mi">4</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="mi">11</span><span class="p">.</span><span class="n">el7</span>                                           <span class="n">base</span>                                              <span class="mi">31</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">python</span><span class="o">-</span><span class="n">lxml</span>                                                          <span class="n">x86_64</span>                                          <span class="mi">3</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="mi">4</span><span class="p">.</span><span class="n">el7</span>                                            <span class="n">base</span>                                             <span class="mi">758</span> <span class="n">k</span>
+<span class="o">#</span>   <span class="n">tzdata</span><span class="o">-</span><span class="n">java</span>                                                          <span class="n">noarch</span>                                          <span class="mi">2019</span><span class="n">a</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="n">el7</span>                                            <span class="n">updates</span>                                          <span class="mi">187</span> <span class="n">k</span>
+<span class="o">#</span>  
+<span class="o">#</span>  <span class="n">Résumé</span> <span class="n">de</span> <span class="n">la</span> <span class="n">transaction</span>
+<span class="o">#</span>  <span class="o">====================================================================================================================================================================================================================================</span>
+</pre></div>
+
+
+<p>Irépertoires impactés</p>
+<div class="highlight"><pre><span></span><span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span>: <span class="mi">200</span><span class="nv">MB</span>
+  <span class="nv">bin</span><span class="o">/</span>
+    <span class="nv">facter</span>       <span class="o">-&gt;</span> <span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppet</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">wrapper</span>.<span class="nv">sh</span>
+    <span class="nv">hiera</span>        <span class="o">-&gt;</span> <span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppet</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">wrapper</span>.<span class="nv">sh</span>
+    <span class="nv">puppet</span>       <span class="o">-&gt;</span> <span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppet</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">wrapper</span>.<span class="nv">sh</span>
+    <span class="nv">puppetserver</span> <span class="o">-&gt;</span> ..<span class="o">/</span><span class="nv">server</span><span class="o">/</span><span class="nv">apps</span><span class="o">/</span><span class="nv">puppetserver</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">puppetserver</span>
+  <span class="nv">facter</span><span class="o">/</span><span class="nv">facts</span>.<span class="nv">d</span><span class="o">/</span>
+  <span class="nv">puppet</span><span class="o">/</span>
+    <span class="nv">bin</span><span class="o">/</span>
+    <span class="nv">cache</span><span class="o">/</span>
+    <span class="k">include</span><span class="o">/</span>
+    <span class="nv">lib</span><span class="o">/</span>
+    <span class="nv">modules</span><span class="o">/</span>
+    <span class="nv">share</span><span class="o">/</span>
+    <span class="nv">ssl</span><span class="o">/</span>
+    <span class="nv">vendor_modules</span><span class="o">/</span>
+    <span class="nv">VERSION</span>
+  <span class="nv">pxp</span><span class="o">-</span><span class="nv">agent</span><span class="o">/</span>
+    <span class="nv">modules</span><span class="o">/</span>
+       <span class="nv">pxp</span><span class="o">-</span><span class="nv">module</span><span class="o">-</span><span class="nv">puppet</span>
+    <span class="nv">spool</span><span class="o">/</span>
+    <span class="nv">tasks</span><span class="o">-</span><span class="nv">cache</span><span class="o">/</span>
+
+  <span class="nv">server</span><span class="o">/</span>
+    <span class="nv">apps</span><span class="o">/</span><span class="nv">puppetserver</span><span class="o">/</span>
+    <span class="nv">bin</span><span class="o">/</span><span class="nv">puppetserver</span> <span class="o">-&gt;</span> ..<span class="o">/</span><span class="nv">apps</span><span class="o">/</span><span class="nv">puppetserver</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">puppetserver</span>
+    <span class="nv">data</span><span class="o">/</span>
+
+<span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">puppetlabs</span>: <span class="mi">68</span><span class="nv">K</span>
+
+<span class="o">/</span><span class="nv">usr</span><span class="o">/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">systemd</span><span class="o">/</span><span class="nv">system</span><span class="o">/</span><span class="nv">puppetserver</span>.<span class="nv">service</span>
+<span class="o">/</span><span class="nv">usr</span><span class="o">/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">tmpfiles</span>.<span class="nv">d</span><span class="o">/</span><span class="nv">puppetserver</span>.<span class="nv">conf</span>
+<span class="o">/</span><span class="nv">var</span><span class="o">/</span><span class="nv">log</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
+<span class="o">/</span><span class="nv">var</span><span class="o">/</span><span class="nv">run</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
+</pre></div>
+
+
+<h1>Usages</h1>
+<p>En suivant le tuto de pppet learning</p>
+<div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">O</span> <span class="err">\</span>
+<span class="s1">&#39;https://pe-education-vms.s3.amazonaws.com/learning/learning_puppet_vm-6.7.zip&#39;</span>
+<span class="n">unzip</span> <span class="n">learning_puppet_vm</span><span class="o">-</span><span class="mi">6</span><span class="p">.</span><span class="mi">7</span><span class="p">.</span><span class="n">zip</span>
+<span class="n">tar</span> <span class="n">xvf</span> <span class="n">puppet</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="n">learning</span><span class="o">-</span><span class="mi">6</span><span class="p">.</span><span class="mi">7</span><span class="p">.</span><span class="n">ova</span>
+<span class="n">qemu</span><span class="o">-</span><span class="n">img</span> <span class="k">convert</span> <span class="o">-</span><span class="n">O</span> <span class="n">qcow2</span> <span class="n">learning</span><span class="o">-</span><span class="n">disk1</span><span class="p">.</span><span class="n">vmdk</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">virtu</span><span class="o">/</span><span class="n">libvirt</span><span class="o">/</span><span class="n">images</span><span class="o">/</span><span class="n">puppet</span><span class="o">-</span><span class="n">learning</span><span class="o">-</span><span class="mi">6</span><span class="p">.</span><span class="mi">7</span><span class="p">.</span><span class="n">qcow2</span>
+<span class="n">virt</span><span class="o">-</span><span class="n">manager</span>
+<span class="o">#</span> <span class="n">Créer</span> <span class="n">une</span> <span class="n">machine</span> <span class="n">Redhat</span> <span class="mi">7</span><span class="p">.</span><span class="mi">6</span>  <span class="p">:</span> <span class="mi">2</span> <span class="n">vcpu</span> <span class="o">/</span> <span class="mi">4096</span> <span class="n">GB</span> <span class="o">/</span> <span class="n">utiliser</span> <span class="n">le</span> <span class="n">disque</span> <span class="n">qcow2</span>
+</pre></div>
+
+
+<h2>Puppet resource</h2>
+<p>En local, utiliser puppet resource</p>
+<p>Exemple:</p>
+<p>puppet resource file /tmp/test
+  puppet resource file /tmp/test content='Hello Puppet'</p>
+<p>puppet resource package
+  puppet resource package ensure=present</p>
+<p>REMARQUE: utile pour la confguration plutôt que apply !</p>
+<h1>Cycle de dialogue mde client / master</h1>
+<p>puppet agent </p>
+<ul>
+<li>CSR</li>
+</ul>
+<p>Puppet server</p>
+<ul>
+<li>SIGN</li>
+</ul>
+<p>Puppet agent</p>
+<ul>
+<li>pluginsync : récupération des extensions</li>
+<li>collecte des fact</li>
+<li>envoie catalog request contenant les fact</li>
+</ul>
+<p>Puppet server</p>
+<ul>
+<li>compile le catalog</li>
+<li>renvoie le catalog</li>
+</ul>
+<p>Puppet Agent</p>
+<ul>
+<li>execute le catalog</li>
+</ul>
+<h1>Configuration</h1>
+<ul>
+<li>site.pp</li>
+<li>PE console (avantage interessant)</li>
+<li>external code classifier</li>
+</ul>
+<h1>Divers</h1>
+<p>C'est initeressnt d'utiliser puppet en ligne de commande pour récupérer des
+informations locale interessantes dans les scripts</p>
+<div class="highlight"><pre><span></span><span class="n">puppet</span> <span class="n">config</span> <span class="n">print</span> <span class="n">modulepath</span>
+</pre></div>
+
+
+<p>Valider du code</p>
+<div class="highlight"><pre><span></span><span class="n">puppet</span> <span class="n">parser</span> <span class="n">validate</span> <span class="n">ficier</span><span class="p">.</span><span class="n">pp</span>
+</pre></div>
+
+
+<h1>Template</h1>
+<p>Regarder les epp</p>
+<h1>fact</h1>
+<p>utiliser maintenant $facts['fqdn'] à la place de $fqdn ou $::fqdn</p>
+<h1>puppet job</h1>
+<div class="highlight"><pre><span></span><span class="n">puppet</span> <span class="k">access</span>
+<span class="n">puppet</span> <span class="n">job</span> <span class="p">...</span> <span class="k">comment</span> <span class="err">ç</span><span class="n">a</span> <span class="n">fonctionne</span> <span class="n">ce</span> <span class="n">truc</span> <span class="o">!!!</span>
+</pre></div>
+
+
+<h1>Management</h1>
+<div class="highlight"><pre><span></span><span class="n">puppet</span> <span class="n">module</span> <span class="n">list</span>
+<span class="n">puppet</span> <span class="n">module</span> <span class="n">install</span>
+</pre></div>
+
+
+<h1>Puppetfile</h1>
+<p>Utiliser PuppetFile pour mettre les dépendences et la configuration de la
+forge. C'est utiliser par puppet deploy ...
+Il faut voir si c'est présent dans la version opensource</p>
+<p>L'idée est: 
+- configuration du pointeur vers le dépôt Git
+- puppet code deploy production --wait</p>
+<h1>puppet sur centOS 7</h1>
+<h2>installation</h2>
+<div class="highlight"><pre><span></span> <span class="nv">sudo</span> <span class="nv">rpm</span> <span class="o">-</span><span class="nv">Uvh</span> <span class="nv">https</span>:<span class="o">//</span><span class="nv">yum</span>.<span class="nv">puppet</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">puppet6</span><span class="o">/</span><span class="nv">puppet6</span><span class="o">-</span><span class="nv">release</span><span class="o">-</span><span class="nv">el</span><span class="o">-</span><span class="mi">7</span>.<span class="nv">noarch</span>.<span class="nv">rpm</span>
+ # <span class="nv">sudo</span> <span class="nv">yum</span> <span class="nv">install</span> <span class="nv">puppet</span><span class="o">-</span><span class="nv">bolt</span>
+
+ <span class="nv">sudo</span> <span class="nv">yum</span> <span class="nv">clean</span> <span class="nv">all</span> <span class="o">&amp;&amp;</span> <span class="nv">yum</span> <span class="nv">search</span> <span class="nv">puppet</span>
+ <span class="nv">puppet</span><span class="o">-</span><span class="nv">agent</span>.<span class="nv">x86_64</span> : <span class="nv">The</span> <span class="nv">Puppet</span> <span class="nv">Agent</span> <span class="nv">package</span> <span class="nv">contains</span> <span class="nv">all</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">elements</span> <span class="nv">needed</span> <span class="nv">to</span> <span class="nv">run</span> <span class="nv">puppet</span>, <span class="nv">including</span> <span class="nv">ruby</span>,
+                     : <span class="nv">facter</span>, <span class="nv">and</span> <span class="nv">hiera</span>.
+ <span class="nv">puppet</span><span class="o">-</span><span class="nv">client</span><span class="o">-</span><span class="nv">tools</span>.<span class="nv">x86_64</span> : <span class="nv">PuppetDB</span> <span class="nv">CLI</span> <span class="k">for</span> <span class="nv">querying</span> <span class="nv">Puppet</span> <span class="nv">data</span>
+ <span class="nv">puppet</span><span class="o">-</span><span class="nv">release</span>.<span class="nv">noarch</span> : <span class="nv">Release</span> <span class="nv">packages</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">Puppet</span> <span class="nv">repository</span>
+ <span class="nv">puppet6</span><span class="o">-</span><span class="nv">release</span>.<span class="nv">noarch</span> : <span class="nv">Release</span> <span class="nv">packages</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">Puppet</span> <span class="mi">6</span> <span class="nv">repository</span>
+ <span class="nv">puppetdb</span>.<span class="nv">noarch</span> : <span class="nv">Puppet</span> <span class="nv">Labs</span> <span class="nv">puppetdb</span>. <span class="nv">Contains</span>: <span class="nv">Puppet</span><span class="o">-</span><span class="nv">integrated</span> <span class="nv">catalog</span> <span class="nv">and</span> <span class="nv">fact</span> <span class="nv">storage</span> <span class="ss">(</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetdb</span>
+                 : <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">0</span>,<span class="nv">org</span>.<span class="nv">clojure</span><span class="o">/</span><span class="nv">clojure</span> <span class="mi">1</span>.<span class="mi">10</span>.<span class="mi">0</span>,<span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetdb</span> <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">0</span><span class="ss">)</span>
+ <span class="nv">puppetdb</span><span class="o">-</span><span class="nv">termini</span>.<span class="nv">noarch</span> : <span class="nv">Termini</span> <span class="k">for</span> <span class="nv">puppetdb</span>. <span class="nv">Contains</span> <span class="nv">terminus</span> <span class="k">for</span>:<span class="nv">puppetdb</span> <span class="ss">(</span><span class="nv">version</span> <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">0</span><span class="ss">)</span>
+ <span class="nv">puppetserver</span>.<span class="nv">noarch</span> : <span class="nv">Puppet</span> <span class="nv">Labs</span> <span class="nv">puppetserver</span>. <span class="nv">Contains</span>: <span class="nv">Puppet</span> <span class="nv">Server</span> <span class="ss">(</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
+                     : <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">1</span>,<span class="nv">org</span>.<span class="nv">clojure</span><span class="o">/</span><span class="nv">clojure</span> <span class="mi">1</span>.<span class="mi">10</span>.<span class="mi">0</span>,<span class="nv">org</span>.<span class="nv">clojure</span><span class="o">/</span><span class="nv">clojurescript</span> <span class="mi">1</span>.<span class="mi">10</span>.<span class="mi">238</span>,<span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
+                     : <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">1</span>,<span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">trapperkeeper</span><span class="o">-</span><span class="nv">webserver</span><span class="o">-</span><span class="nv">jetty9</span> <span class="mi">2</span>.<span class="mi">3</span>.<span class="mi">1</span><span class="ss">)</span>
+ <span class="nv">pdk</span>.<span class="nv">x86_64</span> : <span class="nv">Puppet</span> <span class="nv">Development</span> <span class="nv">Kit</span>
+ <span class="nv">puppet</span><span class="o">-</span><span class="nv">bolt</span>.<span class="nv">x86_64</span> : <span class="nv">Stand</span> <span class="nv">alone</span> <span class="nv">task</span> <span class="nv">runner</span>
+</pre></div>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

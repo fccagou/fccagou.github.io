@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8" />
+        <title>The Cagou's Blog - Development</title>
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">The Cagou's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="../category/editors.html">Editors</a></li>
+                    <li><a href="../category/it.html">IT</a></li>
+                    <li><a href="../category/rhel8.html">rhel8</a></li>
+                    <li><a href="../category/tips.html">TIPS</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="../git-advanced-by-tim-burglund.html">Git Advanced by Tim Burglund</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2019-05-19T10:33:00+02:00">
+                Published: dim. 19 mai 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
+        </address>
+<p>In <a href="../category/it.html">IT</a>.</p>
+<p>tags: <a href="../tag/development.html">Development</a> <a href="../tag/git.html">Git</a> </p>
+</footer><!-- /.post-info --><h1>Présentation</h1>
+<p>Notes prises à partir de la
+<a href="https://player.vimeo.com/video/49444883">présentation</a> de Tim Berglund
+(<a href="https://twitter.com/tlberglund">@tlberglund</a>/tlberglund@github.com /
+<a href="https://github.com/training">Github</a>).</p>
+<p>Les thèmes abordés lors de la présentation </p>
+<ul>
+<li><em>commit</em> à la main (repo internals)</li>
+<li>Rebase interactif</li>
+<li>Pull rebase</li>
+<li>External diff tools</li>
+<li>Reflog</li>
+<li>Reset</li>
+</ul>
+<p>Ceux qui ne l'ont pas été par manque de temps</p>
+<ul>
+<li>Pull request</li>
+<li>Log avancés</li>
+</ul>
+<h1>Un petit tour dans les entrailles de Git</h1>
+<h2>3 Types d'objets gérés par Git</h2>
+<p>Un dépôt Git est un ensemble de fichiers de type <em>blob</em>, <em>tree</em> et <em>Commit</em>.
+Si on se représente un arbre, les <em>blob</em> sont les feuilles et les <em>tree</em> sont les
+nœuds.  Les <em>commits</em> sont alors des pointeurs vers un nœud, ce qui est alors
+un point d'entrée sur une branche.</p>
+<p>Chaque fichier est stocké dans un fichier ayant pour nom, l'empreinte sha256 du
+contenu de l'objet. Cela permet l'unicité des fichiers et des références
+associées. On peut comme cela stocké plusieurs versions d'un même fichier et
+référencer chaque version sans risque d'écrasement.</p>
+<ul>
+<li>le <em>blob</em> est le contenu d'un fichier.</li>
+<li>le <em>tree</em> est un élément qui contient une liste de <em>blob</em> et des empreintes
+  associées. Cela correspond au principe de répertoire</li>
+<li>le <em>commit</em> est un pointeur sur un objet de type '<em>tree</em>' (empreinte du
+  <em>tree</em>). Il contient aussi l'auteur, le <em>commiter</em> et le message du <em>commit</em>
+  ainsi qu'un pointeur sur le _commit_parent</li>
+</ul>
+<p>Chaque <em>commit_donne lieu a de nouveaux _blob</em> et <em>tree</em> correspondant à
+l'ensemble des éléments qui composent le commit. Un fichier qui n'a pas été
+modifié est référencé dans plusieurs <em>tree</em> au travers de plusieurs <em>commits</em>.
+Il y va de même pour les <em>tree</em> qui n'ont pas changé dans un <em>commit</em>.</p>
+<h2>Bonne idée d'illustration en live</h2>
+<p>Pour faire la démonstration, Tim crée un dépôt vide </p>
+<div class="highlight"><pre><span></span>$ git init bits <span class="o">&amp;&amp;</span> <span class="nb">cd</span> bits
+</pre></div>
+
+
+<p>Il ouvre deux terminaux</p>
+<p><table style="border: 1px solid; border-collapse;">
+  <thead>
+  <tr>
+     <th style="border: 1px solid;" >Commandes Git</th>
+     <th style="border: 1px solid;" ><code>while true; do _tree_ .git; sleep 1; done;</code></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="border: 1px solid;" >
+  $ git status </p>
+<p>Sur la branche master</p>
+<p>Aucun commit</p>
+<p>rien à valider (créez/copiez des fichiers et utilisez "git add" pour les suivre)</p>
+<p></td>
+  <td style="border: 1px solid;" >
+  <pre>
+  .git
+  ├── config
+  ├── HEAD
+  ├── objects
+  │   ├── info
+  │   └── pack
+  └── refs
+      ├── heads
+      └── tags
+      </pre>
+  </td>
+  </tr>
+  </tbody>
+  </table></p>
+<p>Suppression des fichiers inutiles pour la démonstration</p>
+<div class="highlight"><pre><span></span>$ rm -rf .git/hooks
+</pre></div>
+
+
+<p>État initial du référentiel Git</p>
+<div class="highlight"><pre><span></span>$ git status
+</pre></div>
+
+
+<p>Création d'un objet de type <em>blob</em></p>
+<div class="highlight"><pre><span></span>$ <span class="nb">echo</span> <span class="s2">&quot;on cree un _blob_ qui contient ce texte&quot;</span> <span class="p">|</span> git empreinte-object -w --stdin
+128e7392089cd1fc22e3905214325da95a7d96e7
+</pre></div>
+
+
+<p>Information sur l'objet référencé par le empreinte 
+* Son type</p>
+<div class="highlight"><pre><span></span>    <span class="err">$</span> <span class="n">git</span> <span class="n">cat</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">t</span> <span class="mi">128</span><span class="n">e7392089cd1fc22e3905214325da95a7d96e7</span>
+    <span class="n">_tree_</span>
+</pre></div>
+
+
+<ul>
+<li>Son contenu<div class="highlight"><pre><span></span>$ git cat-file -p 128e7392089cd1fc22e3905214325da95a7d96e7
+on cree un _blob_ qui contient ce texte
+</pre></div>
+
+
+</li>
+</ul>
+<p>État du référentiel Git est toujours l'état initial
+    $ git status</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">FIXME</span><span class="p">:</span> <span class="n">contrairemment</span> <span class="err">à</span> <span class="n">la</span> <span class="n">démo</span><span class="p">,</span> <span class="n">lors</span> <span class="n">de</span> <span class="n">ce</span> <span class="n">git</span> <span class="n">status</span><span class="p">,</span> <span class="n">un</span> <span class="n">objet</span> <span class="n">_tree_</span>
+<span class="n">vide</span> <span class="n">est</span> <span class="n">créé</span>
+</pre></div>
+
+
+<p>On va déclaré et nommé l'objet créé dans le cache.Cela impacte le contenu
+du fichier .git/index</p>
+<div class="highlight"><pre><span></span>$ git update-index --add --cacheinfo <span class="m">100644</span> <span class="se">\</span>
+       825dc642cb6eb9a060e54bf8d69288fbee4904 README.txt
+</pre></div>
+
+
+<p>On le vérifie de la façon suivante </p>
+<div class="highlight"><pre><span></span>$ git status
+...
+new file: README.txt
+...
+deleted: README.txt
+...
+</pre></div>
+
+
+<p>On créé maintenant l'objet <em>tree</em> qui correspond à l'état du répertoire
+contenant <em>README.txt</em></p>
+<div class="highlight"><pre><span></span>$ git write-_tree_
+0055d7f6ee8c48e021848b27a13cd493449333b0
+
+$ git cat-file -t 0055d7f
+_tree_
+
+$ git cat-file -p 0055d7f
+<span class="m">100644</span> _blob_ 128e7392089cd1fc22e3905214325da95a7d96e7    README.txt
+</pre></div>
+
+
+<p>On <em>commit_l'objet _tree</em></p>
+<div class="highlight"><pre><span></span>$ git commit-_tree_ 0055d7f6ee8c48e021848b27a13cd493449333b0 <span class="se">\</span>
+    -m <span class="s2">&quot;Crazy crazy commit&quot;</span>
+b610c2b4fc8b98a7a58e1657a18087c2d27ba6ff
+</pre></div>
+
+
+<p>L'état du référentiel est toujours sale <code>git status</code> car la référence
+pointée par <em>HEAD</em> n'existe pas</p>
+<div class="highlight"><pre><span></span>$ cat .git/HEAD
+ref: refs/heads/master
+</pre></div>
+
+
+<p>On met à jour cette référence</p>
+<div class="highlight"><pre><span></span>$ git update-ref refs/heads/master b610c2b4fc8b98a7a58e1657a18087c2d27ba6ff
+$ cat .git/refs/heads/master
+b610c2b4fc8b98a7a58e1657a18087c2d27ba6ff
+</pre></div>
+
+
+<p>On est peut enfin avoir des choses connues</p>
+<div class="highlight"><pre><span></span>$ git log -p
+_commit_b610c2b4fc8b98a7a58e1657a18087c2d27ba6ff <span class="o">(</span>HEAD -&gt; master<span class="o">)</span>
+Author: fccagou &lt;fccagou@gmail.com&gt;
+Date:   Sun May <span class="m">19</span> <span class="m">11</span>:29:00 <span class="m">2019</span> +0200
+
+    Crazy crazy commit
+
+diff --git a/README.txt b/README.txt
+new file mode <span class="m">100644</span>
+index <span class="m">0000000</span>..128e739
+--- /dev/null
++++ b/README.txt
+@@ -0,0 +1 @@
++on cree un _blob_ qui contient ce texte
+</pre></div>
+
+
+<p>Mais l'état du répertoire courant n'est pas en phase avec l'index puisqu'on
+n'a jamais créé de fichier <em>README.txt</em>.</p>
+<div class="highlight"><pre><span></span>$ <span class="nv">git</span> <span class="nv">status</span>
+<span class="nv">On</span> <span class="nv">branch</span> <span class="nv">master</span>
+<span class="nv">Changes</span> <span class="nv">not</span> <span class="nv">staged</span> <span class="k">for</span> <span class="nv">commit</span>:
+  <span class="ss">(</span><span class="nv">use</span> <span class="s2">&quot;</span><span class="s">git add/rm &lt;file&gt;...</span><span class="s2">&quot;</span> <span class="nv">to</span> <span class="nv">update</span> <span class="nv">what</span> <span class="nv">will</span> <span class="nv">be</span> <span class="nv">committed</span><span class="ss">)</span>
+  <span class="ss">(</span><span class="nv">use</span> <span class="s2">&quot;</span><span class="s">git checkout -- &lt;file&gt;...</span><span class="s2">&quot;</span> <span class="nv">to</span> <span class="nv">discard</span> <span class="nv">changes</span> <span class="nv">in</span> <span class="nv">working</span> <span class="nv">directory</span><span class="ss">)</span>
+
+        <span class="nv">deleted</span>:    <span class="nv">README</span>.<span class="nv">txt</span>
+
+<span class="nv">no</span> <span class="nv">changes</span> <span class="nv">added</span> <span class="nv">to</span> <span class="nv">_commit_</span><span class="ss">(</span><span class="nv">use</span> <span class="s2">&quot;</span><span class="s">git add</span><span class="s2">&quot;</span> <span class="nv">and</span><span class="o">/</span><span class="nv">or</span> <span class="s2">&quot;</span><span class="s">git _commit_-a</span><span class="s2">&quot;</span><span class="ss">)</span>
+</pre></div>
+
+
+<p>Il ne nous reste plus qu'à faire un <em>checkout</em> </p>
+<div class="highlight"><pre><span></span>$ git checkout HEAD -- README.txt
+$ $ cat README.txt 
+on cree un _blob_ qui contient ce texte
+$ git status
+On branch master
+nothing to commit, working _tree_ clean
+</pre></div>
+
+
+<h1>Jouons avec les branches, les rebase et les logs</h1>
+<h2>Nouvelle présentation pour l'illustration</h2>
+<p><table style="border: 1px solid; border-collapse;">
+  <thead>
+  <tr>
+     <th style="border: 1px solid;" >Commandes Git</th>
+     <th style="border: 1px solid;" >
+     while true; do clear; git log --color --decorate --graph 
+     --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)' 
+     --abbrev-commit --all; done
+     </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="border: 1px solid;" >
+  $ git ...
+  </td>
+  <td style="border: 1px solid;" >
+  <pre>
+  * 61f6e0a - (HEAD -&gt; master) add samples files (il y a 4 heures)
+  * e96b81c -  Un changement dans master (il y a 5 heures)
+  * db3aefb - une modif (il y a 5 heures)
+  * b610c2b - Crazy crazy commit (il y a 5 heures)</p>
+<p></pre>
+  </td>
+  </tr>
+  </tbody>
+  </table></p>
+<p>Dans le second terminal, changer de commande pour l'illustration. Elle permet de
+voir évoluer les références de <em>HEAD</em> et des branches. </p>
+<h2>Création d'un ensemble de <em>commits</em> et branches</h2>
+<p>Dans le terminal des commandes :</p>
+<div class="highlight"><pre><span></span>$ git branch
+* master
+
+$ git branch feature
+
+$ <span class="nb">echo</span> <span class="s2">&quot;modif pour illustrer le rebase&quot;</span> &gt;&gt; README.txt
+
+$ git _commit_-a -m <span class="s2">&quot;une modif&quot;</span>
+
+$ git checkout master
+</pre></div>
+
+
+<p>On créé un ensemble de fichiers</p>
+<div class="highlight"><pre><span></span>$ <span class="nv">mkdir</span> <span class="nv">files</span> <span class="o">&amp;&amp;</span> <span class="nv">ce</span> <span class="nv">files</span>
+$ <span class="k">for</span> <span class="nv">i</span> <span class="nv">in</span> {<span class="mi">1</span>..<span class="mi">5</span>}<span class="c1">; do echo $RANDOM &gt; file$i.txt; git add file$i.txt; git _commit_-m &quot;add file$i.txt&quot; file$i.txt;  done</span>
+[<span class="nv">feature</span> <span class="mi">948</span><span class="nv">fdba</span>] <span class="nv">add</span> <span class="nv">file1</span>.<span class="nv">txt</span>
+ <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
+ <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file1</span>.<span class="nv">txt</span>
+[<span class="nv">feature</span> <span class="mi">36</span><span class="nv">cf263</span>] <span class="nv">add</span> <span class="nv">file2</span>.<span class="nv">txt</span>
+ <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
+ <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file2</span>.<span class="nv">txt</span>
+[<span class="nv">feature</span> <span class="mi">74</span><span class="nv">e45f8</span>] <span class="nv">add</span> <span class="nv">file3</span>.<span class="nv">txt</span>
+ <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
+ <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file3</span>.<span class="nv">txt</span>
+[<span class="nv">feature</span> <span class="mi">217</span><span class="nv">e179</span>] <span class="nv">add</span> <span class="nv">file4</span>.<span class="nv">txt</span>
+ <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
+ <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file4</span>.<span class="nv">txt</span>
+[<span class="nv">feature</span> <span class="mi">96</span><span class="nv">edd19</span>] <span class="nv">add</span> <span class="nv">file5</span>.<span class="nv">txt</span>
+ <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
+ <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file5</span>.<span class="nv">txt</span>
+</pre></div>
+
+
+<p>On voit le graphe sur le terminal de démonstration.</p>
+<p>Un <em>merge</em> est un <em>commit_avec 2 parents mais ce n'est pas ce qu'on veut. On veut
+déplacer l'ensemble des _commit_d'une branche sur la branche _master</em>. C'est le
+rebase en <em>fast forward</em></p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="n">git</span> <span class="n">checkout</span> <span class="n">master</span>
+<span class="err">$</span> <span class="n">echo</span> <span class="s">&quot;nouveau changement dans la version master&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">README</span><span class="p">.</span><span class="n">txt</span>
+<span class="err">$</span> <span class="n">git</span> <span class="n">_commit_</span><span class="o">-</span><span class="n">a</span> <span class="o">-</span><span class="n">m</span> <span class="s">&quot;Un changement dans master&quot;</span> 
+<span class="p">[</span><span class="n">master</span> <span class="n">e96b81c</span><span class="p">]</span>  <span class="n">Un</span> <span class="n">changement</span> <span class="n">dans</span> <span class="n">master</span>
+ <span class="mi">1</span> <span class="n">file</span> <span class="n">changed</span><span class="p">,</span> <span class="mi">1</span> <span class="n">insertion</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+
+<span class="err">$</span> <span class="n">git</span> <span class="n">merge</span> <span class="n">featue</span>
+<span class="nl">suggestion</span> <span class="p">:</span> <span class="n">en</span> <span class="n">attente</span> <span class="n">de</span> <span class="n">la</span> <span class="n">fermeture</span> <span class="n">duMerge</span> <span class="n">made</span> <span class="n">by</span> <span class="n">the</span> <span class="err">&#39;</span><span class="n">recursive</span><span class="err">&#39;</span> <span class="n">strategy</span><span class="p">.</span>
+ <span class="n">files</span><span class="o">/</span><span class="n">file1</span><span class="p">.</span><span class="n">txt</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">+</span>
+ <span class="n">files</span><span class="o">/</span><span class="n">file2</span><span class="p">.</span><span class="n">txt</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">+</span>
+ <span class="n">files</span><span class="o">/</span><span class="n">file3</span><span class="p">.</span><span class="n">txt</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">+</span>
+ <span class="n">files</span><span class="o">/</span><span class="n">file4</span><span class="p">.</span><span class="n">txt</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">+</span>
+ <span class="n">files</span><span class="o">/</span><span class="n">file5</span><span class="p">.</span><span class="n">txt</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">+</span>
+ <span class="mi">5</span> <span class="n">files</span> <span class="n">changed</span><span class="p">,</span> <span class="mi">5</span> <span class="n">insertions</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+ <span class="n">create</span> <span class="n">mode</span> <span class="mi">100644</span> <span class="n">files</span><span class="o">/</span><span class="n">file1</span><span class="p">.</span><span class="n">txt</span>
+ <span class="n">create</span> <span class="n">mode</span> <span class="mi">100644</span> <span class="n">files</span><span class="o">/</span><span class="n">file2</span><span class="p">.</span><span class="n">txt</span>
+ <span class="n">create</span> <span class="n">mode</span> <span class="mi">100644</span> <span class="n">files</span><span class="o">/</span><span class="n">file3</span><span class="p">.</span><span class="n">txt</span>
+ <span class="n">create</span> <span class="n">mode</span> <span class="mi">100644</span> <span class="n">files</span><span class="o">/</span><span class="n">file4</span><span class="p">.</span><span class="n">txt</span>
+ <span class="n">create</span> <span class="n">mode</span> <span class="mi">100644</span> <span class="n">files</span><span class="o">/</span><span class="n">file5</span><span class="p">.</span><span class="n">txt</span>
+</pre></div>
+
+
+<p>Oups, je ne voulais pas faire un <em>merge</em> ... Mais temps que rien n'est poussé,
+je suis serein :)</p>
+<div class="highlight"><pre><span></span>$ <span class="n">git</span> <span class="n">branch</span>
+<span class="n">feature</span>
+* <span class="n">master</span>
+<span class="c1"># On garde le _commit_merge pour l&#39;exerice</span>
+$ <span class="n">git</span> <span class="n">rev-parse</span> <span class="n">master</span>
+<span class="n">b2a894705506648be602f1a927da0d1faea224de</span>
+
+$ <span class="n">git</span> <span class="n">reset</span> --<span class="n">hard</span>  <span class="n">e96b81c</span>
+<span class="n">HEAD</span> <span class="n">est</span> <span class="n">maintenant</span> <span class="n">à</span> <span class="n">e96b81c</span>  <span class="n">Un</span> <span class="n">changement</span> <span class="n">dans</span> <span class="n">master</span>
+</pre></div>
+
+
+<p><em>Reflog</em> pour se sauver des presque tout et trouver ce qui a été fait</p>
+<div class="highlight"><pre><span></span>$ git reflog
+e96b81c <span class="o">(</span>HEAD -&gt; master<span class="o">)</span> HEAD@<span class="o">{</span><span class="m">0</span><span class="o">}</span>: reset: moving to e96b81c
+b2a8947 HEAD@<span class="o">{</span><span class="m">1</span><span class="o">}</span>: merge feature: Merge made by the <span class="s1">&#39;recursive&#39;</span> strategy.
+e96b81c <span class="o">(</span>HEAD -&gt; master<span class="o">)</span> HEAD@<span class="o">{</span><span class="m">2</span><span class="o">}</span>: commit: Un changement dans master
+db3aefb HEAD@<span class="o">{</span><span class="m">3</span><span class="o">}</span>: checkout: moving from feature to master
+96edd19 <span class="o">(</span>feature<span class="o">)</span> HEAD@<span class="o">{</span><span class="m">4</span><span class="o">}</span>: commit: add file5.txt
+217e179 HEAD@<span class="o">{</span><span class="m">5</span><span class="o">}</span>: commit: add file4.txt
+74e45f8 HEAD@<span class="o">{</span><span class="m">6</span><span class="o">}</span>: commit: add file3.txt
+36cf263 HEAD@<span class="o">{</span><span class="m">7</span><span class="o">}</span>: commit: add file2.txt
+948fdba HEAD@<span class="o">{</span><span class="m">8</span><span class="o">}</span>: commit: add file1.txt
+b610c2b HEAD@<span class="o">{</span><span class="m">9</span><span class="o">}</span>: checkout: moving from master to feature
+db3aefb HEAD@<span class="o">{</span><span class="m">10</span><span class="o">}</span>: checkout: moving from feature to master
+b610c2b HEAD@<span class="o">{</span><span class="m">11</span><span class="o">}</span>: checkout: moving from master to feature
+db3aefb HEAD@<span class="o">{</span><span class="m">12</span><span class="o">}</span>: commit: une modif
+b610c2b HEAD@<span class="o">{</span><span class="m">13</span><span class="o">}</span>:
+</pre></div>
+
+
+<p>On retrouve bien le <em>merge</em> indésirable et sa valeur d'empreinte</p>
+<div class="highlight"><pre><span></span>$ git rev-parse HEAD@<span class="o">{</span><span class="m">1</span><span class="o">}</span>
+b2a894705506648be602f1a927da0d1faea224de
+</pre></div>
+
+
+<p>Et on peux y revenir finalement</p>
+<div class="highlight"><pre><span></span>$ git reset --hard HEAD@<span class="o">{</span><span class="m">1</span><span class="o">}</span>
+HEAD est maintenant à b2a8947 Merge branch <span class="s1">&#39;feature&#39;</span>
+</pre></div>
+
+
+<p>Mais ce n'est pas ce qu'on veut, on veut bien ne pas faire ce <em>merge</em></p>
+<div class="highlight"><pre><span></span>$ git reflog
+b2a8947 <span class="o">(</span>HEAD -&gt; master<span class="o">)</span> HEAD@<span class="o">{</span><span class="m">0</span><span class="o">}</span>: reset: moving to HEAD@<span class="o">{</span><span class="m">1</span><span class="o">}</span>
+e96b81c HEAD@<span class="o">{</span><span class="m">1</span><span class="o">}</span>: reset: moving to e96b81c
+b2a8947 <span class="o">(</span>HEAD -&gt; master<span class="o">)</span> HEAD@<span class="o">{</span><span class="m">2</span><span class="o">}</span>: merge feature: Merge made by the <span class="s1">&#39;recursive&#39;</span> strategy.
+e96b81c HEAD@<span class="o">{</span><span class="m">3</span><span class="o">}</span>: commit: Un changement dans master
+db3aefb HEAD@<span class="o">{</span><span class="m">4</span><span class="o">}</span>: checkout: moving from feature to master
+96edd19 <span class="o">(</span>feature<span class="o">)</span> HEAD@<span class="o">{</span><span class="m">5</span><span class="o">}</span>: commit: add file5.txt
+217e179 HEAD@<span class="o">{</span><span class="m">6</span><span class="o">}</span>: commit: add file4.txt
+74e45f8 HEAD@<span class="o">{</span><span class="m">7</span><span class="o">}</span>: commit: add file3.txt
+36cf263 HEAD@<span class="o">{</span><span class="m">8</span><span class="o">}</span>: commit: add file2.txt
+948fdba HEAD@<span class="o">{</span><span class="m">9</span><span class="o">}</span>: commit: add file1.txt
+b610c2b HEAD@<span class="o">{</span><span class="m">10</span><span class="o">}</span>: checkout: moving from master to feature
+db3aefb HEAD@<span class="o">{</span><span class="m">11</span><span class="o">}</span>: checkout: moving from feature to master
+b610c2b HEAD@<span class="o">{</span><span class="m">12</span><span class="o">}</span>: checkout: moving from master to feature
+db3aefb HEAD@<span class="o">{</span><span class="m">13</span><span class="o">}</span>: commit: une modif
+b610c2b HEAD@<span class="o">{</span><span class="m">14</span><span class="o">}</span>:
+
+$ git reset --hard HEAD@<span class="o">{</span><span class="m">3</span><span class="o">}</span>
+HEAD est maintenant à e96b81c  Un changement dans master
+</pre></div>
+
+
+<h2>C'est parti pour un rebase</h2>
+<p>Revenons en au fait pour mettre nos modification de la branche <em>feature</em> dans la
+branche <em>master</em>.</p>
+<div class="highlight"><pre><span></span>$ git checkout feature
+Basculement sur la branche <span class="s1">&#39;feature&#39;</span>
+
+$ git rebase master
+Rembobinage préalable de head pour pouvoir rejouer votre travail par-dessus...
+Application de  add file1.txt
+Application de  add file2.txt
+Application de  add file3.txt
+Application de  add file4.txt
+Application de  add file5.txt
+
+$ git checkour master
+Basculement sur la branche <span class="s1">&#39;master&#39;</span>
+
+$ git merge feature
+Mise à jour e96b81c..9c7c907
+Fast-forward
+ files/file1.txt <span class="p">|</span> <span class="m">1</span> +
+ files/file2.txt <span class="p">|</span> <span class="m">1</span> +
+ files/file3.txt <span class="p">|</span> <span class="m">1</span> +
+ files/file4.txt <span class="p">|</span> <span class="m">1</span> +
+ files/file5.txt <span class="p">|</span> <span class="m">1</span> +
+ <span class="m">5</span> files changed, <span class="m">5</span> insertions<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file1.txt
+ create mode <span class="m">100644</span> files/file2.txt
+ create mode <span class="m">100644</span> files/file3.txt
+ create mode <span class="m">100644</span> files/file4.txt
+ create mode <span class="m">100644</span> files/file5.txt
+</pre></div>
+
+
+<h2>Rebase interactif</h2>
+<p>Petit rappel sue la syntaxe des références</p>
+<div class="highlight"><pre><span></span>$ git rev-parse HEAD~5
+$ git rev-parse <span class="s2">&quot;HEAD^^^^^&quot;</span>
+</pre></div>
+
+
+<p>On <em>squash</em> tous les <em>commits</em> de création des fichiers dans <em>files</em> pour ne
+faire qu'un seul <em>commit</em>. </p>
+<div class="highlight"><pre><span></span>$ git rebase -i HEAD~5
+...
+<span class="o">=</span>&gt; on remplace les <span class="m">4</span> derniers _pick_ par squash, on sauvegarde et on quitte
+...
+<span class="o">=</span>&gt; on fait un joli message de commit, on sauvegarde, on quitte et hop 
+...
+suggestion : en attente de la fermeture du<span class="o">[</span>HEAD détachée 61f6e0a<span class="o">]</span> add samples files
+ Date: Sun May <span class="m">19</span> <span class="m">12</span>:06:37 <span class="m">2019</span> +0200
+ <span class="m">5</span> files changed, <span class="m">5</span> insertions<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file1.txt
+ create mode <span class="m">100644</span> files/file2.txt
+ create mode <span class="m">100644</span> files/file3.txt
+ create mode <span class="m">100644</span> files/file4.txt
+ create mode <span class="m">100644</span> files/file5.txt
+Successfully rebased and updated refs/heads/master.
+</pre></div>
+
+
+<p>On obtient un nouveau <em>commit</em> sur la branche <em>master</em> et la branche <em>feature</em>
+référence toujours les 5 <em>commits</em> faits pour créer les 5 fichiers.
+On n'a plus besoin de la branche <em>feature</em> donc on a supprime</p>
+<div class="highlight"><pre><span></span>$ git branch -D feature
+Branche feature supprimée <span class="o">(</span>précédemment 9c7c907<span class="o">)</span>.
+</pre></div>
+
+
+<p>A ce stade, il n'y a plus de référence au <em>commit</em> pointé par le branche
+<em>feature</em> MAIS le <em>commit</em> existe toujours. Pour s'en persuader, il suffit
+d'interroger Git.</p>
+<div class="highlight"><pre><span></span>$ git cat -t 9c7c907
+commit
+</pre></div>
+
+
+<h1>External diff tools</h1>
+<ul>
+<li>Local conf : .gitconfig</li>
+<li>
+<p>Global conf : </p>
+<p>$ git config --global merge.tool vimdiff
+$ git config --global mergetool.prompt false
+$ git difftool </p>
+</li>
+</ul>
+<h1>From scratch</h1>
+<p>L'équivalent de <code>git init scratch</code></p>
+<div class="highlight"><pre><span></span>$ mkdir scratch <span class="o">&amp;&amp;</span> <span class="nb">cd</span> scratch
+$ mkdir -p .git/objects
+$ mkdir -p .git/refs/heads
+$ <span class="nb">echo</span> <span class="s1">&#39;ref: refs/heads/master&#39;</span> &gt; .git/HEAD
+</pre></div>
+
+
+<p>Création d'un premier fichier</p>
+<div class="highlight"><pre><span></span>$ git status
+$ <span class="nb">echo</span> <span class="s2">&quot;first file&quot;</span> <span class="p">|</span> git hash-object --stdin -w                                                                  
+$ git update-index --add --cacheinfo <span class="m">100644</span> 303ff981c488b812b6215f7db7920dedb3b59d9a  README.txt                  
+$ git write-tree                                                                                                  
+$ git commit-tree f9f8cb0e34417c41edafe889c303d1acc9a858b7 -m <span class="s2">&quot;Crazy crazy commit&quot;</span>
+$ git update-ref refs/heads/master be8c65c58aa5ab7ef8737079da858486fd102bf8
+$ git checkout master -- README.txt
+</pre></div>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
