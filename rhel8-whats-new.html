@@ -43,8 +43,10 @@
                 <p>Dans <a href="./category/rhel8.html">rhel8</a>.
 <p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/redhat.html">RedHat</a><a href="./tag/system.html">System</a><a href="./tag/french.html">French</a></p></p>        </footer><!-- /.post-info -->
         <h1>Actions menées</h1>
-<p>Récuparation de l'iso sur le site de RedHat
-Installation dans une VM</p>
+<ul>
+<li>Récupération de l'iso sur le site de <a href="https://www.redhat.com">RedHat</a></li>
+<li>Installation dans une VM</li>
+</ul>
 <h1>Contenu de l'ISO</h1>
 <h2>Racine de l'ISO</h2>
 <ul>
@@ -60,26 +62,25 @@ Installation dans une VM</p>
 <h2>AppStream</h2>
 <p>Contient des RPM: quelle est la dif avec BaseOS ?</p>
 <h2>BaseOS</h2>
-<p>TODO: faire le point sue le contenu et l'usage mais vue le nom, il semble que
-ce soit le minimu pour faire l'installation.</p>
+<p>TODO: faire le point sur le contenu et l'usage mais vue le nom, il semble que
+ce soit le minimum pour faire l'installation.</p>
 <h2>EFI/BOOT</h2>
 <p>Contient les bootrom uefi</p>
-<h2>images</h2>
+<h2>Images</h2>
 <p>Images pour les types de boot, uefi, install ou pxe.</p>
-<h2>isolinux</h2>
+<h2>Isolinux</h2>
 <p>Fichiers pour le démarrage depuis l'ISO</p>
 <h1>Général</h1>
-<p>Il ne semble pas y avoir de grand changement dans l'outils d'installation.
+<p>Il ne semble pas y avoir de grand changement dans l'outil d'installation.
 L'interface reste la même, il y a un changement mineur au niveau du
 récapitulatif.</p>
-<p>On voit aussi apparâitre un menu pour définir l'usage de la machine.
-Ces options sont utilisées par subscription-manager.</p>
-<p>Chose interessante, on trouve la notion de 'role' qui qui se rapproche de ce
-que l'on trouve dans Puppet. ... En fait pas du tout, la notion de role Ansible
-correspons aux profile de Puppet :( </p>
-<p>Le fichier kickstart généré ne semble pas avoir changer sauf pour les noms des
-groupes de packages qui doivent certainement être cohérents avec les rôles.</p>
-<div class="highlight"><pre><span></span><span class="nv">yum</span> <span class="nv">info</span> <span class="nv">rhel</span><span class="o">-</span><span class="nv">system</span><span class="o">-</span><span class="nv">roles</span>
+<p>On voit aussi apparaître un menu pour définir l'usage de la machine.
+Ces options sont utilisées par <code>subscription-manager</code>.</p>
+<p>Chose intéressante, on trouve la notion de <strong>rôle</strong> qui qui se rapproche de ce
+que l'on trouve dans <a href="https://puppet.com/docs/pe/2019.1/designing_system_configs_roles_and_profiles.html">Puppet</a>. ... En fait pas du tout, la notion de rôle <a href="https://www.ansible.com/">Ansible</a> correspond aux profils de Puppet.</p>
+<p>Le fichier <em>kickstart</em> généré ne semble pas avoir changé sauf pour les noms des
+groupes de <em>packages</em> qui doivent certainement être cohérents avec les rôles.</p>
+<div class="highlight"><pre><span></span>$ <span class="nv">yum</span> <span class="nv">info</span> <span class="nv">rhel</span><span class="o">-</span><span class="nv">system</span><span class="o">-</span><span class="nv">roles</span>
 <span class="nv">Updating</span> <span class="nv">Subscription</span> <span class="nv">Management</span> <span class="nv">repositories</span>.
 <span class="nv">Derni</span>è<span class="nv">re</span> <span class="nv">v</span>é<span class="nv">rification</span> <span class="nv">de</span> <span class="nv">l</span>’<span class="nv">expiration</span> <span class="nv">des</span> <span class="nv">m</span>é<span class="nv">tadonn</span>é<span class="nv">es</span> <span class="nv">effectu</span>é<span class="nv">e</span> <span class="nv">il</span> <span class="nv">y</span> <span class="nv">a</span> <span class="mi">0</span>:<span class="mi">01</span>:<span class="mi">31</span> <span class="nv">le</span> <span class="nv">mer</span>. <span class="mi">08</span> <span class="nv">mai</span> <span class="mi">2019</span> <span class="mi">17</span>:<span class="mi">37</span>:<span class="mi">24</span> <span class="nv">EDT</span>.
 <span class="nv">Paquets</span> <span class="nv">disponibles</span>
@@ -99,22 +100,32 @@ groupes de packages qui doivent certainement être cohérents avec les rôles.</
 </pre></div>
 
 
-<p>En pos installation, si pon ne choisi pas de réseau durant l'installation, il
-suffit d'utiliser 'nmcli c up ens1'</p>
+<p>En post installation, si on ne choisi pas de réseau durant l'installation, il
+suffit d'utiliser <code>nmcli c up ens1</code></p>
 <h2>Souscription</h2>
-<p>Pour les souscriptions, subscription-manager register --auto-attach
-La souscription génère les fichiers:
-- /etc/yum.repos.d/redhat.repo
-- /etc/pki/consumer/{key,cert}.pem</p>
-<p>Le certificat sert ensuite pour les transations.</p>
-<p>TODO: quel est le nivea d'intrusion du mécanisme ??</p>
-<p>Dans la crontab daily, /usr/libexec/rhsmd -s et en service /usr/bin/rhsmcertd</p>
+<p>Pour les souscriptions</p>
+<div class="highlight"><pre><span></span><span class="n">subscription</span><span class="o">-</span><span class="n">manager</span> <span class="n">register</span> <span class="c1">--auto-attach</span>
+</pre></div>
+
+
+<p>La souscription génère les fichiers:</p>
+<ul>
+<li>
+<p>/etc/yum.repos.d/redhat.repo</p>
+</li>
+<li>
+<p>/etc/pki/consumer/{key,cert}.pem</p>
+</li>
+</ul>
+<p>Le certificat sert ensuite pour les transactions.</p>
+<p>TODO: quel est le niveau d'intrusion du mécanisme ??</p>
+<p>Dans la crontab daily, <code>/usr/libexec/rhsmd -s</code> et en <em>service /usr/bin/rhsmcertd</em></p>
 <h2>Gestion des paquets</h2>
 <p>Le syslog montre que dnf est utilisé comme gestion de paquets.</p>
 <p>TODO: à creuser</p>
 <h2>Python</h2>
-<p>Apparition de plateform-python, certainemen por éviter le conflit avec la
-version mise à disporition des utilisateurs.</p>
+<p>Apparition de <code>plateform-python</code>, certainement pour éviter le conflit avec la
+version mise à disposition des utilisateurs.</p>
 <div class="highlight"><pre><span></span><span class="n">ls</span> <span class="o">-</span><span class="n">al</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span><span class="o">*</span>
 <span class="n">lrwxrwxrwx</span><span class="p">.</span> <span class="mi">1</span> <span class="n">root</span> <span class="n">root</span>    <span class="mi">20</span>  <span class="mi">3</span> <span class="n">avril</span> <span class="mi">13</span><span class="p">:</span><span class="mi">28</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span> <span class="o">-&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python3</span><span class="p">.</span><span class="mi">6</span>
 <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span><span class="p">.</span> <span class="mi">2</span> <span class="n">root</span> <span class="n">root</span> <span class="mi">12448</span>  <span class="mi">3</span> <span class="n">avril</span> <span class="mi">13</span><span class="p">:</span><span class="mi">28</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python3</span><span class="p">.</span><span class="mi">6</span>
@@ -124,17 +135,19 @@ version mise à disporition des utilisateurs.</p>
 
 <p>TODO: à creuser</p>
 <h2>Firewall</h2>
-<p>/!\ Passage à nftables. Utilisé par firewalld.
-TODO: prendre en compte
-https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes</p>
-<p>Les règles sont dans /etc/nftables, mais ici, c'est la conf de firewalld qui
-compte. Le service nftables est disabled.</p>
+<p>/!\ Passage à <a href="https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes">nftables</a>
+C'est le backend par défaut de firewalld.
+TODO: prendre en compte</p>
+<p>Les règles sont dans <em>/etc/nftables</em>, mais ici, c'est la conf de <em>firewalld</em> qui
+compte. Le service <em>nftables est disabled</em>.</p>
 <h1>Système core</h1>
 <h2>Choix de la VM</h2>
 <p>2vCPU, 2048 BG RAM, 10GB DD</p>
-<h2>Point post instllation</h2>
+<h2>Point post installation</h2>
 <p>Prend 1,4GB de disque
-Il faut faire une souscription pour avoir accès aux dépots.</p>
+Il faut faire une souscription pour avoir accès aux dépôts.
+Ou alors créer un fichier de configuration yum pour utiliser les rpm présents
+sur l'ISO.</p>
 <h2>Groupe paquets</h2>
 <div class="highlight"><pre><span></span><span class="o">@^</span><span class="n">minimal</span><span class="o">-</span><span class="n">environment</span>
 </pre></div>
@@ -329,9 +342,8 @@ Il faut faire une souscription pour avoir accès aux dépots.</p>
 
 
 <h2>Sécurité</h2>
-<p>Selinux est éctivé par défaut en Enforcing</p>
-<p>TODO: voir les namespaces
-https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/resource_management_guide/ch01</p>
+<p>Selinux est activé par défaut en <em>Enforcing</em></p>
+<p>TODO: voir les <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/resource_management_guide/ch01">namespaces</a></p>
 <div class="highlight"><pre><span></span>   <span class="k">Namespace</span>   <span class="nn">Constant</span>          <span class="n">Isolates</span>
    <span class="n">Cgroup</span>      <span class="n">CLONE_NEWCGROUP</span>   <span class="n">Cgroup</span> <span class="n">root</span> <span class="n">directory</span>
    <span class="n">IPC</span>         <span class="n">CLONE_NEWIPC</span>      <span class="n">System</span> <span class="n">V</span> <span class="n">IPC</span><span class="p">,</span> <span class="n">POSIX</span> <span class="n">message</span> <span class="n">queues</span>
