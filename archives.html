@@ -1,77 +1,100 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-        <meta charset="utf-8" />
         <title>The Cagou's Blog</title>
-        <link rel="stylesheet" href="./theme/css/main.css" />
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="./" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
+
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="./">The Cagou's Blog </a></h1>
+                <h1><a href="./index.html">The Cagou's Blog </a></h1>
                 <nav><ul>
-                    <li><a href="./category/editors.html">Editors</a></li>
-                    <li><a href="./category/it.html">IT</a></li>
-                    <li><a href="./category/rhel8.html">rhel8</a></li>
-                    <li><a href="./category/tips.html">TIPS</a></li>
+                <li><a href="./index.html">Accueil</a></li>
+                <li><a href="./archives.html">Archives</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+
 <section id="content" class="body">
-<h1>Archives for The Cagou's Blog</h1>
+<h1>Archives pour «The Cagou's Blog»</h1>
 
 <dl>
     <dt>dim. 19 mai 2019</dt>
-    <dd><a href="./notes-about-vim.html">Notes about Vim</a></dd>
+    <dd><a href='notes-about-vim.html'>Notes about Vim</a></dd>
     <dt>dim. 19 mai 2019</dt>
-    <dd><a href="./git-advanced-by-tim-burglund.html">Git Advanced by Tim Burglund</a></dd>
+    <dd><a href='git-advanced-by-tim-burglund.html'>Git Advanced by Tim Burglund</a></dd>
     <dt>sam. 18 mai 2019</dt>
-    <dd><a href="./what-about-udev.html">what about udev ?</a></dd>
+    <dd><a href='what-about-udev.html'>what about udev ?</a></dd>
     <dt>dim. 12 mai 2019</dt>
-    <dd><a href="./some-it-tips.html">Some IT TIPS</a></dd>
+    <dd><a href='some-it-tips.html'>Some IT TIPS</a></dd>
     <dt>mer. 08 mai 2019</dt>
-    <dd><a href="./rhel8-whats-new.html">RHEL8 what's new ?</a></dd>
+    <dd><a href='rhel8-whats-new.html'>RHEL8 what's new ?</a></dd>
     <dt>jeu. 11 avril 2019</dt>
-    <dd><a href="./cups-under-arch.html">CUPS under Arch</a></dd>
+    <dd><a href='cups-under-arch.html'>CUPS under Arch</a></dd>
     <dt>sam. 23 février 2019</dt>
-    <dd><a href="./puppet-6x.html">Puppet 6.x</a></dd>
+    <dd><a href='puppet-6x.html'>Puppet 6.x</a></dd>
     <dt>mar. 29 janvier 2019</dt>
-    <dd><a href="./custom-boot.html">Custom boot</a></dd>
+    <dd><a href='custom-boot.html'>Custom boot</a></dd>
     <dt>lun. 05 novembre 2018</dt>
-    <dd><a href="./some-doc-about-libvirt.html">Some doc about libvirt</a></dd>
+    <dd><a href='some-doc-about-libvirt.html'>Some doc about libvirt</a></dd>
     <dt>lun. 24 septembre 2018</dt>
-    <dd><a href="./apt-conf-on-readonly-system.html">Apt conf on readonly system</a></dd>
+    <dd><a href='apt-conf-on-readonly-system.html'>Apt conf on readonly system</a></dd>
     <dt>dim. 23 septembre 2018</dt>
-    <dd><a href="./docker-on-centos-7.html">Docker on CentOS 7</a></dd>
+    <dd><a href='docker-on-centos-7.html'>Docker on CentOS 7</a></dd>
     <dt>dim. 23 septembre 2018</dt>
-    <dd><a href="./multi-screen-on-linux.html">Multi screen on Linux</a></dd>
+    <dd><a href='multi-screen-on-linux.html'>Multi screen on Linux</a></dd>
     <dt>lun. 11 décembre 2017</dt>
-    <dd><a href="./linux-infra-configuration.html">Linux infra configuration</a></dd>
+    <dd><a href='linux-infra-configuration.html'>Linux infra configuration</a></dd>
     <dt>mer. 02 août 2017</dt>
-    <dd><a href="./how-to-make-ha-glusterfs-using-keepalived.html">How to make HA GlusterFs using Keepalived</a></dd>
+    <dd><a href='how-to-make-ha-glusterfs-using-keepalived.html'>How to make HA GlusterFs using Keepalived</a></dd>
     <dt>sam. 15 juillet 2017</dt>
-    <dd><a href="./lxc-beginner.html">LXC beginner</a></dd>
+    <dd><a href='lxc-beginner.html'>LXC beginner</a></dd>
     <dt>sam. 29 novembre 2014</dt>
-    <dd><a href="./installation-de-cobbler-sur-centos-66.html">Installation de cobbler sur CentOS 6.6</a></dd>
+    <dd><a href='installation-de-cobbler-sur-centos-66.html'>Installation de cobbler sur CentOS 6.6</a></dd>
 </dl>
 </section>
-        <section id="extras" class="body">
-                <div class="social">
-                        <h2>social</h2>
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Catégories</h2>
                         <ul>
+                           <li ><a href="./category/editors.html">Editors</a></li>
+                           <li ><a href="./category/it.html">IT</a></li>
+                           <li ><a href="./category/rhel8.html">rhel8</a></li>
+                           <li ><a href="./category/tips.html">TIPS</a></li>
+                        </ul>
+                </div>
+                <div class="widget social">
+                        <h2>Réseaux sociaux</h2>
+                        <ul>
+                            <li><a href="./" rel="alternate">atom feed</a></li>
 
                             <li><a href="https://twitter.com/fccagou">twitter</a></li>
                             <li><a href="https://github.com/fccagou">github</a></li>
                         </ul>
                 </div><!-- /.social -->
-        </section><!-- /#extras -->
+        </aside><!-- /#sidebar -->
 
-        <footer id="contentinfo" class="body">
+        <footer id="footer" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Ce site est généré par <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>, un CMS réalisé en <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                <p>Le thème utilisé est «NotMyIdea-CMS», une version modifiée de «NotMyIdea», le thème par défaut.</p>
+        </footer><!-- /#footer -->
 
 </body>
 </html>

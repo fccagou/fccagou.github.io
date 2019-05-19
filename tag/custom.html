@@ -1,36 +1,49 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-        <meta charset="utf-8" />
         <title>The Cagou's Blog - Custom</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
+
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog </a></h1>
                 <nav><ul>
-                    <li><a href="../category/editors.html">Editors</a></li>
-                    <li><a href="../category/it.html">IT</a></li>
-                    <li><a href="../category/rhel8.html">rhel8</a></li>
-                    <li><a href="../category/tips.html">TIPS</a></li>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../archives.html">Archives</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../custom-boot.html">Custom boot</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2019-01-29T22:33:00+01:00">
-                Published: mar. 29 janvier 2019
-        </abbr>
+        
+        
+     <section id="content" class="body">
+        <aside id="featured"><article>
+                <h1 class="entry-title"><a href="../custom-boot.html">Custom boot</a></h1> 
+                <footer class="post-info">
+                        <abbr class="published" title="2019-01-29T22:33:00+01:00">
+                                Publié le 29/01/2019 &agrave; 22:33
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/boot.html">boot</a> <a href="../tag/grub.html">grub</a> <a href="../tag/plymouth.html">plymouth</a> </p>
-</footer><!-- /.post-info --><h2>Pour changer l'image sur le menu grub</h2>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                <p>Dans <a href="../category/it.html">IT</a>. </p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/boot.html">boot</a><a href="../tag/grub.html">grub</a><a href="../tag/plymouth.html">plymouth</a></p></p>                </footer><!-- /.post-info -->
+                <h2>Pour changer l'image sur le menu grub</h2>
 <p>Choisir une image et remplacer /boot/grub2/splatch.png</p>
 <p>Modifier /etc/default/grub</p>
 <div class="highlight"><pre><span></span>   <span class="n">GRUB_TIMEOUT</span><span class="o">=</span><span class="mi">5</span>
@@ -87,87 +100,99 @@
 <li>plymouth-system-theme</li>
 <li>plymouth-plugin-two-step</li>
 <li>plymouth-plugin-script</li>
-</ul>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
+</ul>
+        </article></aside><!-- /#featured -->
+                <h1>Autres articles</h1>
+                <hr />
                     <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark"
-                           title="Permalink to Apt conf on readonly system">Apt conf on readonly system</a></h1>
+                        <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark" title="Permalien vers «Apt conf on readonly system»">Apt conf on readonly system</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-09-24T22:14:00+02:00">
-                Published: lun. 24 septembre 2018
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2018-09-24T22:14:00+02:00">
+                                Publié le 24/09/2018 &agrave; 22:14
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/debian.html">Debian</a> <a href="../tag/apt.html">Apt</a> <a href="../tag/security.html">Security</a> </p>
-</footer><!-- /.post-info -->                <h1>In the apt configuration</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/debian.html">Debian</a><a href="../tag/apt.html">Apt</a><a href="../tag/security.html">Security</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>In the apt configuration</h1>
 <div class="highlight"><pre><span></span><span class="nv">DPkg</span> <span class="p">{</span>
     <span class="o">//</span> <span class="nv">Auto</span> <span class="s s-Atom">re</span><span class="o">-</span><span class="s s-Atom">mounting</span> <span class="s s-Atom">of</span> <span class="s s-Atom">a</span> <span class="s s-Atom">readonly</span> <span class="o">/</span>
     <span class="nv">Pre</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;mount -o remount,rw /&quot;</span><span class="p">;</span> <span class="p">};</span>
     <span class="nv">Post</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;test ${NO_APT_REMOUNT:-no} = yes || mount -o remount,ro / || true&quot;</span><span class="p">;</span> <span class="p">};</span>
 <span class="p">};</span>
 </pre></div>
-                <a class="readmore" href="../apt-conf-on-readonly-system.html">read more</a>
+                <a class="readmore" href="../apt-conf-on-readonly-system.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../multi-screen-on-linux.html" rel="bookmark"
-                           title="Permalink to Multi screen on Linux">Multi screen on Linux</a></h1>
+                        <h1><a href="../multi-screen-on-linux.html" rel="bookmark" title="Permalien vers «Multi screen on Linux»">Multi screen on Linux</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-09-23T00:49:00+02:00">
-                Published: dim. 23 septembre 2018
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2018-09-23T00:49:00+02:00">
+                                Publié le 23/09/2018 &agrave; 00:49
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/screen.html">Screen</a> <a href="../tag/french.html">French</a> </p>
-</footer><!-- /.post-info -->                <h1>Choisir le bon moniteur au boot</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/screen.html">Screen</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Choisir le bon moniteur au boot</h1>
 <p>https://www.centos.org/forums/viewtopic.php?t=62575
 https://forums.fedoraforum.org/showthread.php?239526-GDM-login-on-wrong-Monitor</p>
 <p>Essayer l'ordre de connexion sur la carte</p>
 <p>TIPS: Simply move your mouse to the monitor you want the GDM greeter to show
       and press Enter; IS THAT SIMPLE …</p>
-                <a class="readmore" href="../multi-screen-on-linux.html">read more</a>
+                <a class="readmore" href="../multi-screen-on-linux.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="social">
-                        <h2>social</h2>
+        </article></li>
+</ol><!-- /#posts-list -->
+</section><!-- /#content -->
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Catégories</h2>
                         <ul>
+                           <li ><a href="../category/editors.html">Editors</a></li>
+                           <li ><a href="../category/it.html">IT</a></li>
+                           <li ><a href="../category/rhel8.html">rhel8</a></li>
+                           <li ><a href="../category/tips.html">TIPS</a></li>
+                        </ul>
+                </div>
+                <div class="widget social">
+                        <h2>Réseaux sociaux</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
 
                             <li><a href="https://twitter.com/fccagou">twitter</a></li>
                             <li><a href="https://github.com/fccagou">github</a></li>
                         </ul>
                 </div><!-- /.social -->
-        </section><!-- /#extras -->
+        </aside><!-- /#sidebar -->
 
-        <footer id="contentinfo" class="body">
+        <footer id="footer" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Ce site est généré par <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>, un CMS réalisé en <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                <p>Le thème utilisé est «NotMyIdea-CMS», une version modifiée de «NotMyIdea», le thème par défaut.</p>
+        </footer><!-- /#footer -->
 
 </body>
 </html>

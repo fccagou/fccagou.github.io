@@ -1,36 +1,49 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-        <meta charset="utf-8" />
         <title>The Cagou's Blog - Linux</title>
-        <link rel="stylesheet" href="../theme/css/main.css" />
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
+
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog </a></h1>
                 <nav><ul>
-                    <li><a href="../category/editors.html">Editors</a></li>
-                    <li><a href="../category/it.html">IT</a></li>
-                    <li><a href="../category/rhel8.html">rhel8</a></li>
-                    <li><a href="../category/tips.html">TIPS</a></li>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../archives.html">Archives</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="../what-about-udev.html">what about udev ?</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2019-05-18T00:00:00+02:00">
-                Published: sam. 18 mai 2019
-        </abbr>
+        
+        
+     <section id="content" class="body">
+        <aside id="featured"><article>
+                <h1 class="entry-title"><a href="../what-about-udev.html">what about udev ?</a></h1> 
+                <footer class="post-info">
+                        <abbr class="published" title="2019-05-18T00:00:00+02:00">
+                                Publié le 18/05/2019 &agrave; 00:00
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/kernel.html">kernel</a> <a href="../tag/udev.html">udev</a> </p>
-</footer><!-- /.post-info --><h1>Presentation</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                <p>Dans <a href="../category/it.html">IT</a>. </p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/kernel.html">kernel</a><a href="../tag/udev.html">udev</a></p></p>                </footer><!-- /.post-info -->
+                <h1>Presentation</h1>
 <p>udev job is to manage '/dev' directory with kernel input output events.
 Udev is implemented by <a href="">systemd-udevd</a></p>
 <h1>Blink(1) Led  exemple</h1>
@@ -918,59 +931,60 @@ SUBSYSTEM=leds</p>
 <span class="nv">USEC_INITIALIZED</span><span class="o">=</span><span class="mi">6761851487</span>
 <span class="nv">MAJOR</span><span class="o">=</span><span class="mi">189</span>
 <span class="nv">MINOR</span><span class="o">=</span><span class="mi">6</span>
-</pre></div>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
+</pre></div>
+        </article></aside><!-- /#featured -->
+                <h1>Autres articles</h1>
+                <hr />
                     <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../some-it-tips.html" rel="bookmark"
-                           title="Permalink to Some IT TIPS">Some IT TIPS</a></h1>
+                        <h1><a href="../some-it-tips.html" rel="bookmark" title="Permalien vers «Some IT TIPS»">Some IT TIPS</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-05-12T11:34:00+02:00">
-                Published: dim. 12 mai 2019
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2019-05-12T11:34:00+02:00">
+                                Publié le 12/05/2019 &agrave; 11:34
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/tips.html">TIPS</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/divers.html">Divers</a> <a href="../tag/tips.html">TIPS</a> </p>
-</footer><!-- /.post-info -->                <h1>Openssl, make multi DNS certificat</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/tips.html">TIPS</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/divers.html">Divers</a><a href="../tag/tips.html">TIPS</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Openssl, make multi DNS certificat</h1>
 <div class="highlight"><pre><span></span><span class="n">openssl</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">-</span><span class="k">new</span><span class="w"> </span><span class="o">-</span><span class="n">sha256</span><span class="w"> </span><span class="o">-</span><span class="k">key</span><span class="w"> </span><span class="k">domain</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">-</span><span class="n">subj</span><span class="w"> </span><span class="ss">&quot;/C=US/ST=CA/O=Acme, Inc./CN=example.com&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">reqexts</span><span class="w"> </span><span class="n">SAN</span><span class="w"> </span><span class="o">-</span><span class="n">config</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="n">cat</span><span class="w"> </span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">openssl</span><span class="p">.</span><span class="n">cnf</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="n">printf</span><span class="w"> </span><span class="ss">&quot;[SAN]\nsubjectAltName=DNS:example.com,DNS:www.example.com&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="k">out</span><span class="w"> </span><span class="k">domain</span><span class="p">.</span><span class="n">csr</span><span class="w"></span>
 </pre></div>
 
 
 <h1>Debian Netinstallation</h1>
 <p>https://www.debian.org …</p>
-                <a class="readmore" href="../some-it-tips.html">read more</a>
+                <a class="readmore" href="../some-it-tips.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../rhel8-whats-new.html" rel="bookmark"
-                           title="Permalink to RHEL8 what's new ?">RHEL8 what's new ?</a></h1>
+                        <h1><a href="../rhel8-whats-new.html" rel="bookmark" title="Permalien vers «RHEL8 what's new ?»">RHEL8 what's new ?</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-05-08T23:52:00+02:00">
-                Published: mer. 08 mai 2019
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2019-05-08T23:52:00+02:00">
+                                Publié le 08/05/2019 &agrave; 23:52
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/rhel8.html">rhel8</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/redhat.html">RedHat</a> <a href="../tag/system.html">System</a> <a href="../tag/french.html">French</a> </p>
-</footer><!-- /.post-info -->                <h1>Actions menées</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/rhel8.html">rhel8</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/redhat.html">RedHat</a><a href="../tag/system.html">System</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Actions menées</h1>
 <p>Récuparation de l'iso sur le site de RedHat
 Installation dans une VM</p>
 <h1>Contenu de l'ISO</h1>
@@ -983,28 +997,29 @@ Installation dans une VM</p>
 <li>media.repo: configuration yum</li>
 <li>RPM-GPG-KEY-redhat-beta : clef de signature</li>
 <li>RPM-GPG-KEY-redhat-release : clef de signature …</li></ul>
-                <a class="readmore" href="../rhel8-whats-new.html">read more</a>
+                <a class="readmore" href="../rhel8-whats-new.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../cups-under-arch.html" rel="bookmark"
-                           title="Permalink to CUPS under Arch">CUPS under Arch</a></h1>
+                        <h1><a href="../cups-under-arch.html" rel="bookmark" title="Permalien vers «CUPS under Arch»">CUPS under Arch</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-04-11T22:33:00+02:00">
-                Published: jeu. 11 avril 2019
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2019-04-11T22:33:00+02:00">
+                                Publié le 11/04/2019 &agrave; 22:33
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/cups.html">Cups</a> <a href="../tag/arch.html">Arch</a> <a href="../tag/french.html">French</a> </p>
-</footer><!-- /.post-info -->                <h2>Installation</h2>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/cups.html">Cups</a><a href="../tag/arch.html">Arch</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h2>Installation</h2>
 <p>pacman -Sy cups cups-pdf hplip
   systemctl start org.cups.cupsd.socket</p>
 <h2>Configuration d'une imprimante</h2>
@@ -1023,28 +1038,29 @@ Installation dans une VM</p>
 <p>List drivers matching "HP LaserJet":</p>
 <div class="highlight"><pre><span></span><span class="n">lpinfo</span> <span class="c1">--make-and-model &quot;HP LaserJet&quot; -m</span>
 <span class="n">lpinfo …</span></pre></div>
-                <a class="readmore" href="../cups-under-arch.html">read more</a>
+                <a class="readmore" href="../cups-under-arch.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../puppet-6x.html" rel="bookmark"
-                           title="Permalink to Puppet 6.x">Puppet 6.x</a></h1>
+                        <h1><a href="../puppet-6x.html" rel="bookmark" title="Permalien vers «Puppet 6.x»">Puppet 6.x</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-02-23T12:17:00+01:00">
-                Published: sam. 23 février 2019
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2019-02-23T12:17:00+01:00">
+                                Publié le 23/02/2019 &agrave; 12:17
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/puppet.html">Puppet</a> <a href="../tag/devops.html">DevOPS</a> <a href="../tag/configuration.html">configuration</a> </p>
-</footer><!-- /.post-info -->                <h1>Pré-requis / Entrants</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/puppet.html">Puppet</a><a href="../tag/devops.html">DevOPS</a><a href="../tag/configuration.html">configuration</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Pré-requis / Entrants</h1>
 <ul>
 <li>CentOS 7 minimal</li>
 <li>Partitionnement reco ANSSI : à fournir</li>
@@ -1068,28 +1084,29 @@ Installation dans une VM</p>
 <ul>
 <li>puppet-agent sur les noeuds à configurer</li>
 <li>puppetserver : le puppetmaster …</li></ul>
-                <a class="readmore" href="../puppet-6x.html">read more</a>
+                <a class="readmore" href="../puppet-6x.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../custom-boot.html" rel="bookmark"
-                           title="Permalink to Custom boot">Custom boot</a></h1>
+                        <h1><a href="../custom-boot.html" rel="bookmark" title="Permalien vers «Custom boot»">Custom boot</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2019-01-29T22:33:00+01:00">
-                Published: mar. 29 janvier 2019
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2019-01-29T22:33:00+01:00">
+                                Publié le 29/01/2019 &agrave; 22:33
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/boot.html">boot</a> <a href="../tag/grub.html">grub</a> <a href="../tag/plymouth.html">plymouth</a> </p>
-</footer><!-- /.post-info -->                <h2>Pour changer l'image sur le menu grub</h2>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/boot.html">boot</a><a href="../tag/grub.html">grub</a><a href="../tag/plymouth.html">plymouth</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h2>Pour changer l'image sur le menu grub</h2>
 <p>Choisir une image et remplacer /boot/grub2/splatch.png</p>
 <p>Modifier /etc/default/grub</p>
 <div class="highlight"><pre><span></span>   <span class="n">GRUB_TIMEOUT</span><span class="o">=</span><span class="mi">5</span>
@@ -1098,28 +1115,29 @@ Installation dans une VM</p>
    <span class="n">GRUB_DISABLE_SUBMENU</span><span class="o">=</span><span class="k">true</span>
 <span class="o">-&gt;</span> <span class="o">#</span><span class="n">GRUB_TERMINAL_OUTPUT</span><span class="o">=</span><span class="ss">&quot;console&quot;</span>
    <span class="n">GRUB_CMDLINE_LINUX</span><span class="o">=</span><span class="ss">&quot;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet …</span></pre></div>
-                <a class="readmore" href="../custom-boot.html">read more</a>
+                <a class="readmore" href="../custom-boot.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../some-doc-about-libvirt.html" rel="bookmark"
-                           title="Permalink to Some doc about libvirt">Some doc about libvirt</a></h1>
+                        <h1><a href="../some-doc-about-libvirt.html" rel="bookmark" title="Permalien vers «Some doc about libvirt»">Some doc about libvirt</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-11-05T01:23:00+01:00">
-                Published: lun. 05 novembre 2018
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2018-11-05T01:23:00+01:00">
+                                Publié le 05/11/2018 &agrave; 01:23
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/virtualization.html">virtualization</a> <a href="../tag/libvirt.html">libvirt</a> </p>
-</footer><!-- /.post-info -->                <p>Installation de libvirt et virt-manager</p>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">virtualization</a><a href="../tag/libvirt.html">libvirt</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <p>Installation de libvirt et virt-manager</p>
 <div class="section" id="dnsmasq">
 <h2>dnsmasq</h2>
 <p>libvirt utilise dnsmasq</p>
@@ -1135,56 +1153,58 @@ dhcp-no-override
 dhcp-leasefile=/var/lib/libvirt/dnsmasq/default.leases
 dhcp-lease-max=253
 dhcp-hostsfile=/var/lib/libvirt …</pre></div>
-                <a class="readmore" href="../some-doc-about-libvirt.html">read more</a>
+                <a class="readmore" href="../some-doc-about-libvirt.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark"
-                           title="Permalink to Apt conf on readonly system">Apt conf on readonly system</a></h1>
+                        <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark" title="Permalien vers «Apt conf on readonly system»">Apt conf on readonly system</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-09-24T22:14:00+02:00">
-                Published: lun. 24 septembre 2018
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2018-09-24T22:14:00+02:00">
+                                Publié le 24/09/2018 &agrave; 22:14
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/debian.html">Debian</a> <a href="../tag/apt.html">Apt</a> <a href="../tag/security.html">Security</a> </p>
-</footer><!-- /.post-info -->                <h1>In the apt configuration</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/debian.html">Debian</a><a href="../tag/apt.html">Apt</a><a href="../tag/security.html">Security</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>In the apt configuration</h1>
 <div class="highlight"><pre><span></span><span class="nv">DPkg</span> <span class="p">{</span>
     <span class="o">//</span> <span class="nv">Auto</span> <span class="s s-Atom">re</span><span class="o">-</span><span class="s s-Atom">mounting</span> <span class="s s-Atom">of</span> <span class="s s-Atom">a</span> <span class="s s-Atom">readonly</span> <span class="o">/</span>
     <span class="nv">Pre</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;mount -o remount,rw /&quot;</span><span class="p">;</span> <span class="p">};</span>
     <span class="nv">Post</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;test ${NO_APT_REMOUNT:-no} = yes || mount -o remount,ro / || true&quot;</span><span class="p">;</span> <span class="p">};</span>
 <span class="p">};</span>
 </pre></div>
-                <a class="readmore" href="../apt-conf-on-readonly-system.html">read more</a>
+                <a class="readmore" href="../apt-conf-on-readonly-system.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../docker-on-centos-7.html" rel="bookmark"
-                           title="Permalink to Docker on CentOS 7">Docker on CentOS 7</a></h1>
+                        <h1><a href="../docker-on-centos-7.html" rel="bookmark" title="Permalien vers «Docker on CentOS 7»">Docker on CentOS 7</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-09-23T00:49:00+02:00">
-                Published: dim. 23 septembre 2018
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2018-09-23T00:49:00+02:00">
+                                Publié le 23/09/2018 &agrave; 00:49
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/virtualization.html">Virtualization</a> <a href="../tag/container.html">Container</a> <a href="../tag/centos.html">CentOS</a> </p>
-</footer><!-- /.post-info -->                <h1>Installation</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">Virtualization</a><a href="../tag/container.html">Container</a><a href="../tag/centos.html">CentOS</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Installation</h1>
 <div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">docker</span>
 <span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span>
 <span class="n">systemctl</span> <span class="k">start</span> <span class="n">docker</span>
@@ -1210,60 +1230,211 @@ dhcp-hostsfile=/var/lib/libvirt …</pre></div>
 
 <p>Apport de modifications.</p>
 <h1>Exemple d'utilisation de …</h1>
-                <a class="readmore" href="../docker-on-centos-7.html">read more</a>
+                <a class="readmore" href="../docker-on-centos-7.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
                 <header>
-                    <h1><a href="../multi-screen-on-linux.html" rel="bookmark"
-                           title="Permalink to Multi screen on Linux">Multi screen on Linux</a></h1>
+                        <h1><a href="../multi-screen-on-linux.html" rel="bookmark" title="Permalien vers «Multi screen on Linux»">Multi screen on Linux</a></h1>
                 </header>
-
+                
                 <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-09-23T00:49:00+02:00">
-                Published: dim. 23 septembre 2018
-        </abbr>
+                <footer class="post-info">
+                        <abbr class="published" title="2018-09-23T00:49:00+02:00">
+                                Publié le 23/09/2018 &agrave; 00:49
+                        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="../author/fccagou.html">fccagou</a>
-        </address>
-<p>In <a href="../category/it.html">IT</a>.</p>
-<p>tags: <a href="../tag/linux.html">Linux</a> <a href="../tag/custom.html">Custom</a> <a href="../tag/screen.html">Screen</a> <a href="../tag/french.html">French</a> </p>
-</footer><!-- /.post-info -->                <h1>Choisir le bon moniteur au boot</h1>
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/screen.html">Screen</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Choisir le bon moniteur au boot</h1>
 <p>https://www.centos.org/forums/viewtopic.php?t=62575
 https://forums.fedoraforum.org/showthread.php?239526-GDM-login-on-wrong-Monitor</p>
 <p>Essayer l'ordre de connexion sur la carte</p>
 <p>TIPS: Simply move your mouse to the monitor you want the GDM greeter to show
       and press Enter; IS THAT SIMPLE …</p>
-                <a class="readmore" href="../multi-screen-on-linux.html">read more</a>
+                <a class="readmore" href="../multi-screen-on-linux.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-<p class="paginator">
-    Page 1 / 2
-        <a href="../tag/linux2.html">&raquo;</a>
-</p>
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="social">
-                        <h2>social</h2>
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../linux-infra-configuration.html" rel="bookmark" title="Permalien vers «Linux infra configuration»">Linux infra configuration</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+                        <abbr class="published" title="2017-12-11T18:31:00+01:00">
+                                Publié le 11/12/2017 &agrave; 18:31
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Description</h1>
+<p>This document show a way to configure Linux services to manage Linux hosts from
+deployment to usage.</p>
+<p>The configurations have been tested on CentOS &gt;=6 system but can be adapted to
+others GNU/Linux distributions.</p>
+<h1>Name resolution service</h1>
+<p>Bind uses named.conf as default configuration file. On CentOS, the …</p>
+                <a class="readmore" href="../linux-infra-configuration.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../how-to-make-ha-glusterfs-using-keepalived.html" rel="bookmark" title="Permalien vers «How to make HA GlusterFs using Keepalived»">How to make HA GlusterFs using Keepalived</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+                        <abbr class="published" title="2017-08-02T01:01:00+02:00">
+                                Publié le 02/08/2017 &agrave; 01:01
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/ha.html">HA</a><a href="../tag/gluster.html">Gluster</a><a href="../tag/keepalived.html">Keepalived</a><a href="../tag/distributedfs.html">distributedfs</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <p>Example tested on 2 CentOS7 VM</p>
+<div class="highlight"><pre><span></span><span class="o">!</span> <span class="nv">Configuration</span> <span class="nv">File</span> <span class="k">for</span> <span class="nv">keepalived</span>
+
+<span class="nv">vrrp_script</span> <span class="nv">check_glusterd</span> {
+  <span class="nv">script</span>       <span class="s2">&quot;</span><span class="s">/usr/sbin/pidof glusterd</span><span class="s2">&quot;</span>
+  <span class="nv">interval</span> <span class="mi">5</span>
+  <span class="nv">fall</span> <span class="mi">1</span>
+  <span class="nv">rise</span> <span class="mi">1</span>
+<span class="o">!</span>  <span class="nb">timeout</span> <span class="nv">t</span>
+<span class="o">!</span>  <span class="nv">weight</span> <span class="nv">w</span>
+}
+
+<span class="nv">global_defs</span> {
+}
+
+<span class="nv">vrrp_instance</span> <span class="nv">gfs01</span> {
+<span class="o">!</span>    <span class="nv">state</span> <span class="nv">MASTER</span>
+    <span class="nv">interface</span> <span class="nv">eth0</span>
+    <span class="nv">virtual_router_id</span> <span class="mi">51</span>
+    <span class="nv">priority</span> <span class="mi">100</span>
+    <span class="nv">advert_int</span> <span class="mi">1</span>
+    <span class="nv">nopreempt</span>
+    <span class="nv">authentication</span> {
+        <span class="nv">auth_type</span> <span class="nv">PASS</span>
+        <span class="nv">auth_pass</span> <span class="mi">1111</span>
+    }
+    <span class="nv">virtual_ipaddress</span> {
+        <span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">122 …</span></pre></div>
+                <a class="readmore" href="../how-to-make-ha-glusterfs-using-keepalived.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../lxc-beginner.html" rel="bookmark" title="Permalien vers «LXC beginner»">LXC beginner</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+                        <abbr class="published" title="2017-07-15T12:13:00+02:00">
+                                Publié le 15/07/2017 &agrave; 12:13
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/container.html">Container</a><a href="../tag/lxc.html">LXC</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Configuration environnement local</h1>
+<div class="highlight"><pre><span></span><span class="nv">mkdir</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.include = /etc/lxc/default.conf</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = u 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = g 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
+<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.lxcpath=/srv/containers/lxc</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">lxc</span>.<span class="nv">conf</span>
+
+<span class="nv">sudo …</span></pre></div>
+                <a class="readmore" href="../lxc-beginner.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../installation-de-cobbler-sur-centos-66.html" rel="bookmark" title="Permalien vers «Installation de cobbler sur CentOS 6.6»">Installation de cobbler sur CentOS 6.6</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+                        <abbr class="published" title="2014-11-29T20:59:00+01:00">
+                                Publié le 29/11/2014 &agrave; 20:59
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="../category/it.html">IT</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/admin.html">Admin</a><a href="../tag/cobbler.html">Cobbler</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <h1>Introduction</h1>
+<p>Ce texte explique comment installer cobbler sur un système CentOS 6.6.</p>
+<p>La solution est testée sur la plate forme vituelle :</p>
+<ul>
+<li>hôte CentOS 7</li>
+<li>solution de virtualisation: libvirt</li>
+</ul>
+<h1>Préparation de l'hôte</h1>
+<h2>Configuration NFS</h2>
+<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span>
+<span class="n">printf</span> <span class="c1">-- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="n">printf</span> <span class="c1">-- &quot;/home …</span></pre></div>
+                <a class="readmore" href="../installation-de-cobbler-sur-centos-66.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
+</ol><!-- /#posts-list -->
+</section><!-- /#content -->
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Catégories</h2>
                         <ul>
+                           <li ><a href="../category/editors.html">Editors</a></li>
+                           <li ><a href="../category/it.html">IT</a></li>
+                           <li ><a href="../category/rhel8.html">rhel8</a></li>
+                           <li ><a href="../category/tips.html">TIPS</a></li>
+                        </ul>
+                </div>
+                <div class="widget social">
+                        <h2>Réseaux sociaux</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
 
                             <li><a href="https://twitter.com/fccagou">twitter</a></li>
                             <li><a href="https://github.com/fccagou">github</a></li>
                         </ul>
                 </div><!-- /.social -->
-        </section><!-- /#extras -->
+        </aside><!-- /#sidebar -->
 
-        <footer id="contentinfo" class="body">
+        <footer id="footer" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Ce site est généré par <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>, un CMS réalisé en <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                <p>Le thème utilisé est «NotMyIdea-CMS», une version modifiée de «NotMyIdea», le thème par défaut.</p>
+        </footer><!-- /#footer -->
 
 </body>
 </html>
