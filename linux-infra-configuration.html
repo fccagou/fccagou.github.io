@@ -43,12 +43,12 @@
                 <p>Dans <a href="./category/it.html">IT</a>.
 <p>tags: <a href="./tag/linux.html">Linux</a></p></p>        </footer><!-- /.post-info -->
         <h1>Description</h1>
-<p>This document show a way to configure Linux services to manage Linux hosts from
+<p>This document shows a way to configure Linux services to manage Linux hosts from
 deployment to usage.</p>
 <p>The configurations have been tested on CentOS &gt;=6 system but can be adapted to
 others GNU/Linux distributions.</p>
 <h1>Name resolution service</h1>
-<p>Bind uses named.conf as default configuration file. On CentOS, the file is in
+<p>Bind uses <em>named.conf</em> as default configuration file. On CentOS, the file is in
 /etc directory, on debian, it's in /etc/bind directory.</p>
 <p>While debian use include feature to separate the configuration, CentOS use
 only named.conf.  But You can use include feature to.</p>
@@ -171,11 +171,12 @@ access.</p>
 
 
 <h1>DHCP and BOOTP service</h1>
-<p>The service use isc-dcp server. The next sample allow Network deployment and
-DHCP service only for know hosts. For security reason, the dynamic dns update
-eis not set. The omapi-port is defined to allow system query tools.</p>
+<p>The service use <a href="https://www.isc.org/downloads/bind/">isc-dhcp</a> server.
+The next sample allows Network deployment and DHCP service only for known hosts.
+For security reason, the dynamic dns update is not set. The <em>omapi-port</em> is
+defined to allow system query tools.</p>
 <h2>dhcp server configurattion</h2>
-<p>TODO: add ipxe conofiguration</p>
+<p>TODO: add <a href="http://ipxe.org/">ipxe</a> configuration</p>
 <div class="highlight"><pre><span></span><span class="nv">allow</span> <span class="nv">bootp</span><span class="c1">;</span>
 <span class="nv">allow</span> <span class="nv">booting</span><span class="c1">;</span>
 # <span class="nv">boot</span><span class="o">-</span><span class="nv">unknown</span><span class="o">-</span><span class="nv">clients</span>  <span class="nv">false</span><span class="c1">;</span>
@@ -198,7 +199,6 @@ eis not set. The omapi-port is defined to allow system query tools.</p>
 <span class="nv">max</span><span class="o">-</span><span class="nv">lease</span><span class="o">-</span><span class="nv">time</span> <span class="mi">259200</span><span class="c1">;</span>
 <span class="nv">omapi</span><span class="o">-</span><span class="nv">port</span>      <span class="mi">7911</span><span class="c1">;</span>
 <span class="nv">one</span><span class="o">-</span><span class="nv">lease</span><span class="o">-</span><span class="nv">per</span><span class="o">-</span><span class="nv">client</span>    <span class="nv">true</span><span class="c1">;</span>
-
 
 <span class="nv">option</span> <span class="nv">space</span> <span class="nv">PXE</span><span class="c1">;</span>
 <span class="nv">option</span> <span class="nv">PXE</span>.<span class="nv">mtftp</span><span class="o">-</span><span class="nv">ip</span>     <span class="nv">code</span> <span class="mi">1</span> <span class="o">=</span> <span class="nv">ip</span><span class="o">-</span><span class="nv">address</span><span class="c1">;</span>
@@ -260,7 +260,9 @@ eis not set. The omapi-port is defined to allow system query tools.</p>
 
 
 <h2>ssh admin server</h2>
-<div class="highlight"><pre><span></span><span class="n">Port</span><span class="w"> </span><span class="mi">422</span><span class="w"></span>
+<p>For security reason, it's useful to use an admin dedicated ssh server running
+on a dedicated an filtered port. Here is an example :</p>
+<div class="highlight"><pre><span></span><span class="n">Port</span><span class="w"> </span><span class="n">XXX</span><span class="w"></span>
 <span class="n">AddressFamily</span><span class="w"> </span><span class="n">inet</span><span class="w"></span>
 <span class="n">ListenAddress</span><span class="w"> </span><span class="mf">0.0.0.0</span><span class="w"></span>
 <span class="n">AcceptEnv</span><span class="w"> </span><span class="n">LANG</span><span class="w"> </span><span class="n">LC_CTYPE</span><span class="w"> </span><span class="n">USERLOGIN</span><span class="w"></span>
@@ -288,6 +290,7 @@ eis not set. The omapi-port is defined to allow system query tools.</p>
 
 
 <h2>SSh for users service</h2>
+<p>The next example uses a <a href="https://web.mit.edu/Kerberos/">Kerberos</a> authentication:</p>
 <div class="highlight"><pre><span></span><span class="n">Protocol</span> <span class="mi">2</span>
 <span class="n">SyslogFacility</span> <span class="n">AUTHPRIV</span>
 <span class="n">PermitRootLogin</span> <span class="k">no</span>
@@ -310,7 +313,11 @@ eis not set. The omapi-port is defined to allow system query tools.</p>
 
 
 <h2>Autofs NFS configuration</h2>
-<div class="highlight"><pre><span></span><span class="n">mountpoint1</span> <span class="o">-</span><span class="n">fstype</span><span class="o">=</span><span class="n">nfs</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span><span class="n">proto</span><span class="o">=</span><span class="n">tcp</span><span class="p">,</span><span class="n">nodev</span><span class="p">,</span><span class="n">nosuid</span><span class="p">,</span><span class="n">rw</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">bg</span><span class="p">,</span><span class="n">intr</span><span class="p">,</span><span class="n">retry</span><span class="o">=</span><span class="mi">10000</span>  <span class="n">NFS_SRV</span><span class="p">:</span><span class="o">/</span><span class="n">export</span><span class="o">/</span><span class="n">directory</span>
+<p><em>Autofs</em> is useful to mount on demand remote filesystems to avoid blocking
+process at boot time when remote file server is down.</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">System</span> <span class="k">security</span>
+<span class="n">mountpoint1</span> <span class="o">-</span><span class="n">fstype</span><span class="o">=</span><span class="n">nfs</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span><span class="n">proto</span><span class="o">=</span><span class="n">tcp</span><span class="p">,</span><span class="n">nodev</span><span class="p">,</span><span class="n">nosuid</span><span class="p">,</span><span class="n">rw</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">bg</span><span class="p">,</span><span class="n">intr</span><span class="p">,</span><span class="n">retry</span><span class="o">=</span><span class="mi">10000</span>  <span class="n">NFS_SRV</span><span class="p">:</span><span class="o">/</span><span class="n">export</span><span class="o">/</span><span class="n">directory</span>
+<span class="o">#</span> <span class="n">NFS</span> <span class="k">with</span> <span class="n">kerberos5</span>
 <span class="n">mountpoint2</span> <span class="o">-</span><span class="n">fstype</span><span class="o">=</span><span class="n">nfs</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">krb5</span><span class="p">,</span><span class="n">proto</span><span class="o">=</span><span class="n">tcp</span><span class="p">,</span><span class="n">nodev</span><span class="p">,</span><span class="n">nosuid</span><span class="p">,</span><span class="n">rw</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">bg</span><span class="p">,</span><span class="n">intr</span><span class="p">,</span><span class="n">retry</span><span class="o">=</span><span class="mi">10000</span> <span class="n">NFS_SRV</span><span class="p">:</span><span class="o">/</span><span class="n">export</span><span class="o">/</span><span class="n">directory</span>
 </pre></div>
         </div><!-- /.entry-content -->
