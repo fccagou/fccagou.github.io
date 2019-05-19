@@ -44,9 +44,9 @@
                 <p>Dans <a href="../category/it.html">IT</a>. </p>
 <p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/virtualization.html">Virtualization</a><a href="../tag/container.html">Container</a><a href="../tag/centos.html">CentOS</a></p></p>                </footer><!-- /.post-info -->
                 <h1>Installation</h1>
-<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">docker</span>
-<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span>
-<span class="n">systemctl</span> <span class="k">start</span> <span class="n">docker</span>
+<div class="highlight"><pre><span></span>$ yum install docker
+$ systemctl <span class="nb">enable</span> docker
+$ systemctl start docker
 </pre></div>
 
 
@@ -73,18 +73,15 @@
 </pre></div>
 
 
-<p>Si on ne veut pas mettre de privilège, il faut mettre à jour selinux :</p>
-<div class="highlight"><pre><span></span><span class="n">setenforce</span> <span class="n">Permissive</span>
-</pre></div>
-
-
-<p>ou</p>
+<p>Si on ne veut pas mettre de privilège, il faut mettre à jour
+<a href="https://selinuxproject.org/page/Main_Page">selinux</a> en analysant les blocages
+à al'aides des commandes <em>audit2why</em> et <em>audit2allow</em></p>
 <div class="highlight"><pre><span></span><span class="n">chcon</span> <span class="o">-</span><span class="n">Rt</span> <span class="n">svirt_sandbox_file_t</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">volume</span>
 </pre></div>
 
 
 <h1>Liens externes</h1>
-<p>https://docs.docker.com/get-started/part2/#conclusion-of-part-two</p>
+<p><a href="https://docs.docker.com/get-started/part2/#conclusion-of-part-two">Docker</a></p>
 <div class="highlight"><pre><span></span><span class="nv">docker</span> <span class="nv">build</span> <span class="o">-</span><span class="nv">t</span> <span class="nv">friendlyhello</span> .  # <span class="nv">Create</span> <span class="nv">image</span> <span class="nv">using</span> <span class="nv">this</span> <span class="nv">directory</span><span class="s1">&#39;</span><span class="s">s Dockerfile</span>
 <span class="nv">docker</span> <span class="nv">run</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">4000</span>:<span class="mi">80</span> <span class="nv">friendlyhello</span>  # <span class="nv">Run</span> <span class="s2">&quot;</span><span class="s">friendlyname</span><span class="s2">&quot;</span> <span class="nv">mapping</span> <span class="nv">port</span> <span class="mi">4000</span> <span class="nv">to</span> <span class="mi">80</span>
 <span class="nv">docker</span> <span class="nv">run</span> <span class="o">-</span><span class="nv">d</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">4000</span>:<span class="mi">80</span> <span class="nv">friendlyhello</span>         # <span class="nv">Same</span> <span class="nv">thing</span>, <span class="nv">but</span> <span class="nv">in</span> <span class="nv">detached</span> <span class="nv">mode</span>
