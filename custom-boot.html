@@ -56,27 +56,27 @@
 </pre></div>
 
 
-<p>Regenérer le grub</p>
+<p>Régénérer la conf de grub</p>
 <div class="highlight"><pre><span></span><span class="n">grub2</span><span class="o">-</span><span class="n">mkconfig</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">grub2</span><span class="o">/</span><span class="n">grub</span><span class="p">.</span><span class="n">cfg</span>
 </pre></div>
 
 
 <h2>Pour l'animation plymouth</h2>
-<p>Plymouth utilise les themes situés dans /usr/share/plymouth/themes/</p>
+<p>Plymouth utilise les thèmes situés dans /usr/share/plymouth/themes/</p>
 <p>Pour choisir  le thème par défaut, </p>
-<div class="highlight"><pre><span></span><span class="n">plymouth</span><span class="o">-</span><span class="k">set</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">theme</span> <span class="o">-</span><span class="n">R</span> <span class="o">&lt;</span><span class="n">nom_du_thee</span><span class="o">&gt;</span>
+<div class="highlight"><pre><span></span><span class="n">plymouth</span><span class="o">-</span><span class="k">set</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">theme</span> <span class="o">-</span><span class="n">R</span> <span class="o">&lt;</span><span class="n">nom_du_theme</span><span class="o">&gt;</span>
 </pre></div>
 
 
-<p>L'option -r refabrique le initrd immédiatement pour y inclure le thème.</p>
-<p>Plymouth uilise le fichier de configuration /etc/plymouth/plymouth.conf</p>
+<p>L'option <em>-r</em> actualise le initrd immédiatement pour y inclure le thème.</p>
+<p>Plymouth utilise le fichier de configuration /etc/plymouth/plymouth.conf</p>
 <div class="highlight"><pre><span></span><span class="k">[Daemon]</span>
 <span class="na">Theme</span><span class="o">=</span><span class="s">&lt;nom_du_theme&gt;</span>
 </pre></div>
 
 
 <p>TODO: voir si la commande du dessus met à jour ce fichier !!!</p>
-<p>Un thème contient son fichier de desription <nom_du_theme>/<nom_du_theme>.plymouth.</p>
+<p>Un thème contient son fichier de description <nom_du_theme>/<nom_du_theme>.plymouth.</p>
 <div class="highlight"><pre><span></span> <span class="p">[</span><span class="n">Plymouth</span> <span class="n">Theme</span><span class="p">]</span>
  <span class="n">Name</span><span class="o">=</span><span class="n">UN_TRUC</span>
  <span class="n">Description</span><span class="o">=</span><span class="n">une</span> <span class="n">doc</span>
