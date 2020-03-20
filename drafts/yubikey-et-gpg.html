@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -43,7 +43,7 @@
                 <p>Dans <a href="../category/it.html">IT</a>.
 <p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/security.html">Security</a><a href="../tag/yubikey.html">Yubikey</a></p></p>        </footer><!-- /.post-info -->
         <h1>Test bon fonctionnement</h1>
-<div class="highlight"><pre><span></span><span class="n">echo</span> <span class="ss">&quot;$(uname -a)&quot;</span> <span class="o">|</span> <span class="n">gpg2</span> <span class="c1">--encrypt --armor  --recipient $KEYID | gpg2 --decrypt --armor</span>
+<div class="highlight"><pre><span></span><span class="err">echo &quot;$(uname -a)&quot; | gpg2 --encrypt --armor  --recipient $KEYID | gpg2 --decrypt --armor</span>
 </pre></div>
 
 
@@ -95,6 +95,33 @@
 
 </li>
 </ul>
+<h2>Liste des protocoles</h2>
+<h3>OTP</h3>
+<ul>
+<li>Yubico OTP</li>
+<li>HMAC-SHA1 Challenge-Response</li>
+<li>Static Password</li>
+<li>OATH-HOTP</li>
+</ul>
+<p>USB Interface: OTP</p>
+<h3>U2F / FIDO</h3>
+<p>USB Interface: FIDO</p>
+<h3>OATH</h3>
+<p>USB Interface: CCID</p>
+<h3>PIV (smart card)</h3>
+<p>USB Interface: CCID</p>
+<h3>CA</h3>
+<p>https://developers.yubico.com/PIV/Guides/Certificate_authority.html</p>
+<h3>OpenPGP</h3>
+<p>USB Interface: CCID</p>
+<p>https://support.yubico.com/support/solutions/articles/15000006420-using-your-yubikey-with-openpgp#Generating_Keys_externally_from_the_YubiKey_(Recommended)</p>
+<p>https://developers.yubico.com/</p>
+<p>https://developers.yubico.com/PGP/Importing_keys.html
+* Créer une clé GPG live system
+* enregistrer la clé pgp dans sur une yubikey + 1 de secours
+* (sauvegarder la clé privée sur su papier ?)
+* extraire la clé ssh
+  https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</p>
         </div><!-- /.entry-content -->
 
 </article>

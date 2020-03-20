@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="./index.html">The Cagou's Blog </a></h1>
+                <h1><a href="./index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="./index.html">Accueil</a></li>
                 <li><a href="./archives.html">Archives</a></li>
@@ -50,12 +50,12 @@
 <h1>Debian Netinstallation</h1>
 <p>https://www.debian.org/releases/stable/i386/ch04s05.html.en</p>
 <h1>AUtofs sample conf</h1>
-<div class="highlight"><pre><span></span><span class="n">dir</span> <span class="o">-</span><span class="n">fstype</span><span class="o">=</span><span class="n">nfs</span><span class="p">,</span><span class="n">rw</span><span class="p">,</span><span class="n">bg</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">retrans</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">vers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">proto</span><span class="o">=</span><span class="n">tcp</span><span class="p">,</span><span class="n">nosuid</span><span class="p">,</span><span class="n">nodev</span><span class="p">,</span><span class="n">intr</span>   <span class="k">host</span><span class="p">:</span><span class="o">/</span><span class="n">mount</span><span class="o">/</span><span class="n">point</span>
+<div class="highlight"><pre><span></span><span class="err">dir -fstype=nfs,rw,bg,hard,retrans=1000,vers=4,proto=tcp,nosuid,nodev,intr   host:/mount/point</span>
 </pre></div>
 
 
 <h1>Soft RAID</h1>
-<div class="highlight"><pre><span></span><span class="n">mdadm</span> <span class="c1">--detail --scan &gt; /etc/mdadm.conf</span>
+<div class="highlight"><pre><span></span><span class="err">mdadm --detail --scan &gt; /etc/mdadm.conf</span>
 </pre></div>
         </div><!-- /.entry-content -->
 

@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -52,10 +52,10 @@
 </ul>
 <h1>Préparation de l'hôte</h1>
 <h2>Configuration NFS</h2>
-<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span>
-<span class="n">printf</span> <span class="c1">-- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
-<span class="n">printf</span> <span class="c1">-- &quot;/home/depots    192.168.122.2(ro,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
-<span class="n">exportfs</span> <span class="o">-</span><span class="n">r</span>
+<div class="highlight"><pre><span></span><span class="err">mkdir /home/cobbler</span>
+<span class="err">printf -- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="err">printf -- &quot;/home/depots    192.168.122.2(ro,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="err">exportfs -r</span>
 </pre></div>
 
 
@@ -82,56 +82,56 @@ virsh net-start default
 <h2>Configuration du serveur</h2>
 <p>Configuration du réseau : DHCP</p>
 <p>Installation de dépot EPEL</p>
-<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">epel</span><span class="o">-</span><span class="n">release</span> <span class="n">facter</span>
+<div class="highlight"><pre><span></span><span class="err">yum install epel-release facter</span>
 </pre></div>
 
 
 <p>Desactivation de selinux</p>
-<div class="highlight"><pre><span></span><span class="n">setenforce</span> <span class="n">permissive</span>
-<span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/^SELINUX=.*$/SELINUX=permissive/&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sysconfig</span><span class="o">/</span><span class="n">selinux</span>
-<span class="n">NOTE</span><span class="p">:</span> <span class="n">BAD</span> <span class="n">IDEA</span> <span class="n">but</span> <span class="n">the</span> <span class="n">article</span> <span class="n">was</span> <span class="n">written</span> <span class="k">in</span> <span class="mi">2014</span><span class="p">.</span> <span class="n">What</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">up</span> <span class="n">now</span> <span class="o">?</span>
+<div class="highlight"><pre><span></span><span class="err">setenforce permissive</span>
+<span class="err">sed -i &#39;s/^SELINUX=.*$/SELINUX=permissive/&#39; /etc/sysconfig/selinux</span>
+<span class="c">NOTE: BAD IDEA but the article was written in 2014. What&#39;s up now ?</span>
 </pre></div>
 
 
 <h2>Installation de paquets de confort</h2>
-<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">vim</span> <span class="n">man</span> <span class="n">task</span>
-<span class="n">task</span> <span class="n">config</span> <span class="n">locale</span> <span class="n">fr</span><span class="o">-</span><span class="n">FR</span>
+<div class="highlight"><pre><span></span><span class="err">yum install vim man task</span>
+<span class="err">task config locale fr-FR</span>
 </pre></div>
 
 
 <h1>Installation de cobbler</h1>
 <h2>Installation</h2>
 <p>Installation de cobbler serveur + web</p>
-<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">cobbler</span> <span class="n">cobbler</span><span class="o">-</span><span class="n">web</span> <span class="n">git</span>
+<div class="highlight"><pre><span></span><span class="err">yum install -y cobbler cobbler-web git</span>
 </pre></div>
 
 
 <p>Configuration pour un démarrage au boot</p>
-<div class="highlight"><pre><span></span><span class="n">chkconfig</span> <span class="n">cobbler</span> <span class="k">on</span>
-<span class="n">chkconfig</span> <span class="n">httpd</span> <span class="k">on</span>
-<span class="n">service</span> <span class="n">cobbler</span> <span class="k">start</span>
-<span class="n">service</span> <span class="n">httpd</span> <span class="k">start</span>
+<div class="highlight"><pre><span></span><span class="err">chkconfig cobbler on</span>
+<span class="err">chkconfig httpd on</span>
+<span class="err">service cobbler start</span>
+<span class="err">service httpd start</span>
 </pre></div>
 
 
 <p>Installation des paquets pour le pxe</p>
-<div class="highlight"><pre><span></span>    <span class="n">yum</span> <span class="n">install</span> <span class="n">syslinux</span><span class="p">.</span><span class="n">x86_64</span>
+<div class="highlight"><pre><span></span><span class="err">    yum install syslinux.x86_64</span>
 </pre></div>
 
 
 <h2>Configuration</h2>
 <p>Serveur kickstart</p>
-<div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="ss">&quot;s/^server:.*/server: $(facter ipaddress)/&quot;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">cobblers</span><span class="o">/</span><span class="n">settings</span>
+<div class="highlight"><pre><span></span><span class="err">sed -i &quot;s/^server:.*/server: $(facter ipaddress)/&quot; /etc/cobblers/settings</span>
 </pre></div>
 
 
 <p>Serveur tftp</p>
-<div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="ss">&quot;s/^next_server:.*/next_server: $(facter ipaddress)/&quot;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">cobblers</span><span class="o">/</span><span class="n">settings</span>
+<div class="highlight"><pre><span></span><span class="err">sed -i &quot;s/^next_server:.*/next_server: $(facter ipaddress)/&quot; /etc/cobblers/settings</span>
 </pre></div>
 
 
 <p>utilisation de git</p>
-<div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/^scm_track_mode/scm_track_mode: &quot;git&quot;/&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">cobblers</span><span class="o">/</span><span class="n">settings</span>
+<div class="highlight"><pre><span></span><span class="err">sed -i &#39;s/^scm_track_mode/scm_track_mode: &quot;git&quot;/&#39; /etc/cobblers/settings</span>
 </pre></div>
 
 
@@ -141,40 +141,40 @@ virsh net-start default
 <li>UTILISER cobbler setting edit --name=foo --value=bar pour faire de la config plutôt que sed !!</li>
 </ul>
 <p>On applique les modifications</p>
-<div class="highlight"><pre><span></span><span class="n">cobbler</span> <span class="n">sync</span>
+<div class="highlight"><pre><span></span><span class="err">cobbler sync</span>
 </pre></div>
 
 
 <h2>Test de la configuration</h2>
-<div class="highlight"><pre><span></span><span class="n">cobbler</span> <span class="k">check</span>
+<div class="highlight"><pre><span></span><span class="err">cobbler check</span>
 </pre></div>
 
 
 <h2>Test Web</h2>
 <p>login/pass: cobbler/cobbler</p>
-<div class="highlight"><pre><span></span><span class="n">firefox</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">122</span><span class="p">.</span><span class="mi">1</span><span class="o">/</span><span class="n">cobbler_web</span>
+<div class="highlight"><pre><span></span><span class="err">firefox http://192.168.122.1/cobbler_web</span>
 </pre></div>
 
 
 <h1>Utilisation montage nfs pour le stockage de cobbler</h1>
 <p>Creation de l'alias datastore pour une utilisation par autofs</p>
-<div class="highlight"><pre><span></span><span class="n">printf</span> <span class="c1">-- &#39;192.168.122.1 datasrore&#39; &gt;&gt; /etc/hosts</span>
+<div class="highlight"><pre><span></span><span class="err">printf -- &#39;192.168.122.1 datasrore&#39; &gt;&gt; /etc/hosts</span>
 </pre></div>
 
 
 <p>Installation des paquets nécessaires pour autofs</p>
-<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">utils</span> <span class="n">autofs</span>
-<span class="n">service</span> <span class="n">autofs</span> <span class="k">start</span>
-<span class="n">chkconfig</span> <span class="n">autofs</span> <span class="k">on</span>
+<div class="highlight"><pre><span></span><span class="err">yum install nfs-utils autofs</span>
+<span class="err">service autofs start</span>
+<span class="err">chkconfig autofs on</span>
 </pre></div>
 
 
 <p>Comme la VM serveur n'a pas beaucoup de place, on utilise un montage nfs 
 sur l'hôte pour l'environnement cobbler. Il faut donc déplacer l'éxistant:</p>
-<div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span>
-<span class="n">mv</span> <span class="n">cobbler</span> <span class="n">cobbler_ori</span>
-<span class="n">ln</span> <span class="o">-</span><span class="n">sf</span> <span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">datastore</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span> <span class="p">.</span>
-<span class="n">rsync</span> <span class="o">-</span><span class="n">av</span> <span class="n">cobbler_ori</span> <span class="n">cobbler</span>
+<div class="highlight"><pre><span></span><span class="err">cd /var/www</span>
+<span class="err">mv cobbler cobbler_ori</span>
+<span class="err">ln -sf /net/datastore/home/cobbler .</span>
+<span class="err">rsync -av cobbler_ori cobbler</span>
 </pre></div>
 
 
@@ -182,14 +182,14 @@ sur l'hôte pour l'environnement cobbler. Il faut donc déplacer l'éxistant:</p
    - etudier l'arborescence pour ne pas tout monter
    - il semble que ce soit ks_mirror qui prend de la place car il contient les distrib.</p>
 <p>Verification</p>
-<div class="highlight"><pre><span></span><span class="n">cobbler</span> <span class="k">check</span>
+<div class="highlight"><pre><span></span><span class="err">cobbler check</span>
 </pre></div>
 
 
 <h1>Import dune distribution</h1>
 <p>Montage de l'iso</p>
-<div class="highlight"><pre><span></span><span class="nv">ls</span> <span class="o">-</span><span class="nv">al</span> <span class="o">/</span><span class="nv">net</span><span class="o">/</span><span class="nv">datastore</span><span class="o">/</span><span class="nv">home</span><span class="o">/</span><span class="nv">depots</span><span class="o">/</span><span class="nv">ISO</span>
-<span class="nv">mount</span> <span class="o">-</span><span class="nv">t</span> <span class="nv">iso9660</span> <span class="o">-</span><span class="nv">o</span> <span class="k">loop</span>,<span class="nv">ro</span> <span class="o">/</span><span class="nv">net</span><span class="o">/</span><span class="nv">datastore</span><span class="o">/</span><span class="nv">home</span><span class="o">/</span><span class="nv">depots</span><span class="o">/</span><span class="nv">ISO</span><span class="o">/</span><span class="nv">CentOS</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="nv">x86_64</span>.<span class="nv">iso</span> <span class="o">/</span><span class="nv">mnt</span>
+<div class="highlight"><pre><span></span><span class="err">ls -al /net/datastore/home/depots/ISO</span>
+<span class="err">mount -t iso9660 -o loop,ro /net/datastore/home/depots/ISO/CentOS-7-x86_64.iso /mnt</span>
 </pre></div>
 
 

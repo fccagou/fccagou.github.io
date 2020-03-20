@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -240,18 +240,18 @@ $ systemctl start docker
 
 <h1>Configuration</h1>
 <p>Autorisation d'un utilisateur lambda</p>
-<div class="highlight"><pre><span></span><span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="n">docker</span> <span class="n">francois</span>
+<div class="highlight"><pre><span></span><span class="err">gpasswd -a docker francois</span>
 </pre></div>
 
 
 <h1>Utilisation</h1>
 <p>Liste des images</p>
-<div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">images</span>
+<div class="highlight"><pre><span></span><span class="err">docker images</span>
 </pre></div>
 
 
 <h1>Créer sa propre image de base</h1>
-<div class="highlight"><pre><span></span><span class="n">curl</span> <span class="c1">--insecure -O https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-yum.sh</span>
+<div class="highlight"><pre><span></span><span class="err">curl --insecure -O https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-yum.sh</span>
 </pre></div>
 
 

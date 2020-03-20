@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>RHEL8 Virtualization Server</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
+
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
+                <nav><ul>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../archives.html">Archives</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+<section id="content" class="body">
+<article>
+        <header> <h1 class="entry-title"><a href="drafts/rhel8-virtualization-server.html"
+        rel="bookmark" title="Permalink to RHEL8 Virtualization Server">RHEL8 Virtualization Server</a></h1>  </header>
+        <div class="entry-content">
+        <footer class="post-info">
+                <abbr class="published" title="2020-03-20T11:06:00+01:00">
+                    Publié le vendredi 20 mars 2020 &agrave; 11:06
+                </abbr>
+                <address class="vcard author">
+                        Par <a class="url fn" href="#">fccagou</a>
+                </address>
+                <p>Dans <a href="../category/rhel8.html">rhel8</a>.
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/redhat.html">RedHat</a><a href="../tag/system.html">System</a><a href="../tag/french.html">French</a><a href="../tag/irtualization.html">irtualization</a></p></p>        </footer><!-- /.post-info -->
+        <!-- vim-markdown-toc GFM -->
+
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#points-dattention-sur-la-sécurité">Points d'attention sur la sécurité</a></li>
+<li><a href="#installation-du-serveur">Installation du serveur</a><ul>
+<li><a href="#création-dune-clé-usb-bootable">Création d'une clé usb bootable</a></li>
+<li><a href="#installation-du-système-de-base">Installation du système de base</a><ul>
+<li><a href="#installation-de-base">Installation de base</a></li>
+<li><a href="#service-cockpit">Service cockpit</a></li>
+</ul>
+</li>
+<li><a href="#configuration-du-réseau">Configuration du réseau</a></li>
+</ul>
+</li>
+<li><a href="#annexes">Annexes</a><ul>
+<li><a href="#kickstart-serveur-virtualisation">Kickstart serveur virtualisation</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+
+<h1>Description</h1>
+<p>Je note ici l'ensemble des actions que je mène pour mettre en place un
+hyperviseur sous CentOS 8.</p>
+<p>En ces temps de confinement, cela permet de continuer à travailler sur
+certaines applications, garder la main et faire de la veille technologique.</p>
+<p>Globalement, beaucoup de chose se font aisément, les divers fournisseurs de
+distributions font ce qu'il faut pour avoir des solutions utilisables, même
+avec les versions Open Source.</p>
+<p>Aussi, ayant un PC dans un coin avec 4 CPU et 8GB de RAM, c'est suffisant pour
+manipuler les bases. Cela permet de faire tourner 3 machines en parallèles.</p>
+<h1>Points d'attention sur la sécurité</h1>
+<p>Il est facile de monter rapidement ces solutions. De mon côté, je m'attache
+à étudier la solution technique mais aussi la sécurité de ce qui est mis en
+place. Aussi, les règles de base que j'applique sont :</p>
+<ul>
+<li>Réduction de la surface d'attaque:</li>
+<li>je n'installe que ce qui est nécessaire et suffisant</li>
+<li>Le pare-feu est activé et seuls les flux nécessaires et suffisants sont ouverts</li>
+<li>moindre privilèges: les applications installées doivent tourner avec des id
+  différents</li>
+<li>Je n'installe que</li>
+<li>les paquets venant de chez CentOS/RHEL</li>
+<li>des paquets signés</li>
+<li>des logiciels recompilés depuis les sources si pas dans le référentiel</li>
+</ul>
+<p>De manière globale, <a href="https://www.ssi.gouv.fr/guide/recommandations-de-securite-relatives-a-un-systeme-gnulinux/">les recos de l'ANSSI</a></p>
+<p>RedHat est un acteur fort dans ce périmètre et s'attache à fournir des
+solutions sécurisées de base. C'est notamment le cas avec l'utilisation de
+selinux. Point que beaucoup ont trop souvent l'habitude de désactiver :(</p>
+<h1>Installation du serveur</h1>
+<h2>Création d'une clé usb bootable</h2>
+<p>Ici on réalise une action assez standard récupération de l'iso et copie sur une
+clé USB</p>
+<div class="highlight"><pre><span></span><span class="err"> curl -O http://mirror.in2p3.fr/linux/CentOS/8.1.1911/isos/x86_64/CentOS-8.1.1911-x86_64-dvd1.iso</span>
+<span class="err"> sudo dd if=CentOS-8.1.1911-x86_64-dvd1.iso of=/dev/sdXXX  bs=512</span>
+</pre></div>
+
+
+<p>/!\ - bien choisir le /dev/sdxxx qui correspond à sa clef USB (dmesg ou
+journalctl)</p>
+<h2>Installation du système de base</h2>
+<p>En appliquant le principe d'installer ce qui est juste nécessaire, la démarche
+est :
+* installer le système avec le rôle de serveur de virtualisation
+* ajouter des service
+* faire les configurations spécifiques</p>
+<h3>Installation de base</h3>
+<p>Là encore pas de chose très spéciales, on boote sur la clé USB et on suis les
+instructions :
+* Nom de machine
+* choix du partitionnement
+* choix du rôle du serveur
+* Configuration du réseau
+* Mot de passe <em>root</em>
+* Utilisateur supplémentaire administrateur</p>
+<h3>Service cockpit</h3>
+<p>Cockpit est une application qui permet de configurer le serveur au travers
+d'une interface https. J'ai tendance à éviter d'installer des applications qui
+font tout toutes seules pour favoriser l'apprentissage en profondeur de ce qui
+est installé. Cela évite aussi d'augmenter la surface d'attaque du serveur.
+Ici, le risque est réduit parce que je suis sur une infra locale avec des
+systèmes de tests. Donc je l'installe pour découvrir.</p>
+<p>Cockpit est installé par défaut mais le service n'est pas lancé.</p>
+<div class="highlight"><pre><span></span><span class="err">systemctl enable cockpit.service</span>
+<span class="err">systemctl start cockpit.service</span>
+</pre></div>
+
+
+<p>Ensuite, on accède à l'interface via l'url <em>https://<ip_serveur>:9090/</em> et on se
+connecte avec un des comptes du système. Etant en phase de découverte, je me
+connecte <em>root</em>.</p>
+<p>Cockpit est évolutif et peut être étoffé à l'aide de plugins.
+Dans mon cas, voulant faire un serveur de virtu, j'ai ajouté les paquets
+suivants:
+* cockpit-machines: gestion de libvirt
+* cockpit-storaged: Gestion du stockage
+* cockpit-podman: gestion docker
+* cockpit-dashboard: état du serveur.</p>
+<p>On retrouve assez naturellement les éléments de configuration d'un système
+d'hyper convergence. C'est la direction qu'à prise RedHat il y a plusieurs
+années et c'est la raison pour laquelle IBM l'a acheté !:)</p>
+<p>Après un tour rapide de l'interface, on peut faire pas mal de choses simples
+mais on est vite bloqué dès qu'on sort des sentiers balisés. Or dans mon cas,
+je sors de ces sentiers. </p>
+<h2>Configuration du réseau</h2>
+<p>C'est ici que je sors des sentiers battus pour la raison suivante.</p>
+<p>Partie d'une configuration du réseau des VM par défaut, c'est du NAT qui est
+configuré. Pour pouvoir accéder directement à ces machines, j'ai plusieurs
+solutions :
+* passer le réseau en bridge: alors les vm seront vue sur mon réseau local
+* passer le réseau en mode routé</p>
+<p>La solution bridge est séduisante mais je n'ai pas trop envie que des VM, qui
+servent de tests, aient accès au reste de mon infra. Aussi, il faut pouvoir
+isoler au maximum le réseau des VM tout en y ayant accès. Les flux peuvent
+entrer mais pas sortir. Mais, si on bloque tout en sortie, on se heurte à
+des soucis pour faire des mises à jour ou installer de nouvelles choses.</p>
+<p>La solution routée est pas mal mais passerelle par défaut est ma box sur
+laquelle je ne peux ajouter de route.  Il faudrait alors que j'ajoute la
+route à chacun des postes depuis lesquels je souhaite me connecter aux VM.
+De plus, je partage cette infra avec des personnes qui sont elles aussi
+confinées dont l'accès se fait forcément par la box... qui ne sait pas faire
+le routage.</p>
+<p><a href="https://wiki.libvirt.org/page/Networking#Forwarding_Incoming_Connections">Doc
+Libvirt</a></p>
+<p>Pour avancer sur le sujet, j'ai pris la décision d'opter pour une première
+solution qui est :
+* garder le NAT et filtrer les flux sortants et entrants
+* Créer un VM "bastion" qui est le point d'entrée pour les connexions
+  depuis l'extérieur</p>
+<div class="highlight"><pre><span></span>     <span class="p">[</span><span class="n">BOX</span> <span class="n">G</span><span class="p">]</span><span class="o">--</span><span class="p">.</span><span class="o">--</span><span class="p">[</span><span class="n">BOX</span> <span class="n">P</span><span class="p">]</span> 
+              <span class="o">|</span>
+              <span class="o">|</span>
+         <span class="p">(</span><span class="n">tcp</span><span class="o">/</span><span class="n">xxxx</span><span class="p">)</span>
+              <span class="o">|</span>
+              <span class="o">|</span>
+         <span class="o">-----------</span>
+        <span class="o">|</span>   <span class="n">BOX</span>     <span class="o">|</span>
+         <span class="o">-----------</span>
+              <span class="o">|</span>
+              <span class="o">|</span>
+         <span class="p">(</span><span class="n">tcp</span><span class="o">/</span><span class="n">yyyy</span><span class="p">)</span>
+              <span class="o">|</span>
+              <span class="o">|</span>
+ <span class="o">-------------|---------------------------------</span>
+<span class="o">|</span> <span class="n">hyper</span>        <span class="err">\</span>                                <span class="o">|</span>
+<span class="o">|</span> <span class="n">viser</span>         <span class="err">\</span> <span class="o">----------------------</span>        <span class="o">|</span>
+<span class="o">|</span>                <span class="o">|</span>            <span class="o">|</span>        <span class="o">|</span>        <span class="o">|</span>
+<span class="o">|</span>             <span class="p">[</span><span class="nl">Bastion</span><span class="p">:</span><span class="mi">22</span><span class="p">]</span>    <span class="o">|</span>        <span class="o">|</span>        <span class="o">|</span>
+<span class="o">|</span>                           <span class="p">[</span><span class="n">VM2</span><span class="p">]</span>    <span class="p">[</span><span class="n">VM3</span><span class="p">]</span>      <span class="o">|</span>
+<span class="o">|</span>                                               <span class="o">|</span>
+ <span class="o">-----------------------------------------------</span>
+</pre></div>
+
+
+<p>Avec cette solution, il faut jouer avec le pare feu de l'hyper viseur pour
+ajouter le pNAT pour router le flux entrant vers le bastion.</p>
+<p>C'est là que cockpit atteint ses limites car on ne peut faire ce genre de
+configurations aisément. C'est aussi là que je rouve un nouveau challenge
+car je découvre <a href="https://wiki.nftables.org">nftable</a> et l'instrumentation qui
+en est faite par RedHat au travers de <a href="https://firewalld.org/">firewalld</a></p>
+<p>Je suis en plein dans le truc des solutions qui font "papa/maman" mais qui sont
+restrictives dès qu'on veut faire "plus" ou "différemment". Donc cela demande
+un effort d'apprentissage des 2 technos ainsi que le modèle mis en place par
+RedHat.</p>
+<p>Parce que ça ne fait que 3j que j'ai commencé à regardé tout ça entre d'autres
+choses, j'ai réussi à atteindre l'objectif de faire le pNAT pour donner les
+accès mais ce n'est pas satisfaisant. En effet, je n'ai pas encore réussi
+à tout configurer avec "firewalld". Je n'arrive pas à positionner, de manière
+permanente 2 règles accept au bon endroit.</p>
+<p>Lorsque que je relance le pare-feu, j'ai une règle qui est mal placée car elle
+est automatiquement placée APRÈS les règles mises par "libvirtd" quand il lance
+le réseau virtuel. J'en ai une autre qui ne reste pas.
+Çà ressemble à <a href="https://forums.centos.org/viewtopic.php?t=71454&amp;start=10">ce
+soucis</a></p>
+<p>Pour que ça fonctionne, il faut :
+* autoriser le flux tcp/yyyy  entrant sur l'hyperviseur 
+* forwarder ce flux vers le bastion tcp/22
+* autoriser ce forward à traverser le pare-feu.</p>
+<p>Si j'utilise les outils mis à disposition par CentOS, je dois utiliser
+<em>firewall-cmd</em> <em>(je ne détaille pas ici la gestion des zones public/libvirt...
+peut-être pus tard ou dans un autre doc car ce n'est pas le sujet du moment)</em></p>
+<div class="highlight"><pre><span></span><span class="err">#  On autorise le flux à entrer sur l&#39;hyper viseur.</span>
+<span class="err">firewall-cmd --zone=public --add-port=yyyy/tcp</span>
+<span class="err"># Ajout du forward</span>
+<span class="err">firewall-cmd --zone=public --add-forward-port=port=yyyy:proto=tcp:toport=22:toaddr=&lt;@ip_bastion&gt;</span>
+</pre></div>
+
+
+<p>Je suis ensuite obligé de faire les actions manuelles suivantes</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">Lister</span> <span class="n">la</span> <span class="n">chaine</span> <span class="n">qui</span> <span class="n">m</span><span class="s1">&#39;initéresse avec les numéro de handle.</span>
+<span class="s1"># Util pour le insert d&#39;</span><span class="n">après</span>
+<span class="err">$</span> <span class="n">nft</span> <span class="n">list</span> <span class="k">table</span> <span class="n">filter</span> <span class="o">-</span><span class="n">a</span>
+
+<span class="o">#</span> <span class="n">Dans</span> <span class="n">la</span> <span class="k">chain</span> <span class="k">FORWARD</span><span class="p">,</span> <span class="n">je</span> <span class="n">repère</span> <span class="n">le</span> <span class="n">handle</span> <span class="n">de</span> <span class="n">la</span> <span class="n">première</span> <span class="n">règle</span>
+<span class="o">#</span> <span class="n">et</span> <span class="n">j</span><span class="s1">&#39;insère la règle qui me convient pour autoriser le forward des flux</span>
+<span class="s1"># établis depuis réseau local vers le réseau virtuel.</span>
+<span class="s1">#                                       \/ ici c&#39;</span><span class="n">est</span> <span class="mi">12</span> <span class="n">mais</span> <span class="err">ç</span><span class="n">a</span> <span class="n">peut</span><span class="o">-</span><span class="err">ê</span><span class="n">tre</span> <span class="n">autre</span> <span class="n">chose</span>
+<span class="err">$</span> <span class="n">nft</span> <span class="k">insert</span> <span class="k">rule</span>  <span class="n">filter</span> <span class="k">FORWARD</span> <span class="n">handle</span> <span class="mi">12</span> <span class="n">iifname</span> <span class="n">enp2s0</span> <span class="n">oifname</span> <span class="n">virbr0</span> <span class="n">ct</span> <span class="k">state</span> <span class="k">new</span><span class="p">,</span><span class="n">untracked</span> <span class="n">accept</span>
+
+
+<span class="o">#</span> <span class="n">Enfin</span> <span class="n">j</span><span class="s1">&#39;ajoute la règle qui permet au ssh d&#39;</span><span class="n">arriver</span> <span class="n">sur</span> <span class="n">le</span> <span class="n">bastion</span><span class="p">.</span>
+<span class="err">$</span> <span class="n">nft</span> <span class="k">add</span> <span class="k">rule</span>  <span class="n">filter</span> <span class="k">OUTPUT</span>  <span class="n">oifname</span> <span class="ss">&quot;virbr0&quot;</span> <span class="n">meta</span> <span class="n">l4proto</span> <span class="n">tcp</span> <span class="n">tcp</span> <span class="n">dport</span> <span class="mi">22</span> <span class="n">counter</span> <span class="n">accept</span>
+</pre></div>
+
+
+<p>En écrivant ces lignes, j'ai chercher des informations et je suis tombé sur
+<em>virsh nwfilter-list</em> ... Ciel, encore un truc intéressant à creuser !!:P</p>
+<p><strong>Cela sera tout pour aujourd'hui, je continue sur le sujet plus tard... </strong></p>
+<h1>Annexes</h1>
+<h2>Kickstart serveur virtualisation</h2>
+<p>Ci-dessous le fichier kickstart généré par l'installation du rôle serveur
+virtualisation.</p>
+<div class="highlight"><pre><span></span><span class="cp">#version=RHEL8</span>
+<span class="n">ignoredisk</span> <span class="o">--</span><span class="n">only</span><span class="o">-</span><span class="n">use</span><span class="o">=</span><span class="n">sda</span>
+<span class="n">autopart</span> <span class="o">--</span><span class="n">type</span><span class="o">=</span><span class="n">lvm</span>
+<span class="cp"># Partition clearing information</span>
+<span class="n">clearpart</span> <span class="o">--</span><span class="n">none</span> <span class="o">--</span><span class="n">initlabel</span>
+<span class="cp"># Use graphical install</span>
+<span class="n">graphical</span>
+<span class="cp"># Use CDROM installation media</span>
+<span class="n">cdrom</span>
+<span class="cp"># Keyboard layouts</span>
+<span class="n">keyboard</span> <span class="o">--</span><span class="n">vckeymap</span><span class="o">=</span><span class="n">fr</span><span class="o">-</span><span class="n">oss</span> <span class="o">--</span><span class="n">xlayouts</span><span class="o">=</span><span class="err">&#39;</span><span class="n">fr</span> <span class="p">(</span><span class="n">oss</span><span class="p">)</span><span class="err">&#39;</span>
+<span class="cp"># System language</span>
+<span class="n">lang</span> <span class="n">fr_FR</span><span class="p">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+
+<span class="cp"># Network information</span>
+<span class="n">network</span>  <span class="o">--</span><span class="n">bootproto</span><span class="o">=</span><span class="n">dhcp</span> <span class="o">--</span><span class="n">device</span><span class="o">=</span><span class="n">enp2s0</span> <span class="o">--</span><span class="n">onboot</span><span class="o">=</span><span class="n">off</span> <span class="o">--</span><span class="n">ipv6</span><span class="o">=</span><span class="k">auto</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">activate</span>
+<span class="n">network</span>  <span class="o">--</span><span class="n">hostname</span><span class="o">=</span><span class="n">localhost</span><span class="p">.</span><span class="n">localdomain</span>
+<span class="n">repo</span> <span class="o">--</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;AppStream&quot;</span> <span class="o">--</span><span class="n">baseurl</span><span class="o">=</span><span class="nl">file</span><span class="p">:</span><span class="c1">///run/install/repo/AppStream</span>
+<span class="cp"># Root password</span>
+<span class="n">rootpw</span> <span class="o">--</span><span class="n">iscrypted</span> <span class="o">*</span>
+<span class="cp"># Run the Setup Agent on first boot</span>
+<span class="n">firstboot</span> <span class="o">--</span><span class="n">enable</span>
+<span class="cp"># Do not configure the X Window System</span>
+<span class="n">skipx</span>
+<span class="cp"># System services</span>
+<span class="n">services</span> <span class="o">--</span><span class="n">enabled</span><span class="o">=</span><span class="s">&quot;chronyd&quot;</span>
+<span class="cp"># System timezone</span>
+<span class="n">timezone</span> <span class="n">America</span><span class="o">/</span><span class="n">New_York</span> <span class="o">--</span><span class="n">isUtc</span>
+
+<span class="nf">%packages</span>
+<span class="err">@</span><span class="o">^</span><span class="n">virtualization</span><span class="o">-</span><span class="n">host</span><span class="o">-</span><span class="n">environment</span>
+<span class="err">@</span><span class="n">remote</span><span class="o">-</span><span class="n">system</span><span class="o">-</span><span class="n">management</span>
+<span class="n">kexec</span><span class="o">-</span><span class="n">tools</span>
+
+<span class="nf">%end</span>
+
+<span class="nf">%addon</span> <span class="n">com_redhat_kdump</span> <span class="o">--</span><span class="n">enable</span> <span class="o">--</span><span class="n">reserve</span><span class="o">-</span><span class="n">mb</span><span class="o">=</span><span class="err">&#39;</span><span class="k">auto</span><span class="err">&#39;</span>
+
+<span class="nf">%end</span>
+
+<span class="nf">%anaconda</span>
+<span class="n">pwpolicy</span> <span class="n">root</span> <span class="o">--</span><span class="n">minlen</span><span class="o">=</span><span class="mi">6</span> <span class="o">--</span><span class="n">minquality</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">notstrict</span> <span class="o">--</span><span class="n">nochanges</span> <span class="o">--</span><span class="n">notempty</span>
+<span class="n">pwpolicy</span> <span class="n">user</span> <span class="o">--</span><span class="n">minlen</span><span class="o">=</span><span class="mi">6</span> <span class="o">--</span><span class="n">minquality</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">notstrict</span> <span class="o">--</span><span class="n">nochanges</span> <span class="o">--</span><span class="n">emptyok</span>
+<span class="n">pwpolicy</span> <span class="n">luks</span> <span class="o">--</span><span class="n">minlen</span><span class="o">=</span><span class="mi">6</span> <span class="o">--</span><span class="n">minquality</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">notstrict</span> <span class="o">--</span><span class="n">nochanges</span> <span class="o">--</span><span class="n">notempty</span>
+</pre></div>
+
+
+<!--
+   vim: spell spelllang=fr
+-->
+        </div><!-- /.entry-content -->
+
+</article>
+</section>
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Catégories</h2>
+                        <ul>
+                           <li ><a href="../category/draft.html">Draft</a></li>
+                           <li ><a href="../category/editors.html">Editors</a></li>
+                           <li ><a href="../category/it.html">IT</a></li>
+                           <li class="active"><a href="../category/rhel8.html">rhel8</a></li>
+                           <li ><a href="../category/tips.html">TIPS</a></li>
+                        </ul>
+                </div>
+                <div class="widget social">
+                        <h2>Réseaux sociaux</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+
+                            <li><a href="https://twitter.com/fccagou">twitter</a></li>
+                            <li><a href="https://github.com/fccagou">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </aside><!-- /#sidebar -->
+
+        <footer id="footer" class="body">
+                <address id="about" class="vcard body">
+                Ce site est généré par <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>, un CMS réalisé en <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>Le thème utilisé est «NotMyIdea-CMS», une version modifiée de «NotMyIdea», le thème par défaut.</p>
+        </footer><!-- /#footer -->
+
+</body>
+</html>

@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -140,8 +140,8 @@ Il y va de même pour les <em>tree</em> qui n'ont pas changé dans un <em>commit
 
 <p>Information sur l'objet référencé par le empreinte 
 * Son type</p>
-<div class="highlight"><pre><span></span>    <span class="err">$</span> <span class="n">git</span> <span class="n">cat</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">t</span> <span class="mi">128</span><span class="n">e7392089cd1fc22e3905214325da95a7d96e7</span>
-    <span class="n">_tree_</span>
+<div class="highlight"><pre><span></span><span class="err">    $ git cat-file -t 128e7392089cd1fc22e3905214325da95a7d96e7</span>
+<span class="err">    _tree_</span>
 </pre></div>
 
 
@@ -155,8 +155,8 @@ on cree un _blob_ qui contient ce texte
 </ul>
 <p>État du référentiel Git est toujours l'état initial
     $ git status</p>
-<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">FIXME</span><span class="p">:</span> <span class="n">contrairemment</span> <span class="err">à</span> <span class="n">la</span> <span class="n">démo</span><span class="p">,</span> <span class="n">lors</span> <span class="n">de</span> <span class="n">ce</span> <span class="n">git</span> <span class="n">status</span><span class="p">,</span> <span class="n">un</span> <span class="n">objet</span> <span class="n">_tree_</span>
-<span class="n">vide</span> <span class="n">est</span> <span class="n">créé</span>
+<div class="highlight"><pre><span></span><span class="err"># FIXME: contrairemment à la démo, lors de ce git status, un objet _tree_</span>
+<span class="err">vide est créé</span>
 </pre></div>
 
 
@@ -231,15 +231,15 @@ index <span class="m">0000000</span>..128e739
 
 <p>Mais l'état du répertoire courant n'est pas en phase avec l'index puisqu'on
 n'a jamais créé de fichier <em>README.txt</em>.</p>
-<div class="highlight"><pre><span></span>$ <span class="nv">git</span> <span class="nv">status</span>
-<span class="nv">On</span> <span class="nv">branch</span> <span class="nv">master</span>
-<span class="nv">Changes</span> <span class="nv">not</span> <span class="nv">staged</span> <span class="k">for</span> <span class="nv">commit</span>:
-  <span class="ss">(</span><span class="nv">use</span> <span class="s2">&quot;</span><span class="s">git add/rm &lt;file&gt;...</span><span class="s2">&quot;</span> <span class="nv">to</span> <span class="nv">update</span> <span class="nv">what</span> <span class="nv">will</span> <span class="nv">be</span> <span class="nv">committed</span><span class="ss">)</span>
-  <span class="ss">(</span><span class="nv">use</span> <span class="s2">&quot;</span><span class="s">git checkout -- &lt;file&gt;...</span><span class="s2">&quot;</span> <span class="nv">to</span> <span class="nv">discard</span> <span class="nv">changes</span> <span class="nv">in</span> <span class="nv">working</span> <span class="nv">directory</span><span class="ss">)</span>
+<div class="highlight"><pre><span></span>$ git status
+On branch master
+Changes not staged <span class="k">for</span> commit:
+  <span class="o">(</span>use <span class="s2">&quot;git add/rm &lt;file&gt;...&quot;</span> to update what will be committed<span class="o">)</span>
+  <span class="o">(</span>use <span class="s2">&quot;git checkout -- &lt;file&gt;...&quot;</span> to discard changes in working directory<span class="o">)</span>
 
-        <span class="nv">deleted</span>:    <span class="nv">README</span>.<span class="nv">txt</span>
+        deleted:    README.txt
 
-<span class="nv">no</span> <span class="nv">changes</span> <span class="nv">added</span> <span class="nv">to</span> <span class="nv">_commit_</span><span class="ss">(</span><span class="nv">use</span> <span class="s2">&quot;</span><span class="s">git add</span><span class="s2">&quot;</span> <span class="nv">and</span><span class="o">/</span><span class="nv">or</span> <span class="s2">&quot;</span><span class="s">git _commit_-a</span><span class="s2">&quot;</span><span class="ss">)</span>
+no changes added to _commit_<span class="o">(</span>use <span class="s2">&quot;git add&quot;</span> and/or <span class="s2">&quot;git _commit_-a&quot;</span><span class="o">)</span>
 </pre></div>
 
 
@@ -300,23 +300,23 @@ $ git checkout master
 
 
 <p>On créé un ensemble de fichiers</p>
-<div class="highlight"><pre><span></span>$ <span class="nv">mkdir</span> <span class="nv">files</span> <span class="o">&amp;&amp;</span> <span class="nv">ce</span> <span class="nv">files</span>
-$ <span class="k">for</span> <span class="nv">i</span> <span class="nv">in</span> {<span class="mi">1</span>..<span class="mi">5</span>}<span class="c1">; do echo $RANDOM &gt; file$i.txt; git add file$i.txt; git _commit_-m &quot;add file$i.txt&quot; file$i.txt;  done</span>
-[<span class="nv">feature</span> <span class="mi">948</span><span class="nv">fdba</span>] <span class="nv">add</span> <span class="nv">file1</span>.<span class="nv">txt</span>
- <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
- <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file1</span>.<span class="nv">txt</span>
-[<span class="nv">feature</span> <span class="mi">36</span><span class="nv">cf263</span>] <span class="nv">add</span> <span class="nv">file2</span>.<span class="nv">txt</span>
- <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
- <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file2</span>.<span class="nv">txt</span>
-[<span class="nv">feature</span> <span class="mi">74</span><span class="nv">e45f8</span>] <span class="nv">add</span> <span class="nv">file3</span>.<span class="nv">txt</span>
- <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
- <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file3</span>.<span class="nv">txt</span>
-[<span class="nv">feature</span> <span class="mi">217</span><span class="nv">e179</span>] <span class="nv">add</span> <span class="nv">file4</span>.<span class="nv">txt</span>
- <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
- <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file4</span>.<span class="nv">txt</span>
-[<span class="nv">feature</span> <span class="mi">96</span><span class="nv">edd19</span>] <span class="nv">add</span> <span class="nv">file5</span>.<span class="nv">txt</span>
- <span class="mi">1</span> <span class="nv">file</span> <span class="nv">changed</span>, <span class="mi">1</span> <span class="nv">insertion</span><span class="ss">(</span><span class="o">+</span><span class="ss">)</span>
- <span class="nv">create</span> <span class="nv">mode</span> <span class="mi">100644</span> <span class="nv">files</span><span class="o">/</span><span class="nv">file5</span>.<span class="nv">txt</span>
+<div class="highlight"><pre><span></span>$ mkdir files <span class="o">&amp;&amp;</span> ce files
+$ <span class="k">for</span> i in <span class="o">{</span><span class="m">1</span>..5<span class="o">}</span><span class="p">;</span> <span class="k">do</span> <span class="nb">echo</span> <span class="nv">$RANDOM</span> &gt; file<span class="nv">$i</span>.txt<span class="p">;</span> git add file<span class="nv">$i</span>.txt<span class="p">;</span> git _commit_-m <span class="s2">&quot;add file</span><span class="nv">$i</span><span class="s2">.txt&quot;</span> file<span class="nv">$i</span>.txt<span class="p">;</span>  <span class="k">done</span>
+<span class="o">[</span>feature 948fdba<span class="o">]</span> add file1.txt
+ <span class="m">1</span> file changed, <span class="m">1</span> insertion<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file1.txt
+<span class="o">[</span>feature 36cf263<span class="o">]</span> add file2.txt
+ <span class="m">1</span> file changed, <span class="m">1</span> insertion<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file2.txt
+<span class="o">[</span>feature 74e45f8<span class="o">]</span> add file3.txt
+ <span class="m">1</span> file changed, <span class="m">1</span> insertion<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file3.txt
+<span class="o">[</span>feature 217e179<span class="o">]</span> add file4.txt
+ <span class="m">1</span> file changed, <span class="m">1</span> insertion<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file4.txt
+<span class="o">[</span>feature 96edd19<span class="o">]</span> add file5.txt
+ <span class="m">1</span> file changed, <span class="m">1</span> insertion<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> files/file5.txt
 </pre></div>
 
 
@@ -589,12 +589,12 @@ $ lpinfo …</pre></div>
                 <h2>Pour changer l'image sur le menu grub</h2>
 <p>Choisir une image et remplacer /boot/grub2/splatch.png</p>
 <p>Modifier /etc/default/grub</p>
-<div class="highlight"><pre><span></span>   <span class="n">GRUB_TIMEOUT</span><span class="o">=</span><span class="mi">5</span>
-   <span class="n">GRUB_DISTRIBUTOR</span><span class="o">=</span><span class="ss">&quot;$(sed &#39;s, release .*$,,g&#39; /etc/system-release)&quot;</span>
-   <span class="n">GRUB_DEFAULT</span><span class="o">=</span><span class="n">saved</span>
-   <span class="n">GRUB_DISABLE_SUBMENU</span><span class="o">=</span><span class="k">true</span>
-<span class="o">-&gt;</span> <span class="o">#</span><span class="n">GRUB_TERMINAL_OUTPUT</span><span class="o">=</span><span class="ss">&quot;console&quot;</span>
-   <span class="n">GRUB_CMDLINE_LINUX</span><span class="o">=</span><span class="ss">&quot;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet …</span></pre></div>
+<div class="highlight"><pre><span></span><span class="err">   GRUB_TIMEOUT=5</span>
+<span class="err">   GRUB_DISTRIBUTOR=&quot;$(sed &#39;s, release .*$,,g&#39; /etc/system-release)&quot;</span>
+<span class="err">   GRUB_DEFAULT=saved</span>
+<span class="err">   GRUB_DISABLE_SUBMENU=true</span>
+<span class="err">-&gt; #GRUB_TERMINAL_OUTPUT=&quot;console&quot;</span>
+<span class="err">   GRUB_CMDLINE_LINUX=&quot;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet …</span></pre></div>
                 <a class="readmore" href="../custom-boot.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>
@@ -693,18 +693,18 @@ $ systemctl start docker
 
 <h1>Configuration</h1>
 <p>Autorisation d'un utilisateur lambda</p>
-<div class="highlight"><pre><span></span><span class="n">gpasswd</span> <span class="o">-</span><span class="n">a</span> <span class="n">docker</span> <span class="n">francois</span>
+<div class="highlight"><pre><span></span><span class="err">gpasswd -a docker francois</span>
 </pre></div>
 
 
 <h1>Utilisation</h1>
 <p>Liste des images</p>
-<div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">images</span>
+<div class="highlight"><pre><span></span><span class="err">docker images</span>
 </pre></div>
 
 
 <h1>Créer sa propre image de base</h1>
-<div class="highlight"><pre><span></span><span class="n">curl</span> <span class="c1">--insecure -O https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-yum.sh</span>
+<div class="highlight"><pre><span></span><span class="err">curl --insecure -O https://raw.githubusercontent.com/docker/docker/master/contrib/mkimage-yum.sh</span>
 </pre></div>
 
 
@@ -794,33 +794,33 @@ others GNU/Linux distributions.</p>
 <p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/ha.html">HA</a><a href="../tag/gluster.html">Gluster</a><a href="../tag/keepalived.html">Keepalived</a><a href="../tag/distributedfs.html">distributedfs</a></p></p>                    <p></p>
                 </footer><!-- /.post-info -->
                 <p>Example tested on 2 CentOS7 VM</p>
-<div class="highlight"><pre><span></span><span class="o">!</span> <span class="nv">Configuration</span> <span class="nv">File</span> <span class="k">for</span> <span class="nv">keepalived</span>
+<div class="highlight"><pre><span></span><span class="o">!</span> <span class="n">Configuration</span> <span class="n">File</span> <span class="k">for</span> <span class="n">keepalived</span>
 
-<span class="nv">vrrp_script</span> <span class="nv">check_glusterd</span> {
-  <span class="nv">script</span>       <span class="s2">&quot;</span><span class="s">/usr/sbin/pidof glusterd</span><span class="s2">&quot;</span>
-  <span class="nv">interval</span> <span class="mi">5</span>
-  <span class="nv">fall</span> <span class="mi">1</span>
-  <span class="nv">rise</span> <span class="mi">1</span>
-<span class="o">!</span>  <span class="nb">timeout</span> <span class="nv">t</span>
-<span class="o">!</span>  <span class="nv">weight</span> <span class="nv">w</span>
-}
+<span class="n">vrrp_script</span> <span class="n">check_glusterd</span> <span class="err">{</span>
+  <span class="n">script</span>       <span class="ss">&quot;/usr/sbin/pidof glusterd&quot;</span>
+  <span class="nb">interval</span> <span class="mi">5</span>
+  <span class="n">fall</span> <span class="mi">1</span>
+  <span class="n">rise</span> <span class="mi">1</span>
+<span class="o">!</span>  <span class="n">timeout</span> <span class="n">t</span>
+<span class="o">!</span>  <span class="n">weight</span> <span class="n">w</span>
+<span class="err">}</span>
 
-<span class="nv">global_defs</span> {
-}
+<span class="n">global_defs</span> <span class="err">{</span>
+<span class="err">}</span>
 
-<span class="nv">vrrp_instance</span> <span class="nv">gfs01</span> {
-<span class="o">!</span>    <span class="nv">state</span> <span class="nv">MASTER</span>
-    <span class="nv">interface</span> <span class="nv">eth0</span>
-    <span class="nv">virtual_router_id</span> <span class="mi">51</span>
-    <span class="nv">priority</span> <span class="mi">100</span>
-    <span class="nv">advert_int</span> <span class="mi">1</span>
-    <span class="nv">nopreempt</span>
-    <span class="nv">authentication</span> {
-        <span class="nv">auth_type</span> <span class="nv">PASS</span>
-        <span class="nv">auth_pass</span> <span class="mi">1111</span>
-    }
-    <span class="nv">virtual_ipaddress</span> {
-        <span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">122 …</span></pre></div>
+<span class="n">vrrp_instance</span> <span class="n">gfs01</span> <span class="err">{</span>
+<span class="o">!</span>    <span class="k">state</span> <span class="n">MASTER</span>
+    <span class="n">interface</span> <span class="n">eth0</span>
+    <span class="n">virtual_router_id</span> <span class="mi">51</span>
+    <span class="n">priority</span> <span class="mi">100</span>
+    <span class="n">advert_int</span> <span class="mi">1</span>
+    <span class="n">nopreempt</span>
+    <span class="n">authentication</span> <span class="err">{</span>
+        <span class="n">auth_type</span> <span class="n">PASS</span>
+        <span class="n">auth_pass</span> <span class="mi">1111</span>
+    <span class="err">}</span>
+    <span class="n">virtual_ipaddress</span> <span class="err">{</span>
+        <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">122 …</span></pre></div>
                 <a class="readmore" href="../how-to-make-ha-glusterfs-using-keepalived.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>
@@ -844,13 +844,13 @@ others GNU/Linux distributions.</p>
 <p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/container.html">Container</a><a href="../tag/lxc.html">LXC</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
                 </footer><!-- /.post-info -->
                 <h1>Configuration environnement local</h1>
-<div class="highlight"><pre><span></span><span class="nv">mkdir</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.include = /etc/lxc/default.conf</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = u 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = g 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.lxcpath=/srv/containers/lxc</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">lxc</span>.<span class="nv">conf</span>
+<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.include = /etc/lxc/default.conf&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="k">defaults</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.id_map = u 0 100000 65536&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="k">defaults</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.id_map = g 0 100000 65536&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="k">defaults</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.lxcpath=/srv/containers/lxc&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="n">lxc</span><span class="p">.</span><span class="n">conf</span>
 
-<span class="nv">sudo …</span></pre></div>
+<span class="n">sudo …</span></pre></div>
                 <a class="readmore" href="../lxc-beginner.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>
@@ -882,9 +882,9 @@ others GNU/Linux distributions.</p>
 </ul>
 <h1>Préparation de l'hôte</h1>
 <h2>Configuration NFS</h2>
-<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span>
-<span class="n">printf</span> <span class="c1">-- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
-<span class="n">printf</span> <span class="c1">-- &quot;/home …</span></pre></div>
+<div class="highlight"><pre><span></span><span class="err">mkdir /home/cobbler</span>
+<span class="err">printf -- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="err">printf -- &quot;/home …</span></pre></div>
                 <a class="readmore" href="../installation-de-cobbler-sur-centos-66.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>

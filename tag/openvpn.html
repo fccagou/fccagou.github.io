@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>The Cagou's Blog - Sécurity</title>
+        <title>The Cagou's Blog - Openvpn</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
         <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
@@ -147,38 +147,6 @@ Mise en place des certificats</p>
 <h2>Tests de connexion</h2>
 <h2>Routage et firewall sur le serveur</h2>
         </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
-        
- 
-        <li><article class="hentry">    
-                <header>
-                        <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark" title="Permalien vers «Apt conf on readonly system»">Apt conf on readonly system</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="2018-09-24T22:14:00+02:00">
-                                Publié le 24/09/2018 &agrave; 22:14
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">fccagou</a>
-                        </address>
-                        <p> Dans <a href="../category/it.html">IT</a></p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/debian.html">Debian</a><a href="../tag/apt.html">Apt</a><a href="../tag/security.html">Security</a></p></p>                    <p></p>
-                </footer><!-- /.post-info -->
-                <h1>In the apt configuration</h1>
-<div class="highlight"><pre><span></span><span class="nv">DPkg</span> <span class="p">{</span>
-    <span class="o">//</span> <span class="nv">Auto</span> <span class="s s-Atom">re</span><span class="o">-</span><span class="s s-Atom">mounting</span> <span class="s s-Atom">of</span> <span class="s s-Atom">a</span> <span class="s s-Atom">readonly</span> <span class="o">/</span>
-    <span class="nv">Pre</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;mount -o remount,rw /&quot;</span><span class="p">;</span> <span class="p">};</span>
-    <span class="nv">Post</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;test ${NO_APT_REMOUNT:-no} = yes || mount -o remount,ro / || true&quot;</span><span class="p">;</span> <span class="p">};</span>
-<span class="p">};</span>
-</pre></div>
-                <a class="readmore" href="../apt-conf-on-readonly-system.html">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
 

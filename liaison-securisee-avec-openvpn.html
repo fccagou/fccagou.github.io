@@ -1,49 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>The Cagou's Blog - Sécurity</title>
+        <title>Liaison sécurisée avec openvpn</title>
         <meta charset="utf-8" />
-        <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
-        <link href="../" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="./" type="application/atom+xml" rel="alternate" title="The Cagou's Blog Flux ATOM" />
 
 
         <!--[if IE]>
                 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
         <!--[if lte IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
-                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
 
         <!--[if lt IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
 
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog</a></h1>
+                <h1><a href="./index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
-                <li><a href="../index.html">Accueil</a></li>
-                <li><a href="../archives.html">Archives</a></li>
+                <li><a href="./index.html">Accueil</a></li>
+                <li><a href="./archives.html">Archives</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
-        
-        
-     <section id="content" class="body">
-        <aside id="featured"><article>
-                <h1 class="entry-title"><a href="../liaison-securisee-avec-openvpn.html">Liaison sécurisée avec openvpn</a></h1> 
-                <footer class="post-info">
-                        <abbr class="published" title="2019-05-25T19:00:00+02:00">
-                                Publié le 25/05/2019 &agrave; 19:00
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">fccagou</a>
-                        </address>
-                <p>Dans <a href="../category/draft.html">Draft</a>. </p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/vpn.html">VPN</a><a href="../tag/security.html">Sécurity</a><a href="../tag/openvpn.html">Openvpn</a></p></p>                </footer><!-- /.post-info -->
-                <h1>Objectif</h1>
+<section id="content" class="body">
+<article>
+        <header> <h1 class="entry-title"><a href="liaison-securisee-avec-openvpn.html"
+        rel="bookmark" title="Permalink to Liaison sécurisée avec openvpn">Liaison sécurisée avec openvpn</a></h1>  </header>
+        <div class="entry-content">
+        <footer class="post-info">
+                <abbr class="published" title="2019-05-25T19:00:00+02:00">
+                    Publié le samedi 25 mai 2019 &agrave; 19:00
+                </abbr>
+                <address class="vcard author">
+                        Par <a class="url fn" href="#">fccagou</a>
+                </address>
+                <p>Dans <a href="./category/draft.html">Draft</a>.
+<p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/vpn.html">VPN</a><a href="./tag/security.html">Sécurity</a><a href="./tag/openvpn.html">Openvpn</a></p></p>        </footer><!-- /.post-info -->
+        <h1>Objectif</h1>
 <p>Créer liaison réseau sécurisée entre un système Linux et une passerelle d'accès
 à un réseau distant.</p>
 <h1>Contexte</h1>
@@ -146,57 +145,26 @@ Mise en place des certificats</p>
 <h2>Installation et configuration du client</h2>
 <h2>Tests de connexion</h2>
 <h2>Routage et firewall sur le serveur</h2>
-        </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
-        
- 
-        <li><article class="hentry">    
-                <header>
-                        <h1><a href="../apt-conf-on-readonly-system.html" rel="bookmark" title="Permalien vers «Apt conf on readonly system»">Apt conf on readonly system</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="2018-09-24T22:14:00+02:00">
-                                Publié le 24/09/2018 &agrave; 22:14
-                        </abbr>
+        </div><!-- /.entry-content -->
 
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">fccagou</a>
-                        </address>
-                        <p> Dans <a href="../category/it.html">IT</a></p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/custom.html">Custom</a><a href="../tag/debian.html">Debian</a><a href="../tag/apt.html">Apt</a><a href="../tag/security.html">Security</a></p></p>                    <p></p>
-                </footer><!-- /.post-info -->
-                <h1>In the apt configuration</h1>
-<div class="highlight"><pre><span></span><span class="nv">DPkg</span> <span class="p">{</span>
-    <span class="o">//</span> <span class="nv">Auto</span> <span class="s s-Atom">re</span><span class="o">-</span><span class="s s-Atom">mounting</span> <span class="s s-Atom">of</span> <span class="s s-Atom">a</span> <span class="s s-Atom">readonly</span> <span class="o">/</span>
-    <span class="nv">Pre</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;mount -o remount,rw /&quot;</span><span class="p">;</span> <span class="p">};</span>
-    <span class="nv">Post</span><span class="o">-</span><span class="nv">Invoke</span> <span class="p">{</span> <span class="s2">&quot;test ${NO_APT_REMOUNT:-no} = yes || mount -o remount,ro / || true&quot;</span><span class="p">;</span> <span class="p">};</span>
-<span class="p">};</span>
-</pre></div>
-                <a class="readmore" href="../apt-conf-on-readonly-system.html">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
-</ol><!-- /#posts-list -->
-</section><!-- /#content -->
+</article>
+</section>
 
         <aside id="sidebar">
                 <div class="widget">
                         <h2>Catégories</h2>
                         <ul>
-                           <li ><a href="../category/draft.html">Draft</a></li>
-                           <li ><a href="../category/editors.html">Editors</a></li>
-                           <li ><a href="../category/it.html">IT</a></li>
-                           <li ><a href="../category/rhel8.html">rhel8</a></li>
-                           <li ><a href="../category/tips.html">TIPS</a></li>
+                           <li class="active"><a href="./category/draft.html">Draft</a></li>
+                           <li ><a href="./category/editors.html">Editors</a></li>
+                           <li ><a href="./category/it.html">IT</a></li>
+                           <li ><a href="./category/rhel8.html">rhel8</a></li>
+                           <li ><a href="./category/tips.html">TIPS</a></li>
                         </ul>
                 </div>
                 <div class="widget social">
                         <h2>Réseaux sociaux</h2>
                         <ul>
-                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            <li><a href="./" rel="alternate">atom feed</a></li>
 
                             <li><a href="https://twitter.com/fccagou">twitter</a></li>
                             <li><a href="https://github.com/fccagou">github</a></li>

@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -81,23 +81,23 @@ Ces options sont utilisées par <code>subscription-manager</code>.</p>
 que l'on trouve dans <a href="https://puppet.com/docs/pe/2019.1/designing_system_configs_roles_and_profiles.html">Puppet</a>. ... En fait pas du tout, la notion de rôle <a href="https://www.ansible.com/">Ansible</a> correspond aux profils de Puppet.</p>
 <p>Le fichier <em>kickstart</em> généré ne semble pas avoir changé sauf pour les noms des
 groupes de <em>packages</em> qui doivent certainement être cohérents avec les rôles.</p>
-<div class="highlight"><pre><span></span>$ <span class="nv">yum</span> <span class="nv">info</span> <span class="nv">rhel</span><span class="o">-</span><span class="nv">system</span><span class="o">-</span><span class="nv">roles</span>
-<span class="nv">Updating</span> <span class="nv">Subscription</span> <span class="nv">Management</span> <span class="nv">repositories</span>.
-<span class="nv">Derni</span>è<span class="nv">re</span> <span class="nv">v</span>é<span class="nv">rification</span> <span class="nv">de</span> <span class="nv">l</span>’<span class="nv">expiration</span> <span class="nv">des</span> <span class="nv">m</span>é<span class="nv">tadonn</span>é<span class="nv">es</span> <span class="nv">effectu</span>é<span class="nv">e</span> <span class="nv">il</span> <span class="nv">y</span> <span class="nv">a</span> <span class="mi">0</span>:<span class="mi">01</span>:<span class="mi">31</span> <span class="nv">le</span> <span class="nv">mer</span>. <span class="mi">08</span> <span class="nv">mai</span> <span class="mi">2019</span> <span class="mi">17</span>:<span class="mi">37</span>:<span class="mi">24</span> <span class="nv">EDT</span>.
-<span class="nv">Paquets</span> <span class="nv">disponibles</span>
-<span class="nv">Nom</span>          : <span class="nv">rhel</span><span class="o">-</span><span class="nv">system</span><span class="o">-</span><span class="nv">roles</span>
-<span class="nv">Version</span>      : <span class="mi">1</span>.<span class="mi">0</span>
-<span class="nv">Publication</span>  : <span class="mi">5</span>.<span class="nv">el8</span>
-<span class="nv">Architecture</span> : <span class="nv">noarch</span>
-<span class="nv">Taille</span>       : <span class="mi">127</span> <span class="nv">k</span>
-<span class="nv">Source</span>       : <span class="nv">rhel</span><span class="o">-</span><span class="nv">system</span><span class="o">-</span><span class="nv">roles</span><span class="o">-</span><span class="mi">1</span>.<span class="mi">0</span><span class="o">-</span><span class="mi">5</span>.<span class="nv">el8</span>.<span class="nv">src</span>.<span class="nv">rpm</span>
-<span class="nv">D</span>é<span class="nv">p</span>ô<span class="nv">t</span>        : <span class="nv">rhel</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">x86_64</span><span class="o">-</span><span class="nv">appstream</span><span class="o">-</span><span class="nv">rpms</span>
-<span class="nv">R</span>é<span class="nv">sum</span>é       : <span class="nv">Set</span> <span class="nv">of</span> <span class="nv">interfaces</span> <span class="k">for</span> <span class="nv">unified</span> <span class="nv">system</span> <span class="nv">management</span>
-<span class="nv">URL</span>          : <span class="nv">https</span>:<span class="o">//</span><span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">linux</span><span class="o">-</span><span class="nv">system</span><span class="o">-</span><span class="nv">roles</span><span class="o">/</span>
-<span class="nv">Licence</span>      : <span class="nv">GPLv3</span><span class="o">+</span> <span class="nv">and</span> <span class="nv">MIT</span> <span class="nv">and</span> <span class="nv">BSD</span>
-<span class="nv">Description</span>  : <span class="nv">Collection</span> <span class="nv">of</span> <span class="nv">Ansible</span> <span class="nv">roles</span> <span class="nv">and</span> <span class="nv">modules</span> <span class="nv">that</span> <span class="nv">provide</span> <span class="nv">a</span> <span class="nv">stable</span> <span class="nv">and</span>
-             : <span class="nv">consistent</span> <span class="nv">configuration</span> <span class="nv">interface</span> <span class="k">for</span> <span class="nv">managing</span> <span class="nv">multiple</span> <span class="nv">versions</span>
-             : <span class="nv">of</span> <span class="nv">Red</span> <span class="nv">Hat</span> <span class="nv">Enterprise</span> <span class="nv">Linux</span>.
+<div class="highlight"><pre><span></span>$ yum info rhel-system-roles
+Updating Subscription Management repositories.
+Dernière vérification de l’expiration des métadonnées effectuée il y a <span class="m">0</span>:01:31 le mer. <span class="m">08</span> mai <span class="m">2019</span> <span class="m">17</span>:37:24 EDT.
+Paquets disponibles
+Nom          : rhel-system-roles
+Version      : <span class="m">1</span>.0
+Publication  : <span class="m">5</span>.el8
+Architecture : noarch
+Taille       : <span class="m">127</span> k
+Source       : rhel-system-roles-1.0-5.el8.src.rpm
+Dépôt        : rhel-8-for-x86_64-appstream-rpms
+Résumé       : Set of interfaces <span class="k">for</span> unified system management
+URL          : https://github.com/linux-system-roles/
+Licence      : GPLv3+ and MIT and BSD
+Description  : Collection of Ansible roles and modules that provide a stable and
+             : consistent configuration interface <span class="k">for</span> managing multiple versions
+             : of Red Hat Enterprise Linux.
 </pre></div>
 
 
@@ -105,7 +105,7 @@ groupes de <em>packages</em> qui doivent certainement être cohérents avec les 
 suffit d'utiliser <code>nmcli c up ens1</code></p>
 <h2>Souscription</h2>
 <p>Pour les souscriptions</p>
-<div class="highlight"><pre><span></span><span class="n">subscription</span><span class="o">-</span><span class="n">manager</span> <span class="n">register</span> <span class="c1">--auto-attach</span>
+<div class="highlight"><pre><span></span><span class="err">subscription-manager register --auto-attach</span>
 </pre></div>
 
 
@@ -127,10 +127,10 @@ suffit d'utiliser <code>nmcli c up ens1</code></p>
 <h2>Python</h2>
 <p>Apparition de <code>plateform-python</code>, certainement pour éviter le conflit avec la
 version mise à disposition des utilisateurs.</p>
-<div class="highlight"><pre><span></span><span class="n">ls</span> <span class="o">-</span><span class="n">al</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span><span class="o">*</span>
-<span class="n">lrwxrwxrwx</span><span class="p">.</span> <span class="mi">1</span> <span class="n">root</span> <span class="n">root</span>    <span class="mi">20</span>  <span class="mi">3</span> <span class="n">avril</span> <span class="mi">13</span><span class="p">:</span><span class="mi">28</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span> <span class="o">-&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python3</span><span class="p">.</span><span class="mi">6</span>
-<span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span><span class="p">.</span> <span class="mi">2</span> <span class="n">root</span> <span class="n">root</span> <span class="mi">12448</span>  <span class="mi">3</span> <span class="n">avril</span> <span class="mi">13</span><span class="p">:</span><span class="mi">28</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python3</span><span class="p">.</span><span class="mi">6</span>
-<span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span><span class="p">.</span> <span class="mi">2</span> <span class="n">root</span> <span class="n">root</span> <span class="mi">12448</span>  <span class="mi">3</span> <span class="n">avril</span> <span class="mi">13</span><span class="p">:</span><span class="mi">28</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python3</span><span class="p">.</span><span class="mi">6</span><span class="n">m</span>
+<div class="highlight"><pre><span></span><span class="err">ls -al /usr/libexec/platform-python*</span>
+<span class="err">lrwxrwxrwx. 1 root root    20  3 avril 13:28 /usr/libexec/platform-python -&gt; ./platform-python3.6</span>
+<span class="err">-rwxr-xr-x. 2 root root 12448  3 avril 13:28 /usr/libexec/platform-python3.6</span>
+<span class="err">-rwxr-xr-x. 2 root root 12448  3 avril 13:28 /usr/libexec/platform-python3.6m</span>
 </pre></div>
 
 
@@ -150,7 +150,7 @@ Il faut faire une souscription pour avoir accès aux dépôts.
 Ou alors créer un fichier de configuration yum pour utiliser les rpm présents
 sur l'ISO.</p>
 <h2>Groupe paquets</h2>
-<div class="highlight"><pre><span></span><span class="o">@^</span><span class="n">minimal</span><span class="o">-</span><span class="n">environment</span>
+<div class="highlight"><pre><span></span><span class="err">@^minimal-environment</span>
 </pre></div>
 
 
@@ -472,13 +472,13 @@ $ xrandr -q …</pre></div>
 <p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/container.html">Container</a><a href="../tag/lxc.html">LXC</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
                 </footer><!-- /.post-info -->
                 <h1>Configuration environnement local</h1>
-<div class="highlight"><pre><span></span><span class="nv">mkdir</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.include = /etc/lxc/default.conf</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = u 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.id_map = g 0 100000 65536</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">defaults</span>.<span class="nv">conf</span>
-<span class="nv">echo</span> <span class="s2">&quot;</span><span class="s">lxc.lxcpath=/srv/containers/lxc</span><span class="s2">&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span>.<span class="nv">config</span><span class="o">/</span><span class="nv">lxc</span><span class="o">/</span><span class="nv">lxc</span>.<span class="nv">conf</span>
+<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.include = /etc/lxc/default.conf&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="k">defaults</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.id_map = u 0 100000 65536&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="k">defaults</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.id_map = g 0 100000 65536&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="k">defaults</span><span class="p">.</span><span class="n">conf</span>
+<span class="n">echo</span> <span class="ss">&quot;lxc.lxcpath=/srv/containers/lxc&quot;</span> <span class="o">&gt;</span> <span class="o">~/</span><span class="p">.</span><span class="n">config</span><span class="o">/</span><span class="n">lxc</span><span class="o">/</span><span class="n">lxc</span><span class="p">.</span><span class="n">conf</span>
 
-<span class="nv">sudo …</span></pre></div>
+<span class="n">sudo …</span></pre></div>
                 <a class="readmore" href="../lxc-beginner.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>
@@ -510,9 +510,9 @@ $ xrandr -q …</pre></div>
 </ul>
 <h1>Préparation de l'hôte</h1>
 <h2>Configuration NFS</h2>
-<div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cobbler</span>
-<span class="n">printf</span> <span class="c1">-- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
-<span class="n">printf</span> <span class="c1">-- &quot;/home …</span></pre></div>
+<div class="highlight"><pre><span></span><span class="err">mkdir /home/cobbler</span>
+<span class="err">printf -- &quot;/home/cobbler   192.168.122.2(rw,no_root_squash)&quot; &gt;&gt; /etc/exports</span>
+<span class="err">printf -- &quot;/home …</span></pre></div>
                 <a class="readmore" href="../installation-de-cobbler-sur-centos-66.html">Lire la suite...</a>
                 </div><!-- /.entry-content -->
         </article></li>

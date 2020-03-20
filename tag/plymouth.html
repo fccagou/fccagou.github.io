@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -46,26 +46,26 @@
                 <h2>Pour changer l'image sur le menu grub</h2>
 <p>Choisir une image et remplacer /boot/grub2/splatch.png</p>
 <p>Modifier /etc/default/grub</p>
-<div class="highlight"><pre><span></span>   <span class="n">GRUB_TIMEOUT</span><span class="o">=</span><span class="mi">5</span>
-   <span class="n">GRUB_DISTRIBUTOR</span><span class="o">=</span><span class="ss">&quot;$(sed &#39;s, release .*$,,g&#39; /etc/system-release)&quot;</span>
-   <span class="n">GRUB_DEFAULT</span><span class="o">=</span><span class="n">saved</span>
-   <span class="n">GRUB_DISABLE_SUBMENU</span><span class="o">=</span><span class="k">true</span>
-<span class="o">-&gt;</span> <span class="o">#</span><span class="n">GRUB_TERMINAL_OUTPUT</span><span class="o">=</span><span class="ss">&quot;console&quot;</span>
-   <span class="n">GRUB_CMDLINE_LINUX</span><span class="o">=</span><span class="ss">&quot;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet&quot;</span>
-   <span class="n">GRUB_DISABLE_RECOVERY</span><span class="o">=</span><span class="ss">&quot;true&quot;</span>
-<span class="o">-&gt;</span> <span class="n">GRUB_BACKGROUND</span><span class="o">=</span><span class="ss">&quot;/boot/grub2/splash.png&quot;</span>
+<div class="highlight"><pre><span></span><span class="err">   GRUB_TIMEOUT=5</span>
+<span class="err">   GRUB_DISTRIBUTOR=&quot;$(sed &#39;s, release .*$,,g&#39; /etc/system-release)&quot;</span>
+<span class="err">   GRUB_DEFAULT=saved</span>
+<span class="err">   GRUB_DISABLE_SUBMENU=true</span>
+<span class="err">-&gt; #GRUB_TERMINAL_OUTPUT=&quot;console&quot;</span>
+<span class="err">   GRUB_CMDLINE_LINUX=&quot;crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet&quot;</span>
+<span class="err">   GRUB_DISABLE_RECOVERY=&quot;true&quot;</span>
+<span class="err">-&gt; GRUB_BACKGROUND=&quot;/boot/grub2/splash.png&quot;</span>
 </pre></div>
 
 
 <p>Régénérer la conf de grub</p>
-<div class="highlight"><pre><span></span><span class="n">grub2</span><span class="o">-</span><span class="n">mkconfig</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">grub2</span><span class="o">/</span><span class="n">grub</span><span class="p">.</span><span class="n">cfg</span>
+<div class="highlight"><pre><span></span><span class="err">grub2-mkconfig &gt; /boot/grub2/grub.cfg</span>
 </pre></div>
 
 
 <h2>Pour l'animation plymouth</h2>
 <p>Plymouth utilise les thèmes situés dans /usr/share/plymouth/themes/</p>
 <p>Pour choisir  le thème par défaut, </p>
-<div class="highlight"><pre><span></span><span class="n">plymouth</span><span class="o">-</span><span class="k">set</span><span class="o">-</span><span class="k">default</span><span class="o">-</span><span class="n">theme</span> <span class="o">-</span><span class="n">R</span> <span class="n">nom_du_theme</span>
+<div class="highlight"><pre><span></span><span class="err">plymouth-set-default-theme -R nom_du_theme</span>
 </pre></div>
 
 

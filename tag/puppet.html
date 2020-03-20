@@ -21,7 +21,7 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog </a></h1>
+                <h1><a href="../index.html">The Cagou's Blog</a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
@@ -61,7 +61,7 @@
 </ul>
 <h1>Références documentaires</h1>
 <ul>
-<li><a href="https://puppet.com/docs/puppet/6.4/puppet_index.html">Documentation générale</a></li>
+<li><a href="https://puppet.com/docs/puppet/latest/puppet_index.html">Documentation générale</a></li>
 <li><a href="https://forge.puppet.com/puppetlabs/puppetdb/readme">Documentation puppetdb</a></li>
 </ul>
 <h1>Architecture</h1>
@@ -114,40 +114,40 @@ $ yum install -y puppetserver
 
 
 <p>Répertoires impactés (Pas fini)</p>
-<div class="highlight"><pre><span></span><span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span>: <span class="mi">200</span><span class="nv">MB</span>
-  <span class="nv">bin</span><span class="o">/</span>
-    <span class="nv">facter</span>       <span class="o">-&gt;</span> <span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppet</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">wrapper</span>.<span class="nv">sh</span>
-    <span class="nv">hiera</span>        <span class="o">-&gt;</span> <span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppet</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">wrapper</span>.<span class="nv">sh</span>
-    <span class="nv">puppet</span>       <span class="o">-&gt;</span> <span class="o">/</span><span class="nv">opt</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppet</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">wrapper</span>.<span class="nv">sh</span>
-    <span class="nv">puppetserver</span> <span class="o">-&gt;</span> ..<span class="o">/</span><span class="nv">server</span><span class="o">/</span><span class="nv">apps</span><span class="o">/</span><span class="nv">puppetserver</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">puppetserver</span>
-  <span class="nv">facter</span><span class="o">/</span><span class="nv">facts</span>.<span class="nv">d</span><span class="o">/</span>
-  <span class="nv">puppet</span><span class="o">/</span>
-    <span class="nv">bin</span><span class="o">/</span>
-    <span class="nv">cache</span><span class="o">/</span>
-    <span class="k">include</span><span class="o">/</span>
-    <span class="nv">lib</span><span class="o">/</span>
-    <span class="nv">modules</span><span class="o">/</span>
-    <span class="nv">share</span><span class="o">/</span>
-    <span class="nv">ssl</span><span class="o">/</span>
-    <span class="nv">vendor_modules</span><span class="o">/</span>
-    <span class="nv">VERSION</span>
-  <span class="nv">pxp</span><span class="o">-</span><span class="nv">agent</span><span class="o">/</span>
-    <span class="nv">modules</span><span class="o">/</span>
-       <span class="nv">pxp</span><span class="o">-</span><span class="nv">module</span><span class="o">-</span><span class="nv">puppet</span>
-    <span class="nv">spool</span><span class="o">/</span>
-    <span class="nv">tasks</span><span class="o">-</span><span class="nv">cache</span><span class="o">/</span>
+<div class="highlight"><pre><span></span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">puppetlabs</span><span class="p">:</span> <span class="mi">200</span><span class="n">MB</span>
+  <span class="n">bin</span><span class="o">/</span>
+    <span class="n">facter</span>       <span class="o">-&gt;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppet</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">wrapper</span><span class="p">.</span><span class="n">sh</span>
+    <span class="n">hiera</span>        <span class="o">-&gt;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppet</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">wrapper</span><span class="p">.</span><span class="n">sh</span>
+    <span class="n">puppet</span>       <span class="o">-&gt;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppet</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">wrapper</span><span class="p">.</span><span class="n">sh</span>
+    <span class="n">puppetserver</span> <span class="o">-&gt;</span> <span class="p">..</span><span class="o">/</span><span class="n">server</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">puppetserver</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">puppetserver</span>
+  <span class="n">facter</span><span class="o">/</span><span class="n">facts</span><span class="p">.</span><span class="n">d</span><span class="o">/</span>
+  <span class="n">puppet</span><span class="o">/</span>
+    <span class="n">bin</span><span class="o">/</span>
+    <span class="k">cache</span><span class="o">/</span>
+    <span class="n">include</span><span class="o">/</span>
+    <span class="n">lib</span><span class="o">/</span>
+    <span class="n">modules</span><span class="o">/</span>
+    <span class="k">share</span><span class="o">/</span>
+    <span class="n">ssl</span><span class="o">/</span>
+    <span class="n">vendor_modules</span><span class="o">/</span>
+    <span class="k">VERSION</span>
+  <span class="n">pxp</span><span class="o">-</span><span class="n">agent</span><span class="o">/</span>
+    <span class="n">modules</span><span class="o">/</span>
+       <span class="n">pxp</span><span class="o">-</span><span class="n">module</span><span class="o">-</span><span class="n">puppet</span>
+    <span class="n">spool</span><span class="o">/</span>
+    <span class="n">tasks</span><span class="o">-</span><span class="k">cache</span><span class="o">/</span>
 
-  <span class="nv">server</span><span class="o">/</span>
-    <span class="nv">apps</span><span class="o">/</span><span class="nv">puppetserver</span><span class="o">/</span>
-    <span class="nv">bin</span><span class="o">/</span><span class="nv">puppetserver</span> <span class="o">-&gt;</span> ..<span class="o">/</span><span class="nv">apps</span><span class="o">/</span><span class="nv">puppetserver</span><span class="o">/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">puppetserver</span>
-    <span class="nv">data</span><span class="o">/</span>
+  <span class="n">server</span><span class="o">/</span>
+    <span class="n">apps</span><span class="o">/</span><span class="n">puppetserver</span><span class="o">/</span>
+    <span class="n">bin</span><span class="o">/</span><span class="n">puppetserver</span> <span class="o">-&gt;</span> <span class="p">..</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">puppetserver</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">puppetserver</span>
+    <span class="k">data</span><span class="o">/</span>
 
-<span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">puppetlabs</span>: <span class="mi">68</span><span class="nv">K</span>
+<span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">puppetlabs</span><span class="p">:</span> <span class="mi">68</span><span class="n">K</span>
 
-<span class="o">/</span><span class="nv">usr</span><span class="o">/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">systemd</span><span class="o">/</span><span class="nv">system</span><span class="o">/</span><span class="nv">puppetserver</span>.<span class="nv">service</span>
-<span class="o">/</span><span class="nv">usr</span><span class="o">/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">tmpfiles</span>.<span class="nv">d</span><span class="o">/</span><span class="nv">puppetserver</span>.<span class="nv">conf</span>
-<span class="o">/</span><span class="nv">var</span><span class="o">/</span><span class="nv">log</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
-<span class="o">/</span><span class="nv">var</span><span class="o">/</span><span class="nv">run</span><span class="o">/</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="k">system</span><span class="o">/</span><span class="n">puppetserver</span><span class="p">.</span><span class="n">service</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">tmpfiles</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">puppetserver</span><span class="p">.</span><span class="n">conf</span>
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppetserver</span>
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppetserver</span>
 </pre></div>
 
 
@@ -210,12 +210,12 @@ $ puppet resource package <span class="nv">ensure</span><span class="o">=</span>
 <h1>Divers</h1>
 <p>C'est intéressant d'utiliser puppet en ligne de commande pour récupérer des
 informations locale intéressantes dans les scripts</p>
-<div class="highlight"><pre><span></span><span class="n">puppet</span> <span class="n">config</span> <span class="n">print</span> <span class="n">modulepath</span>
+<div class="highlight"><pre><span></span><span class="err">puppet config print modulepath</span>
 </pre></div>
 
 
 <p>Valider du code</p>
-<div class="highlight"><pre><span></span><span class="n">puppet</span> <span class="n">parser</span> <span class="n">validate</span> <span class="n">ficier</span><span class="p">.</span><span class="n">pp</span>
+<div class="highlight"><pre><span></span><span class="err">puppet parser validate ficier.pp</span>
 </pre></div>
 
 
@@ -246,24 +246,74 @@ Il faut voir si c'est présent dans la version opensource</p>
 </ul>
 <h1>puppet sur centOS 7</h1>
 <h2>Installation</h2>
-<div class="highlight"><pre><span></span> $ <span class="nv">sudo</span> <span class="nv">rpm</span> <span class="o">-</span><span class="nv">Uvh</span> <span class="nv">https</span>:<span class="o">//</span><span class="nv">yum</span>.<span class="nv">puppet</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">puppet6</span><span class="o">/</span><span class="nv">puppet6</span><span class="o">-</span><span class="nv">release</span><span class="o">-</span><span class="nv">el</span><span class="o">-</span><span class="mi">7</span>.<span class="nv">noarch</span>.<span class="nv">rpm</span>
- # <span class="nv">sudo</span> <span class="nv">yum</span> <span class="nv">install</span> <span class="nv">puppet</span><span class="o">-</span><span class="nv">bolt</span>
+<div class="highlight"><pre><span></span> <span class="err">$</span> <span class="n">sudo</span> <span class="n">rpm</span> <span class="o">-</span><span class="n">Uvh</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">yum</span><span class="p">.</span><span class="n">puppet</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">puppet6</span><span class="o">/</span><span class="n">puppet6</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">el</span><span class="o">-</span><span class="mi">7</span><span class="p">.</span><span class="n">noarch</span><span class="p">.</span><span class="n">rpm</span>
+ <span class="o">#</span> <span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">puppet</span><span class="o">-</span><span class="n">bolt</span>
 
- $ <span class="nv">sudo</span> <span class="nv">yum</span> <span class="nv">clean</span> <span class="nv">all</span> <span class="o">&amp;&amp;</span> <span class="nv">yum</span> <span class="nv">search</span> <span class="nv">puppet</span>
- <span class="nv">puppet</span><span class="o">-</span><span class="nv">agent</span>.<span class="nv">x86_64</span> : <span class="nv">The</span> <span class="nv">Puppet</span> <span class="nv">Agent</span> <span class="nv">package</span> <span class="nv">contains</span> <span class="nv">all</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">elements</span> <span class="nv">needed</span> <span class="nv">to</span> <span class="nv">run</span> <span class="nv">puppet</span>, <span class="nv">including</span> <span class="nv">ruby</span>,
-                     : <span class="nv">facter</span>, <span class="nv">and</span> <span class="nv">hiera</span>.
- <span class="nv">puppet</span><span class="o">-</span><span class="nv">client</span><span class="o">-</span><span class="nv">tools</span>.<span class="nv">x86_64</span> : <span class="nv">PuppetDB</span> <span class="nv">CLI</span> <span class="k">for</span> <span class="nv">querying</span> <span class="nv">Puppet</span> <span class="nv">data</span>
- <span class="nv">puppet</span><span class="o">-</span><span class="nv">release</span>.<span class="nv">noarch</span> : <span class="nv">Release</span> <span class="nv">packages</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">Puppet</span> <span class="nv">repository</span>
- <span class="nv">puppet6</span><span class="o">-</span><span class="nv">release</span>.<span class="nv">noarch</span> : <span class="nv">Release</span> <span class="nv">packages</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">Puppet</span> <span class="mi">6</span> <span class="nv">repository</span>
- <span class="nv">puppetdb</span>.<span class="nv">noarch</span> : <span class="nv">Puppet</span> <span class="nv">Labs</span> <span class="nv">puppetdb</span>. <span class="nv">Contains</span>: <span class="nv">Puppet</span><span class="o">-</span><span class="nv">integrated</span> <span class="nv">catalog</span> <span class="nv">and</span> <span class="nv">fact</span> <span class="nv">storage</span> <span class="ss">(</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetdb</span>
-                 : <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">0</span>,<span class="nv">org</span>.<span class="nv">clojure</span><span class="o">/</span><span class="nv">clojure</span> <span class="mi">1</span>.<span class="mi">10</span>.<span class="mi">0</span>,<span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetdb</span> <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">0</span><span class="ss">)</span>
- <span class="nv">puppetdb</span><span class="o">-</span><span class="nv">termini</span>.<span class="nv">noarch</span> : <span class="nv">Termini</span> <span class="k">for</span> <span class="nv">puppetdb</span>. <span class="nv">Contains</span> <span class="nv">terminus</span> <span class="k">for</span>:<span class="nv">puppetdb</span> <span class="ss">(</span><span class="nv">version</span> <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">0</span><span class="ss">)</span>
- <span class="nv">puppetserver</span>.<span class="nv">noarch</span> : <span class="nv">Puppet</span> <span class="nv">Labs</span> <span class="nv">puppetserver</span>. <span class="nv">Contains</span>: <span class="nv">Puppet</span> <span class="nv">Server</span> <span class="ss">(</span><span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
-                     : <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">1</span>,<span class="nv">org</span>.<span class="nv">clojure</span><span class="o">/</span><span class="nv">clojure</span> <span class="mi">1</span>.<span class="mi">10</span>.<span class="mi">0</span>,<span class="nv">org</span>.<span class="nv">clojure</span><span class="o">/</span><span class="nv">clojurescript</span> <span class="mi">1</span>.<span class="mi">10</span>.<span class="mi">238</span>,<span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">puppetserver</span>
-                     : <span class="mi">6</span>.<span class="mi">2</span>.<span class="mi">1</span>,<span class="nv">puppetlabs</span><span class="o">/</span><span class="nv">trapperkeeper</span><span class="o">-</span><span class="nv">webserver</span><span class="o">-</span><span class="nv">jetty9</span> <span class="mi">2</span>.<span class="mi">3</span>.<span class="mi">1</span><span class="ss">)</span>
- <span class="nv">pdk</span>.<span class="nv">x86_64</span> : <span class="nv">Puppet</span> <span class="nv">Development</span> <span class="nv">Kit</span>
- <span class="nv">puppet</span><span class="o">-</span><span class="nv">bolt</span>.<span class="nv">x86_64</span> : <span class="nv">Stand</span> <span class="nv">alone</span> <span class="nv">task</span> <span class="nv">runner</span>
+ <span class="err">$</span> <span class="n">sudo</span> <span class="n">yum</span> <span class="n">clean</span> <span class="k">all</span> <span class="o">&amp;&amp;</span> <span class="n">yum</span> <span class="k">search</span> <span class="n">puppet</span>
+ <span class="n">puppet</span><span class="o">-</span><span class="n">agent</span><span class="p">.</span><span class="n">x86_64</span> <span class="p">:</span> <span class="n">The</span> <span class="n">Puppet</span> <span class="n">Agent</span> <span class="n">package</span> <span class="k">contains</span> <span class="k">all</span> <span class="k">of</span> <span class="n">the</span> <span class="n">elements</span> <span class="n">needed</span> <span class="k">to</span> <span class="n">run</span> <span class="n">puppet</span><span class="p">,</span> <span class="k">including</span> <span class="n">ruby</span><span class="p">,</span>
+                     <span class="p">:</span> <span class="n">facter</span><span class="p">,</span> <span class="k">and</span> <span class="n">hiera</span><span class="p">.</span>
+ <span class="n">puppet</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">tools</span><span class="p">.</span><span class="n">x86_64</span> <span class="p">:</span> <span class="n">PuppetDB</span> <span class="n">CLI</span> <span class="k">for</span> <span class="n">querying</span> <span class="n">Puppet</span> <span class="k">data</span>
+ <span class="n">puppet</span><span class="o">-</span><span class="n">release</span><span class="p">.</span><span class="n">noarch</span> <span class="p">:</span> <span class="n">Release</span> <span class="n">packages</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Puppet</span> <span class="n">repository</span>
+ <span class="n">puppet6</span><span class="o">-</span><span class="n">release</span><span class="p">.</span><span class="n">noarch</span> <span class="p">:</span> <span class="n">Release</span> <span class="n">packages</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Puppet</span> <span class="mi">6</span> <span class="n">repository</span>
+ <span class="n">puppetdb</span><span class="p">.</span><span class="n">noarch</span> <span class="p">:</span> <span class="n">Puppet</span> <span class="n">Labs</span> <span class="n">puppetdb</span><span class="p">.</span> <span class="k">Contains</span><span class="p">:</span> <span class="n">Puppet</span><span class="o">-</span><span class="n">integrated</span> <span class="k">catalog</span> <span class="k">and</span> <span class="n">fact</span> <span class="k">storage</span> <span class="p">(</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppetdb</span>
+                 <span class="p">:</span> <span class="mi">6</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">clojure</span><span class="o">/</span><span class="n">clojure</span> <span class="mi">1</span><span class="p">.</span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppetdb</span> <span class="mi">6</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span>
+ <span class="n">puppetdb</span><span class="o">-</span><span class="n">termini</span><span class="p">.</span><span class="n">noarch</span> <span class="p">:</span> <span class="n">Termini</span> <span class="k">for</span> <span class="n">puppetdb</span><span class="p">.</span> <span class="k">Contains</span> <span class="n">terminus</span> <span class="k">for</span><span class="p">:</span><span class="n">puppetdb</span> <span class="p">(</span><span class="k">version</span> <span class="mi">6</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span>
+ <span class="n">puppetserver</span><span class="p">.</span><span class="n">noarch</span> <span class="p">:</span> <span class="n">Puppet</span> <span class="n">Labs</span> <span class="n">puppetserver</span><span class="p">.</span> <span class="k">Contains</span><span class="p">:</span> <span class="n">Puppet</span> <span class="n">Server</span> <span class="p">(</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppetserver</span>
+                     <span class="p">:</span> <span class="mi">6</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">clojure</span><span class="o">/</span><span class="n">clojure</span> <span class="mi">1</span><span class="p">.</span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="n">org</span><span class="p">.</span><span class="n">clojure</span><span class="o">/</span><span class="n">clojurescript</span> <span class="mi">1</span><span class="p">.</span><span class="mi">10</span><span class="p">.</span><span class="mi">238</span><span class="p">,</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">puppetserver</span>
+                     <span class="p">:</span> <span class="mi">6</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span><span class="n">puppetlabs</span><span class="o">/</span><span class="n">trapperkeeper</span><span class="o">-</span><span class="n">webserver</span><span class="o">-</span><span class="n">jetty9</span> <span class="mi">2</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span>
+ <span class="n">pdk</span><span class="p">.</span><span class="n">x86_64</span> <span class="p">:</span> <span class="n">Puppet</span> <span class="n">Development</span> <span class="n">Kit</span>
+ <span class="n">puppet</span><span class="o">-</span><span class="n">bolt</span><span class="p">.</span><span class="n">x86_64</span> <span class="p">:</span> <span class="n">Stand</span> <span class="n">alone</span> <span class="n">task</span> <span class="n">runner</span>
 </pre></div>
+
+
+<h1>Conversion des modules existants</h1>
+<p>==================================</p>
+<p># https://puppet.com/docs/pdk/1.x/pdk_converting_modules.html</p>
+<p>pdk convert</p>
+<p>Inconvénient, pose des questions pour générer le fichier metadata.json.
+Une solution est de générer le fichier metadata.json et d'utiliser --force en
+ligne de commande de pdk convert</p>
+<p>La commande ajoute plusieurs fichiers standards à tous les modules. 
+=&gt; Voir si on utilise tout :</p>
+<div class="highlight"><pre><span></span><span class="err">   .fixtures.yml</span>
+<span class="err">   .gitattributes</span>
+<span class="err">   .gitignore</span>
+<span class="err">   .gitlab-ci.yml</span>
+<span class="err">   .pdkignore</span>
+<span class="err">   .puppet-lint.rc</span>
+<span class="err">   .rspec</span>
+<span class="err">   .rubocop.yml</span>
+<span class="err">   .travis.yml</span>
+<span class="err">   .vscode/extensions.json </span>
+<span class="err">   .yardopts</span>
+<span class="err">   CHANGELOG.md</span>
+<span class="err">   Gemfile</span>
+<span class="err">   README.md</span>
+<span class="err">   Rakefile</span>
+<span class="err">   appveyor.yml</span>
+<span class="err">   data/</span>
+<span class="err">   hiera.yaml</span>
+<span class="err">   metadata.json</span>
+<span class="err">   spec/</span>
+</pre></div>
+
+
+<p>En utilisant --template-url, on peut aussi décider d'avoir des fichiers de
+   spécifiques.</p>
+<p># il faut voir comment générer ça avant.
+   pdk validate
+   pdk build</p>
+<p>https://puppet.com/docs/puppet/6.4/environments_creating.html  erreur dans la
+doc envronmen.conf </p>
+<dl>
+<dt>https://puppet.com/docs/puppet/6.4/modules_fundamentals.html#concept-1234</dt>
+<dd>motd n'est pas surligné en entier.</dd>
+</dl>
+<h1>Modules</h1>
+<p>=========</p>
+<p>https://forge.puppet.com/puppetlabs/netapp
+   https://puppet.com/presentations/use-puppet-manage-your-netapp-storage-infrastructure</p>
+<p>https://puppet.com/presentations/manage-your-switches-servers</p>
         </article></aside><!-- /#featured -->
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
