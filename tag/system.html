@@ -21,10 +21,11 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="../index.html">The Cagou's Blog</a></h1>
+                <h1><a href="../index.html">The Cagou's Blog </a></h1>
                 <nav><ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="../archives.html">Archives</a></li>
+                    <li ><a href="../pages/gpg-public-key.html">gpg public key</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
@@ -32,7 +33,293 @@
         
      <section id="content" class="body">
         <aside id="featured"><article>
-                <h1 class="entry-title"><a href="../rhel8-whats-new.html">RHEL8 what's new ?</a></h1> 
+                <h1 class="entry-title"><a href="../rhel8-virtualization-server.html">RHEL8 Virtualization Server</a></h1> 
+                <footer class="post-info">
+                        <abbr class="published" title="2020-03-20T11:06:00+01:00">
+                                Publié le 20/03/2020 &agrave; 11:06
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                <p>Dans <a href="../category/draft.html">Draft</a>. </p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/redhat.html">RedHat</a><a href="../tag/system.html">System</a><a href="../tag/french.html">French</a><a href="../tag/irtualization.html">irtualization</a></p></p>                </footer><!-- /.post-info -->
+                <!-- vim-markdown-toc GFM -->
+
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#points-dattention-sur-la-sécurité">Points d'attention sur la sécurité</a></li>
+<li><a href="#installation-du-serveur">Installation du serveur</a><ul>
+<li><a href="#création-dune-clé-usb-bootable">Création d'une clé usb bootable</a></li>
+<li><a href="#installation-du-système-de-base">Installation du système de base</a><ul>
+<li><a href="#installation-de-base">Installation de base</a></li>
+<li><a href="#service-cockpit">Service cockpit</a></li>
+</ul>
+</li>
+<li><a href="#configuration-du-réseau">Configuration du réseau</a></li>
+</ul>
+</li>
+<li><a href="#annexes">Annexes</a><ul>
+<li><a href="#kickstart-serveur-virtualisation">Kickstart serveur virtualisation</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+
+<h1>Description</h1>
+<p>Je note ici l'ensemble des actions que je mène pour mettre en place un
+hyperviseur sous CentOS 8.</p>
+<p>En ces temps de confinement, cela permet de continuer à travailler sur
+certaines applications, garder la main et faire de la veille technologique.</p>
+<p>Globalement, beaucoup de chose se font aisément, les divers fournisseurs de
+distributions font ce qu'il faut pour avoir des solutions utilisables, même
+avec les versions Open Source.</p>
+<p>Aussi, ayant un PC dans un coin avec 4 CPU et 8GB de RAM, c'est suffisant pour
+manipuler les bases. Cela permet de faire tourner 3 machines en parallèles.</p>
+<h1>Points d'attention sur la sécurité</h1>
+<p>Il est facile de monter rapidement ces solutions. De mon côté, je m'attache
+à étudier la solution technique mais aussi la sécurité de ce qui est mis en
+place. Aussi, les règles de base que j'applique sont :</p>
+<ul>
+<li>Réduction de la surface d'attaque:</li>
+<li>je n'installe que ce qui est nécessaire et suffisant</li>
+<li>Le pare-feu est activé et seuls les flux nécessaires et suffisants sont ouverts</li>
+<li>moindre privilèges: les applications installées doivent tourner avec des id
+  différents</li>
+<li>Je n'installe que</li>
+<li>les paquets venant de chez CentOS/RHEL</li>
+<li>des paquets signés</li>
+<li>des logiciels recompilés depuis les sources si pas dans le référentiel</li>
+</ul>
+<p>De manière globale, <a href="https://www.ssi.gouv.fr/guide/recommandations-de-securite-relatives-a-un-systeme-gnulinux/">les recos de l'ANSSI</a></p>
+<p>RedHat est un acteur fort dans ce périmètre et s'attache à fournir des
+solutions sécurisées de base. C'est notamment le cas avec l'utilisation de
+selinux. Point que beaucoup ont trop souvent l'habitude de désactiver :(</p>
+<h1>Installation du serveur</h1>
+<h2>Création d'une clé usb bootable</h2>
+<p>Ici on réalise une action assez standard récupération de l'iso et copie sur une
+clé USB</p>
+<div class="highlight"><pre><span></span><span class="err"> curl -O http://mirror.in2p3.fr/linux/CentOS/8.1.1911/isos/x86_64/CentOS-8.1.1911-x86_64-dvd1.iso</span>
+<span class="err"> sudo dd if=CentOS-8.1.1911-x86_64-dvd1.iso of=/dev/sdXXX  bs=512</span>
+</pre></div>
+
+
+<p>/!\ - bien choisir le /dev/sdxxx qui correspond à sa clef USB (dmesg ou
+journalctl)</p>
+<h2>Installation du système de base</h2>
+<p>En appliquant le principe d'installer ce qui est juste nécessaire, la démarche
+est :
+* installer le système avec le rôle de serveur de virtualisation
+* ajouter des service
+* faire les configurations spécifiques</p>
+<h3>Installation de base</h3>
+<p>Là encore pas de chose très spéciales, on boote sur la clé USB et on suis les
+instructions :
+* Nom de machine
+* choix du partitionnement
+* choix du rôle du serveur
+* Configuration du réseau
+* Mot de passe <em>root</em>
+* Utilisateur supplémentaire administrateur</p>
+<h3>Service cockpit</h3>
+<p>Cockpit est une application qui permet de configurer le serveur au travers
+d'une interface https. J'ai tendance à éviter d'installer des applications qui
+font tout toutes seules pour favoriser l'apprentissage en profondeur de ce qui
+est installé. Cela évite aussi d'augmenter la surface d'attaque du serveur.
+Ici, le risque est réduit parce que je suis sur une infra locale avec des
+systèmes de tests. Donc je l'installe pour découvrir.</p>
+<p>Cockpit est installé par défaut mais le service n'est pas lancé.</p>
+<div class="highlight"><pre><span></span><span class="err">systemctl enable cockpit.service</span>
+<span class="err">systemctl start cockpit.service</span>
+</pre></div>
+
+
+<p>Ensuite, on accède à l'interface via l'url <em>https://<ip_serveur>:9090/</em> et on se
+connecte avec un des comptes du système. Etant en phase de découverte, je me
+connecte <em>root</em>.</p>
+<p>Cockpit est évolutif et peut être étoffé à l'aide de plugins.
+Dans mon cas, voulant faire un serveur de virtu, j'ai ajouté les paquets
+suivants:
+* cockpit-machines: gestion de libvirt
+* cockpit-storaged: Gestion du stockage
+* cockpit-podman: gestion docker
+* cockpit-dashboard: état du serveur.</p>
+<p>On retrouve assez naturellement les éléments de configuration d'un système
+d'hyper convergence. C'est la direction qu'à prise RedHat il y a plusieurs
+années et c'est la raison pour laquelle IBM l'a acheté !:)</p>
+<p>Après un tour rapide de l'interface, on peut faire pas mal de choses simples
+mais on est vite bloqué dès qu'on sort des sentiers balisés. Or dans mon cas,
+je sors de ces sentiers. </p>
+<h2>Configuration du réseau</h2>
+<p>C'est ici que je sors des sentiers battus pour la raison suivante.</p>
+<p>Partie d'une configuration du réseau des VM par défaut, c'est du NAT qui est
+configuré. Pour pouvoir accéder directement à ces machines, j'ai plusieurs
+solutions :
+* passer le réseau en bridge: alors les vm seront vue sur mon réseau local
+* passer le réseau en mode routé</p>
+<p>La solution bridge est séduisante mais je n'ai pas trop envie que des VM, qui
+servent de tests, aient accès au reste de mon infra. Aussi, il faut pouvoir
+isoler au maximum le réseau des VM tout en y ayant accès. Les flux peuvent
+entrer mais pas sortir. Mais, si on bloque tout en sortie, on se heurte à
+des soucis pour faire des mises à jour ou installer de nouvelles choses.</p>
+<p>La solution routée est pas mal mais passerelle par défaut est ma box sur
+laquelle je ne peux ajouter de route.  Il faudrait alors que j'ajoute la
+route à chacun des postes depuis lesquels je souhaite me connecter aux VM.
+De plus, je partage cette infra avec des personnes qui sont elles aussi
+confinées dont l'accès se fait forcément par la box... qui ne sait pas faire
+le routage.</p>
+<p><a href="https://wiki.libvirt.org/page/Networking#Forwarding_Incoming_Connections">Doc
+Libvirt</a></p>
+<p>Pour avancer sur le sujet, j'ai pris la décision d'opter pour une première
+solution qui est :
+* garder le NAT et filtrer les flux sortants et entrants
+* Créer un VM "bastion" qui est le point d'entrée pour les connexions
+  depuis l'extérieur</p>
+<div class="highlight"><pre><span></span>     <span class="p">[</span><span class="n">BOX</span> <span class="n">G</span><span class="p">]</span><span class="o">--</span><span class="p">.</span><span class="o">--</span><span class="p">[</span><span class="n">BOX</span> <span class="n">P</span><span class="p">]</span> 
+              <span class="o">|</span>
+              <span class="o">|</span>
+         <span class="p">(</span><span class="n">tcp</span><span class="o">/</span><span class="n">xxxx</span><span class="p">)</span>
+              <span class="o">|</span>
+              <span class="o">|</span>
+         <span class="o">-----------</span>
+        <span class="o">|</span>   <span class="n">BOX</span>     <span class="o">|</span>
+         <span class="o">-----------</span>
+              <span class="o">|</span>
+              <span class="o">|</span>
+         <span class="p">(</span><span class="n">tcp</span><span class="o">/</span><span class="n">yyyy</span><span class="p">)</span>
+              <span class="o">|</span>
+              <span class="o">|</span>
+ <span class="o">-------------|---------------------------------</span>
+<span class="o">|</span> <span class="n">hyper</span>        <span class="err">\</span>                                <span class="o">|</span>
+<span class="o">|</span> <span class="n">viser</span>         <span class="err">\</span> <span class="o">----------------------</span>        <span class="o">|</span>
+<span class="o">|</span>                <span class="o">|</span>            <span class="o">|</span>        <span class="o">|</span>        <span class="o">|</span>
+<span class="o">|</span>             <span class="p">[</span><span class="nl">Bastion</span><span class="p">:</span><span class="mi">22</span><span class="p">]</span>    <span class="o">|</span>        <span class="o">|</span>        <span class="o">|</span>
+<span class="o">|</span>                           <span class="p">[</span><span class="n">VM2</span><span class="p">]</span>    <span class="p">[</span><span class="n">VM3</span><span class="p">]</span>      <span class="o">|</span>
+<span class="o">|</span>                                               <span class="o">|</span>
+ <span class="o">-----------------------------------------------</span>
+</pre></div>
+
+
+<p>Avec cette solution, il faut jouer avec le pare feu de l'hyper viseur pour
+ajouter le pNAT pour router le flux entrant vers le bastion.</p>
+<p>C'est là que cockpit atteint ses limites car on ne peut faire ce genre de
+configurations aisément. C'est aussi là que je rouve un nouveau challenge
+car je découvre <a href="https://wiki.nftables.org">nftable</a> et l'instrumentation qui
+en est faite par RedHat au travers de <a href="https://firewalld.org/">firewalld</a></p>
+<p>Je suis en plein dans le truc des solutions qui font "papa/maman" mais qui sont
+restrictives dès qu'on veut faire "plus" ou "différemment". Donc cela demande
+un effort d'apprentissage des 2 technos ainsi que le modèle mis en place par
+RedHat.</p>
+<p>Parce que ça ne fait que 3j que j'ai commencé à regardé tout ça entre d'autres
+choses, j'ai réussi à atteindre l'objectif de faire le pNAT pour donner les
+accès mais ce n'est pas satisfaisant. En effet, je n'ai pas encore réussi
+à tout configurer avec "firewalld". Je n'arrive pas à positionner, de manière
+permanente 2 règles accept au bon endroit.</p>
+<p>Lorsque que je relance le pare-feu, j'ai une règle qui est mal placée car elle
+est automatiquement placée APRÈS les règles mises par "libvirtd" quand il lance
+le réseau virtuel. J'en ai une autre qui ne reste pas.
+Çà ressemble à <a href="https://forums.centos.org/viewtopic.php?t=71454&amp;start=10">ce
+soucis</a></p>
+<p>Pour que ça fonctionne, il faut :
+* autoriser le flux tcp/yyyy  entrant sur l'hyperviseur 
+* forwarder ce flux vers le bastion tcp/22
+* autoriser ce forward à traverser le pare-feu.</p>
+<p>Si j'utilise les outils mis à disposition par CentOS, je dois utiliser
+<em>firewall-cmd</em> <em>(je ne détaille pas ici la gestion des zones public/libvirt...
+peut-être pus tard ou dans un autre doc car ce n'est pas le sujet du moment)</em></p>
+<div class="highlight"><pre><span></span><span class="err">#  On autorise le flux à entrer sur l&#39;hyper viseur.</span>
+<span class="err">firewall-cmd --zone=public --add-port=yyyy/tcp</span>
+<span class="err"># Ajout du forward</span>
+<span class="err">firewall-cmd --zone=public --add-forward-port=port=yyyy:proto=tcp:toport=22:toaddr=&lt;@ip_bastion&gt;</span>
+</pre></div>
+
+
+<p>Je suis ensuite obligé de faire les actions manuelles suivantes</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">Lister</span> <span class="n">la</span> <span class="n">chaine</span> <span class="n">qui</span> <span class="n">m</span><span class="s1">&#39;initéresse avec les numéro de handle.</span>
+<span class="s1"># Util pour le insert d&#39;</span><span class="n">après</span>
+<span class="err">$</span> <span class="n">nft</span> <span class="n">list</span> <span class="k">table</span> <span class="n">filter</span> <span class="o">-</span><span class="n">a</span>
+
+<span class="o">#</span> <span class="n">Dans</span> <span class="n">la</span> <span class="k">chain</span> <span class="k">FORWARD</span><span class="p">,</span> <span class="n">je</span> <span class="n">repère</span> <span class="n">le</span> <span class="n">handle</span> <span class="n">de</span> <span class="n">la</span> <span class="n">première</span> <span class="n">règle</span>
+<span class="o">#</span> <span class="n">et</span> <span class="n">j</span><span class="s1">&#39;insère la règle qui me convient pour autoriser le forward des flux</span>
+<span class="s1"># établis depuis réseau local vers le réseau virtuel.</span>
+<span class="s1">#                                       \/ ici c&#39;</span><span class="n">est</span> <span class="mi">12</span> <span class="n">mais</span> <span class="err">ç</span><span class="n">a</span> <span class="n">peut</span><span class="o">-</span><span class="err">ê</span><span class="n">tre</span> <span class="n">autre</span> <span class="n">chose</span>
+<span class="err">$</span> <span class="n">nft</span> <span class="k">insert</span> <span class="k">rule</span>  <span class="n">filter</span> <span class="k">FORWARD</span> <span class="n">handle</span> <span class="mi">12</span> <span class="n">iifname</span> <span class="n">enp2s0</span> <span class="n">oifname</span> <span class="n">virbr0</span> <span class="n">ct</span> <span class="k">state</span> <span class="k">new</span><span class="p">,</span><span class="n">untracked</span> <span class="n">accept</span>
+
+
+<span class="o">#</span> <span class="n">Enfin</span> <span class="n">j</span><span class="s1">&#39;ajoute la règle qui permet au ssh d&#39;</span><span class="n">arriver</span> <span class="n">sur</span> <span class="n">le</span> <span class="n">bastion</span><span class="p">.</span>
+<span class="err">$</span> <span class="n">nft</span> <span class="k">add</span> <span class="k">rule</span>  <span class="n">filter</span> <span class="k">OUTPUT</span>  <span class="n">oifname</span> <span class="ss">&quot;virbr0&quot;</span> <span class="n">meta</span> <span class="n">l4proto</span> <span class="n">tcp</span> <span class="n">tcp</span> <span class="n">dport</span> <span class="mi">22</span> <span class="n">counter</span> <span class="n">accept</span>
+</pre></div>
+
+
+<p>En écrivant ces lignes, j'ai chercher des informations et je suis tombé sur
+<em>virsh nwfilter-list</em> ... Ciel, encore un truc intéressant à creuser !!:P</p>
+<p><strong>Cela sera tout pour aujourd'hui, je continue sur le sujet plus tard... </strong></p>
+<h1>Annexes</h1>
+<h2>Kickstart serveur virtualisation</h2>
+<p>Ci-dessous le fichier kickstart généré par l'installation du rôle serveur
+virtualisation.</p>
+<div class="highlight"><pre><span></span><span class="cp">#version=RHEL8</span>
+<span class="n">ignoredisk</span> <span class="o">--</span><span class="n">only</span><span class="o">-</span><span class="n">use</span><span class="o">=</span><span class="n">sda</span>
+<span class="n">autopart</span> <span class="o">--</span><span class="n">type</span><span class="o">=</span><span class="n">lvm</span>
+<span class="cp"># Partition clearing information</span>
+<span class="n">clearpart</span> <span class="o">--</span><span class="n">none</span> <span class="o">--</span><span class="n">initlabel</span>
+<span class="cp"># Use graphical install</span>
+<span class="n">graphical</span>
+<span class="cp"># Use CDROM installation media</span>
+<span class="n">cdrom</span>
+<span class="cp"># Keyboard layouts</span>
+<span class="n">keyboard</span> <span class="o">--</span><span class="n">vckeymap</span><span class="o">=</span><span class="n">fr</span><span class="o">-</span><span class="n">oss</span> <span class="o">--</span><span class="n">xlayouts</span><span class="o">=</span><span class="err">&#39;</span><span class="n">fr</span> <span class="p">(</span><span class="n">oss</span><span class="p">)</span><span class="err">&#39;</span>
+<span class="cp"># System language</span>
+<span class="n">lang</span> <span class="n">fr_FR</span><span class="p">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+
+<span class="cp"># Network information</span>
+<span class="n">network</span>  <span class="o">--</span><span class="n">bootproto</span><span class="o">=</span><span class="n">dhcp</span> <span class="o">--</span><span class="n">device</span><span class="o">=</span><span class="n">enp2s0</span> <span class="o">--</span><span class="n">onboot</span><span class="o">=</span><span class="n">off</span> <span class="o">--</span><span class="n">ipv6</span><span class="o">=</span><span class="k">auto</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">activate</span>
+<span class="n">network</span>  <span class="o">--</span><span class="n">hostname</span><span class="o">=</span><span class="n">localhost</span><span class="p">.</span><span class="n">localdomain</span>
+<span class="n">repo</span> <span class="o">--</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;AppStream&quot;</span> <span class="o">--</span><span class="n">baseurl</span><span class="o">=</span><span class="nl">file</span><span class="p">:</span><span class="c1">///run/install/repo/AppStream</span>
+<span class="cp"># Root password</span>
+<span class="n">rootpw</span> <span class="o">--</span><span class="n">iscrypted</span> <span class="o">*</span>
+<span class="cp"># Run the Setup Agent on first boot</span>
+<span class="n">firstboot</span> <span class="o">--</span><span class="n">enable</span>
+<span class="cp"># Do not configure the X Window System</span>
+<span class="n">skipx</span>
+<span class="cp"># System services</span>
+<span class="n">services</span> <span class="o">--</span><span class="n">enabled</span><span class="o">=</span><span class="s">&quot;chronyd&quot;</span>
+<span class="cp"># System timezone</span>
+<span class="n">timezone</span> <span class="n">America</span><span class="o">/</span><span class="n">New_York</span> <span class="o">--</span><span class="n">isUtc</span>
+
+<span class="nf">%packages</span>
+<span class="err">@</span><span class="o">^</span><span class="n">virtualization</span><span class="o">-</span><span class="n">host</span><span class="o">-</span><span class="n">environment</span>
+<span class="err">@</span><span class="n">remote</span><span class="o">-</span><span class="n">system</span><span class="o">-</span><span class="n">management</span>
+<span class="n">kexec</span><span class="o">-</span><span class="n">tools</span>
+
+<span class="nf">%end</span>
+
+<span class="nf">%addon</span> <span class="n">com_redhat_kdump</span> <span class="o">--</span><span class="n">enable</span> <span class="o">--</span><span class="n">reserve</span><span class="o">-</span><span class="n">mb</span><span class="o">=</span><span class="err">&#39;</span><span class="k">auto</span><span class="err">&#39;</span>
+
+<span class="nf">%end</span>
+
+<span class="nf">%anaconda</span>
+<span class="n">pwpolicy</span> <span class="n">root</span> <span class="o">--</span><span class="n">minlen</span><span class="o">=</span><span class="mi">6</span> <span class="o">--</span><span class="n">minquality</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">notstrict</span> <span class="o">--</span><span class="n">nochanges</span> <span class="o">--</span><span class="n">notempty</span>
+<span class="n">pwpolicy</span> <span class="n">user</span> <span class="o">--</span><span class="n">minlen</span><span class="o">=</span><span class="mi">6</span> <span class="o">--</span><span class="n">minquality</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">notstrict</span> <span class="o">--</span><span class="n">nochanges</span> <span class="o">--</span><span class="n">emptyok</span>
+<span class="n">pwpolicy</span> <span class="n">luks</span> <span class="o">--</span><span class="n">minlen</span><span class="o">=</span><span class="mi">6</span> <span class="o">--</span><span class="n">minquality</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">notstrict</span> <span class="o">--</span><span class="n">nochanges</span> <span class="o">--</span><span class="n">notempty</span>
+</pre></div>
+
+
+<!--
+   vim: spell spelllang=fr
+-->
+        </article></aside><!-- /#featured -->
+                <h1>Autres articles</h1>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../rhel8-whats-new.html" rel="bookmark" title="Permalien vers «RHEL8 what's new ?»">RHEL8 what's new ?</a></h1>
+                </header>
+                
+                <div class="entry-content">
                 <footer class="post-info">
                         <abbr class="published" title="2019-05-08T23:52:00+02:00">
                                 Publié le 08/05/2019 &agrave; 23:52
@@ -41,8 +328,9 @@
                         <address class="vcard author">
                                 Par <a class="url fn" href="#">fccagou</a>
                         </address>
-                <p>Dans <a href="../category/rhel8.html">rhel8</a>. </p>
-<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/redhat.html">RedHat</a><a href="../tag/system.html">System</a><a href="../tag/french.html">French</a></p></p>                </footer><!-- /.post-info -->
+                        <p> Dans <a href="../category/rhel8.html">rhel8</a></p>
+<p>tags: <a href="../tag/linux.html">Linux</a><a href="../tag/redhat.html">RedHat</a><a href="../tag/system.html">System</a><a href="../tag/french.html">French</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
                 <h1>Actions menées</h1>
 <ul>
 <li>Récupération de l'iso sur le site de <a href="https://www.redhat.com">RedHat</a></li>
@@ -57,322 +345,10 @@
 <li>GPL: licence</li>
 <li>media.repo: configuration yum</li>
 <li>RPM-GPG-KEY-redhat-beta : clef de signature</li>
-<li>RPM-GPG-KEY-redhat-release : clef de signature</li>
-<li>TRANS.TBL: pour l'iso</li>
-</ul>
-<h2>AppStream</h2>
-<p>Contient des RPM: quelle est la dif avec BaseOS ?</p>
-<h2>BaseOS</h2>
-<p>TODO: faire le point sur le contenu et l'usage mais vue le nom, il semble que
-ce soit le minimum pour faire l'installation.</p>
-<h2>EFI/BOOT</h2>
-<p>Contient les bootrom uefi</p>
-<h2>Images</h2>
-<p>Images pour les types de boot, uefi, install ou pxe.</p>
-<h2>Isolinux</h2>
-<p>Fichiers pour le démarrage depuis l'ISO</p>
-<h1>Général</h1>
-<p>Il ne semble pas y avoir de grand changement dans l'outil d'installation.
-L'interface reste la même, il y a un changement mineur au niveau du
-récapitulatif.</p>
-<p>On voit aussi apparaître un menu pour définir l'usage de la machine.
-Ces options sont utilisées par <code>subscription-manager</code>.</p>
-<p>Chose intéressante, on trouve la notion de <strong>rôle</strong> qui qui se rapproche de ce
-que l'on trouve dans <a href="https://puppet.com/docs/pe/2019.1/designing_system_configs_roles_and_profiles.html">Puppet</a>. ... En fait pas du tout, la notion de rôle <a href="https://www.ansible.com/">Ansible</a> correspond aux profils de Puppet.</p>
-<p>Le fichier <em>kickstart</em> généré ne semble pas avoir changé sauf pour les noms des
-groupes de <em>packages</em> qui doivent certainement être cohérents avec les rôles.</p>
-<div class="highlight"><pre><span></span>$ yum info rhel-system-roles
-Updating Subscription Management repositories.
-Dernière vérification de l’expiration des métadonnées effectuée il y a <span class="m">0</span>:01:31 le mer. <span class="m">08</span> mai <span class="m">2019</span> <span class="m">17</span>:37:24 EDT.
-Paquets disponibles
-Nom          : rhel-system-roles
-Version      : <span class="m">1</span>.0
-Publication  : <span class="m">5</span>.el8
-Architecture : noarch
-Taille       : <span class="m">127</span> k
-Source       : rhel-system-roles-1.0-5.el8.src.rpm
-Dépôt        : rhel-8-for-x86_64-appstream-rpms
-Résumé       : Set of interfaces <span class="k">for</span> unified system management
-URL          : https://github.com/linux-system-roles/
-Licence      : GPLv3+ and MIT and BSD
-Description  : Collection of Ansible roles and modules that provide a stable and
-             : consistent configuration interface <span class="k">for</span> managing multiple versions
-             : of Red Hat Enterprise Linux.
-</pre></div>
-
-
-<p>En post installation, si on ne choisi pas de réseau durant l'installation, il
-suffit d'utiliser <code>nmcli c up ens1</code></p>
-<h2>Souscription</h2>
-<p>Pour les souscriptions</p>
-<div class="highlight"><pre><span></span><span class="err">subscription-manager register --auto-attach</span>
-</pre></div>
-
-
-<p>La souscription génère les fichiers:</p>
-<ul>
-<li>
-<p>/etc/yum.repos.d/redhat.repo</p>
-</li>
-<li>
-<p>/etc/pki/consumer/{key,cert}.pem</p>
-</li>
-</ul>
-<p>Le certificat sert ensuite pour les transactions.</p>
-<p>TODO: quel est le niveau d'intrusion du mécanisme ??</p>
-<p>Dans la crontab daily, <code>/usr/libexec/rhsmd -s</code> et en <em>service /usr/bin/rhsmcertd</em></p>
-<h2>Gestion des paquets</h2>
-<p>Le syslog montre que dnf est utilisé comme gestion de paquets.</p>
-<p>TODO: à creuser</p>
-<h2>Python</h2>
-<p>Apparition de <code>plateform-python</code>, certainement pour éviter le conflit avec la
-version mise à disposition des utilisateurs.</p>
-<div class="highlight"><pre><span></span><span class="err">ls -al /usr/libexec/platform-python*</span>
-<span class="err">lrwxrwxrwx. 1 root root    20  3 avril 13:28 /usr/libexec/platform-python -&gt; ./platform-python3.6</span>
-<span class="err">-rwxr-xr-x. 2 root root 12448  3 avril 13:28 /usr/libexec/platform-python3.6</span>
-<span class="err">-rwxr-xr-x. 2 root root 12448  3 avril 13:28 /usr/libexec/platform-python3.6m</span>
-</pre></div>
-
-
-<p>TODO: à creuser</p>
-<h2>Firewall</h2>
-<p>/!\ Passage à <a href="https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes">nftables</a>
-C'est le backend par défaut de firewalld.
-TODO: prendre en compte</p>
-<p>Les règles sont dans <em>/etc/nftables</em>, mais ici, c'est la conf de <em>firewalld</em> qui
-compte. Le service <em>nftables est disabled</em>.</p>
-<h1>Système core</h1>
-<h2>Choix de la VM</h2>
-<p>2vCPU, 2048 BG RAM, 10GB DD</p>
-<h2>Point post installation</h2>
-<p>Prend 1,4GB de disque
-Il faut faire une souscription pour avoir accès aux dépôts.
-Ou alors créer un fichier de configuration yum pour utiliser les rpm présents
-sur l'ISO.</p>
-<h2>Groupe paquets</h2>
-<div class="highlight"><pre><span></span><span class="err">@^minimal-environment</span>
-</pre></div>
-
-
-<h2>Processus</h2>
-<div class="highlight"><pre><span></span><span class="k">USER</span><span class="w">       </span><span class="n">PID</span><span class="w">     </span><span class="n">STAT</span><span class="w"> </span><span class="k">START</span><span class="w">   </span><span class="nc">TIME</span><span class="w"> </span><span class="n">COMMAND</span><span class="w"></span>
-<span class="n">root</span><span class="w">         </span><span class="mi">1</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">01</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="w"> </span><span class="c1">--switched-root --system --deserialize 18</span>
-<span class="n">root</span><span class="w">         </span><span class="mi">2</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kthreadd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">         </span><span class="mi">3</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">rcu_gp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">         </span><span class="mi">4</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">rcu_par_gp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">         </span><span class="mi">6</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/0:0H-kblockd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">         </span><span class="mi">8</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">mm_percpu_wq</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">         </span><span class="mi">9</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">ksoftirqd/0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">10</span><span class="w">     </span><span class="n">I</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">rcu_sched</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">11</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">migration/0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">12</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">watchdog/0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">13</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">cpuhp/0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">14</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">cpuhp/1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">15</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">watchdog/1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">16</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">migration/1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">17</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">ksoftirqd/1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">19</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/1:0H</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">21</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kdevtmpfs</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">22</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">netns</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">23</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kauditd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">25</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">khungtaskd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">26</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">oom_reaper</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">27</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">writeback</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">28</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kcompactd0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">29</span><span class="w">     </span><span class="n">SN</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">ksmd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">30</span><span class="w">     </span><span class="n">SN</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">khugepaged</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">31</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">crypto</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">32</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kintegrityd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">33</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kblockd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">34</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">md</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">35</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">edac-poller</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">36</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">watchdogd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">48</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kswapd0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">        </span><span class="mi">99</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kthrotld</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">100</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/24-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">101</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/25-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">102</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/26-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">103</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/27-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">104</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/28-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">105</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/29-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">106</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">irq/30-pciehp</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">107</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">acpi_thermal_pm</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">108</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">hwrng</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">109</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kmpath_rdacd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">110</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kaluad</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">112</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">ipv6_addrconf</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">379</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/1:1H-kblockd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">390</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">ata_sff</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">395</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_eh_0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">399</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_tmf_0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">400</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_eh_1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">401</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">ttm_swap</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">402</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_tmf_1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">403</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_eh_2</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">404</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_tmf_2</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">405</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_eh_3</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">406</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_tmf_3</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">407</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_eh_4</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">408</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_tmf_4</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">409</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_eh_5</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">410</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">scsi_tmf_5</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">413</span><span class="w">     </span><span class="n">R</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/u4:4-events_unbound</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">414</span><span class="w">     </span><span class="n">I</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/u4:5-events_unbound</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">443</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/0:1H-kblockd</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">479</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kdmflush</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">487</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kdmflush</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">514</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfsalloc</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">515</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs_mru_cache</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">518</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-buf/dm-0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">519</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-data/dm-0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">520</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-conv/dm-0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">521</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-cil/dm-0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">522</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-reclaim/dm-</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">523</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-log/dm-0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">524</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-eofblocks/d</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">525</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfsaild/dm-0</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">618</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">journald</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">657</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">udevd</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">687</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-buf/vda1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">689</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-data/vda1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">692</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-conv/vda1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">693</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-cil/vda1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">694</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-reclaim/vda</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">695</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-log/vda1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">699</span><span class="w">     </span><span class="n">I</span><span class="o">&lt;</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfs-eofblocks/v</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">702</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">xfsaild/vda1</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">747</span><span class="w">     </span><span class="n">S</span><span class="o">&lt;</span><span class="n">sl</span><span class="w"> </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">auditd</span><span class="w"></span>
-<span class="n">dbus</span><span class="w">       </span><span class="mi">773</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">dbus</span><span class="o">-</span><span class="n">daemon</span><span class="w"> </span><span class="c1">--system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only</span>
-<span class="n">polkitd</span><span class="w">    </span><span class="mi">774</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">polkit</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">polkitd</span><span class="w"> </span><span class="c1">--no-debug</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">776</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">irqbalance</span><span class="w"> </span><span class="c1">--foreground</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">780</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">sssd</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="c1">--logger=files</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">781</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">qemu</span><span class="o">-</span><span class="n">ga</span><span class="w"> </span><span class="c1">--method=virtio-serial --path=/dev/virtio-ports/org.qemu.guest_agent.0 --blacklist=guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-fi</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">782</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">02</span><span class="w"> </span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">rngd</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"></span>
-<span class="n">chrony</span><span class="w">     </span><span class="mi">792</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">chronyd</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">823</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span><span class="w"> </span><span class="o">-</span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">firewalld</span><span class="w"> </span><span class="c1">--nofork --nopid</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">827</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">sssd</span><span class="o">/</span><span class="n">sssd_be</span><span class="w"> </span><span class="c1">--domain implicit_files --uid 0 --gid 0 --logger=files</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">828</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">sssd</span><span class="o">/</span><span class="n">sssd_nss</span><span class="w"> </span><span class="c1">--uid 0 --gid 0 --logger=files</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">829</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">logind</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">840</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">NetworkManager</span><span class="w"> </span><span class="c1">--no-daemon</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">852</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">sshd</span><span class="w"> </span><span class="o">-</span><span class="n">D</span><span class="w"> </span><span class="o">-</span><span class="n">oCiphers</span><span class="o">=</span><span class="n">aes256</span><span class="o">-</span><span class="n">gcm</span><span class="nv">@openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">chacha20</span><span class="o">-</span><span class="n">poly1305</span><span class="nv">@openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">aes256</span><span class="o">-</span><span class="n">ctr</span><span class="p">,</span><span class="n">aes256</span><span class="o">-</span><span class="n">cbc</span><span class="p">,</span><span class="n">aes128</span><span class="o">-</span><span class="n">gcm</span><span class="nv">@openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">aes128</span><span class="o">-</span><span class="n">ctr</span><span class="p">,</span><span class="n">aes128</span><span class="o">-</span><span class="n">cbc</span><span class="w"> </span><span class="o">-</span><span class="n">oMACs</span><span class="o">=</span><span class="n">hmac</span><span class="o">-</span><span class="n">sha2</span><span class="o">-</span><span class="mi">256</span><span class="o">-</span><span class="n">etm</span><span class="nv">@o</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">854</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">01</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span><span class="w"> </span><span class="o">-</span><span class="n">Es</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">tuned</span><span class="w"> </span><span class="o">-</span><span class="n">l</span><span class="w"> </span><span class="o">-</span><span class="n">P</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">860</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">rhsmcertd</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">868</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">crond</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"></span>
-<span class="n">root</span><span class="w">       </span><span class="mi">872</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="n">login</span><span class="w"> </span><span class="c1">-- root</span>
-<span class="n">root</span><span class="w">       </span><span class="mi">888</span><span class="w">     </span><span class="n">Ssl</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">rsyslogd</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6425</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="w"> </span><span class="c1">--user</span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6430</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="p">(</span><span class="n">sd</span><span class="o">-</span><span class="n">pam</span><span class="p">)</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6436</span><span class="w">     </span><span class="n">Ss</span><span class="o">+</span><span class="w">  </span><span class="mi">13</span><span class="err">:</span><span class="mi">34</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">-</span><span class="n">bash</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6519</span><span class="w">     </span><span class="n">S</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">37</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">rhsmd</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6551</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">40</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="nl">sshd</span><span class="p">:</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">[</span><span class="n">priv</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6555</span><span class="w">     </span><span class="n">R</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">41</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="nl">sshd</span><span class="p">:</span><span class="w"> </span><span class="n">root</span><span class="nv">@pts</span><span class="o">/</span><span class="mi">0</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6556</span><span class="w">     </span><span class="n">Ss</span><span class="w">   </span><span class="mi">13</span><span class="err">:</span><span class="mi">41</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">-</span><span class="n">bash</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6601</span><span class="w">     </span><span class="n">I</span><span class="w">    </span><span class="mi">13</span><span class="err">:</span><span class="mi">55</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">08</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/1:2-events</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6690</span><span class="w">     </span><span class="n">I</span><span class="w">    </span><span class="mi">15</span><span class="err">:</span><span class="mi">01</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/0:0-kdmflush</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6691</span><span class="w">     </span><span class="n">I</span><span class="w">    </span><span class="mi">15</span><span class="err">:</span><span class="mi">01</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/1:3-cgroup_destroy</span><span class="o">]</span><span class="w"></span>
-<span class="n">root</span><span class="w">      </span><span class="mi">6694</span><span class="w">     </span><span class="n">I</span><span class="w">    </span><span class="mi">15</span><span class="err">:</span><span class="mi">07</span><span class="w">   </span><span class="mi">0</span><span class="err">:</span><span class="mi">00</span><span class="w"> </span><span class="o">[</span><span class="n">kworker/0:2-events_power_efficient</span><span class="o">]</span><span class="w"></span>
-</pre></div>
-
-
-<h2>Organisation de l'isolation systemd</h2>
-<p>TODO: creuser systemd et les slices.  </p>
-<div class="highlight"><pre><span></span><span class="err">●</span> <span class="n">localhost</span><span class="p">.</span><span class="n">localdomain</span>
-    <span class="nl">State</span><span class="p">:</span> <span class="n">running</span>
-     <span class="nl">Jobs</span><span class="p">:</span> <span class="mi">0</span> <span class="n">queued</span>
-   <span class="nl">Failed</span><span class="p">:</span> <span class="mi">0</span> <span class="n">units</span>
-    <span class="nl">Since</span><span class="p">:</span> <span class="n">Wed</span> <span class="mi">2019</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mi">08</span> <span class="mi">13</span><span class="o">:</span><span class="mi">36</span><span class="o">:</span><span class="mi">58</span> <span class="n">EDT</span><span class="p">;</span> <span class="mi">1</span><span class="n">h</span> <span class="mi">49</span><span class="n">min</span> <span class="n">ago</span>
-   <span class="nl">CGroup</span><span class="p">:</span> <span class="o">/</span>
-           <span class="err">├─</span><span class="n">user</span><span class="p">.</span><span class="n">slice</span>
-           <span class="err">│</span> <span class="err">└─</span><span class="n">user</span><span class="o">-</span><span class="mf">0.</span><span class="n">slice</span>
-           <span class="err">│</span>   <span class="err">├─</span><span class="n">session</span><span class="o">-</span><span class="mf">3.</span><span class="n">scope</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">├─</span><span class="mi">6551</span> <span class="nl">sshd</span><span class="p">:</span> <span class="n">root</span> <span class="p">[</span><span class="n">priv</span><span class="p">]</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">├─</span><span class="mi">6555</span> <span class="nl">sshd</span><span class="p">:</span> <span class="n">root</span><span class="p">@</span><span class="n">pts</span><span class="o">/</span><span class="mi">0</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">├─</span><span class="mi">6556</span> <span class="o">-</span><span class="n">bash</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">├─</span><span class="mi">6718</span> <span class="n">systemctl</span> <span class="n">status</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">└─</span><span class="mi">6719</span> <span class="n">less</span>
-           <span class="err">│</span>   <span class="err">├─</span><span class="n">session</span><span class="o">-</span><span class="mf">1.</span><span class="n">scope</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">├─</span> <span class="mi">872</span> <span class="n">login</span> <span class="o">--</span> <span class="n">root</span>
-           <span class="err">│</span>   <span class="err">│</span> <span class="err">└─</span><span class="mi">6436</span> <span class="o">-</span><span class="n">bash</span>
-           <span class="err">│</span>   <span class="err">└─</span><span class="n">user</span><span class="mf">@0.</span><span class="n">service</span>
-           <span class="err">│</span>     <span class="err">└─</span><span class="n">init</span><span class="p">.</span><span class="n">scope</span>
-           <span class="err">│</span>       <span class="err">├─</span><span class="mi">6425</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">user</span>
-           <span class="err">│</span>       <span class="err">└─</span><span class="mi">6430</span> <span class="p">(</span><span class="n">sd</span><span class="o">-</span><span class="n">pam</span><span class="p">)</span>
-           <span class="err">├─</span><span class="n">init</span><span class="p">.</span><span class="n">scope</span>
-           <span class="err">│</span> <span class="err">└─</span><span class="mi">1</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-           <span class="err">└─</span><span class="n">system</span><span class="p">.</span><span class="n">slice</span>
-             <span class="err">├─</span><span class="n">rngd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">782</span> <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">rngd</span> <span class="o">-</span><span class="n">f</span>
-             <span class="err">├─</span><span class="n">irqbalance</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">776</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">irqbalance</span> <span class="o">--</span><span class="n">foreground</span>
-             <span class="err">├─</span><span class="n">systemd</span><span class="o">-</span><span class="n">udevd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">657</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">udevd</span>
-             <span class="err">├─</span><span class="n">polkit</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">774</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">polkit</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">polkitd</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">debug</span>
-             <span class="err">├─</span><span class="n">chronyd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">792</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">chronyd</span>
-             <span class="err">├─</span><span class="n">auditd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">747</span> <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">auditd</span>
-             <span class="err">├─</span><span class="n">tuned</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">854</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span> <span class="o">-</span><span class="n">Es</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">tuned</span> <span class="o">-</span><span class="n">l</span> <span class="o">-</span><span class="n">P</span>
-             <span class="err">├─</span><span class="n">systemd</span><span class="o">-</span><span class="n">journald</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">618</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">journald</span>
-             <span class="err">├─</span><span class="n">sshd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">852</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">sshd</span> <span class="o">-</span><span class="n">D</span> <span class="o">-</span><span class="n">oCiphers</span><span class="o">=</span><span class="n">aes256</span><span class="o">-</span><span class="n">gcm</span><span class="p">@</span><span class="n">openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">chacha20</span><span class="o">-</span><span class="n">poly1305</span><span class="p">@</span><span class="n">openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">aes256</span><span class="o">-</span><span class="n">ctr</span><span class="p">,</span><span class="n">aes256</span><span class="o">-</span><span class="n">cbc</span><span class="p">,</span><span class="n">aes128</span><span class="o">-</span><span class="n">gcm</span><span class="p">@</span><span class="n">openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">aes128</span><span class="o">-</span><span class="n">ctr</span><span class="p">,</span><span class="n">aes128</span><span class="o">-</span><span class="n">cbc</span> <span class="o">-</span><span class="n">oMACs</span><span class="o">=</span><span class="n">hmac</span><span class="o">-</span><span class="n">sha2</span><span class="o">-</span><span class="mi">256</span><span class="o">-</span><span class="n">etm</span><span class="p">@</span><span class="n">openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">hmac</span><span class="o">-</span><span class="n">sha1</span><span class="o">-</span><span class="n">etm</span><span class="p">@</span><span class="n">openssh</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="n">umac</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span>
-             <span class="err">├─</span><span class="n">crond</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">868</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">crond</span> <span class="o">-</span><span class="n">n</span>
-             <span class="err">├─</span><span class="n">NetworkManager</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">840</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">NetworkManager</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">daemon</span>
-             <span class="err">├─</span><span class="n">rsyslog</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">888</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">rsyslogd</span> <span class="o">-</span><span class="n">n</span>
-             <span class="err">├─</span><span class="n">firewalld</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">823</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">firewalld</span> <span class="o">--</span><span class="n">nofork</span> <span class="o">--</span><span class="n">nopid</span>
-             <span class="err">├─</span><span class="n">qemu</span><span class="o">-</span><span class="n">guest</span><span class="o">-</span><span class="n">agent</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">781</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">qemu</span><span class="o">-</span><span class="n">ga</span> <span class="o">--</span><span class="n">method</span><span class="o">=</span><span class="n">virtio</span><span class="o">-</span><span class="n">serial</span> <span class="o">--</span><span class="n">path</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">virtio</span><span class="o">-</span><span class="n">ports</span><span class="o">/</span><span class="n">org</span><span class="p">.</span><span class="n">qemu</span><span class="p">.</span><span class="n">guest_agent</span><span class="mf">.0</span> <span class="o">--</span><span class="n">blacklist</span><span class="o">=</span><span class="n">guest</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">open</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">close</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">read</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">write</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">seek</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">flush</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">exec</span><span class="p">,</span><span class="n">guest</span><span class="o">-</span><span class="n">e</span><span class="o">&gt;</span>
-             <span class="err">├─</span><span class="n">sssd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">├─</span><span class="mi">780</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">sssd</span> <span class="o">-</span><span class="n">i</span> <span class="o">--</span><span class="n">logger</span><span class="o">=</span><span class="n">files</span>
-             <span class="err">│</span> <span class="err">├─</span><span class="mi">827</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">sssd</span><span class="o">/</span><span class="n">sssd_be</span> <span class="o">--</span><span class="n">domain</span> <span class="n">implicit_files</span> <span class="o">--</span><span class="n">uid</span> <span class="mi">0</span> <span class="o">--</span><span class="n">gid</span> <span class="mi">0</span> <span class="o">--</span><span class="n">logger</span><span class="o">=</span><span class="n">files</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">828</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">sssd</span><span class="o">/</span><span class="n">sssd_nss</span> <span class="o">--</span><span class="n">uid</span> <span class="mi">0</span> <span class="o">--</span><span class="n">gid</span> <span class="mi">0</span> <span class="o">--</span><span class="n">logger</span><span class="o">=</span><span class="n">files</span>
-             <span class="err">├─</span><span class="n">rhsmcertd</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">860</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">rhsmcertd</span>
-             <span class="err">├─</span><span class="n">dbus</span><span class="p">.</span><span class="n">service</span>
-             <span class="err">│</span> <span class="err">├─</span> <span class="mi">773</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">dbus</span><span class="o">-</span><span class="n">daemon</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">address</span><span class="o">=</span><span class="nl">systemd</span><span class="p">:</span> <span class="o">--</span><span class="n">nofork</span> <span class="o">--</span><span class="n">nopidfile</span> <span class="o">--</span><span class="n">systemd</span><span class="o">-</span><span class="n">activation</span> <span class="o">--</span><span class="n">syslog</span><span class="o">-</span><span class="n">only</span>
-             <span class="err">│</span> <span class="err">└─</span><span class="mi">6519</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">platform</span><span class="o">-</span><span class="n">python</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">rhsmd</span>
-             <span class="err">└─</span><span class="n">systemd</span><span class="o">-</span><span class="n">logind</span><span class="p">.</span><span class="n">service</span>
-               <span class="err">└─</span><span class="mi">829</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">logind</span>
-</pre></div>
-
-
-<h2>Sécurité</h2>
-<p>Selinux est activé par défaut en <em>Enforcing</em></p>
-<p>TODO: voir les <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/resource_management_guide/ch01">namespaces</a></p>
-<div class="highlight"><pre><span></span>   <span class="k">Namespace</span>   <span class="nn">Constant</span>          <span class="n">Isolates</span>
-   <span class="n">Cgroup</span>      <span class="n">CLONE_NEWCGROUP</span>   <span class="n">Cgroup</span> <span class="n">root</span> <span class="n">directory</span>
-   <span class="n">IPC</span>         <span class="n">CLONE_NEWIPC</span>      <span class="n">System</span> <span class="n">V</span> <span class="n">IPC</span><span class="p">,</span> <span class="n">POSIX</span> <span class="n">message</span> <span class="n">queues</span>
-   <span class="n">Network</span>     <span class="n">CLONE_NEWNET</span>      <span class="n">Network</span> <span class="n">devices</span><span class="p">,</span> <span class="n">stacks</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span>
-   <span class="n">Mount</span>       <span class="n">CLONE_NEWNS</span>       <span class="n">Mount</span> <span class="n">points</span>
-   <span class="n">PID</span>         <span class="n">CLONE_NEWPID</span>      <span class="n">Process</span> <span class="n">IDs</span>
-   <span class="n">User</span>        <span class="n">CLONE_NEWUSER</span>     <span class="n">User</span> <span class="ow">and</span> <span class="n">group</span> <span class="n">IDs</span>
-   <span class="n">UTS</span>         <span class="n">CLONE_NEWUTS</span>      <span class="n">Hostname</span> <span class="ow">and</span> <span class="n">NIS</span> <span class="n">domain</span> <span class="n">name</span>
-
-<span class="n">lsns</span> 
-        <span class="n">NS</span> <span class="n">TYPE</span>   <span class="n">NPROCS</span>   <span class="n">PID</span> <span class="n">USER</span>   <span class="n">COMMAND</span>
-<span class="mi">4026531835</span> <span class="n">cgroup</span>    <span class="mi">116</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026531836</span> <span class="n">pid</span>       <span class="mi">116</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026531837</span> <span class="n">user</span>      <span class="mi">116</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026531838</span> <span class="n">uts</span>       <span class="mi">116</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026531839</span> <span class="n">ipc</span>       <span class="mi">116</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026531840</span> <span class="n">mnt</span>       <span class="mi">111</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026531860</span> <span class="n">mnt</span>         <span class="mi">1</span>    <span class="mi">21</span> <span class="n">root</span>   <span class="n">kdevtmpfs</span>
-<span class="mi">4026531992</span> <span class="n">net</span>       <span class="mi">116</span>     <span class="mi">1</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span> <span class="o">--</span><span class="n">switched</span><span class="o">-</span><span class="n">root</span> <span class="o">--</span><span class="n">system</span> <span class="o">--</span><span class="n">deserialize</span> <span class="mi">18</span>
-<span class="mi">4026532258</span> <span class="n">mnt</span>         <span class="mi">1</span>   <span class="mi">657</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">systemd</span><span class="o">-</span><span class="n">udevd</span>
-<span class="mi">4026532379</span> <span class="n">mnt</span>         <span class="mi">1</span>   <span class="mi">747</span> <span class="n">root</span>   <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">auditd</span>
-<span class="mi">4026532380</span> <span class="n">mnt</span>         <span class="mi">1</span>   <span class="mi">792</span> <span class="n">chrony</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">chronyd</span>
-<span class="mi">4026532381</span> <span class="n">mnt</span>         <span class="mi">1</span>   <span class="mi">840</span> <span class="n">root</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">NetworkManager</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">daemon</span>
-</pre></div>
-
-
-<p>TODO: approfondir les commandes lsxxx</p>
-        </article></aside><!-- /#featured -->
+<li>RPM-GPG-KEY-redhat-release : clef de signature …</li></ul>
+                <a class="readmore" href="../rhel8-whats-new.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
 

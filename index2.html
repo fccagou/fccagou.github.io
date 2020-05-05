@@ -21,10 +21,11 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="./index.html">The Cagou's Blog</a></h1>
+                <h1><a href="./index.html">The Cagou's Blog </a></h1>
                 <nav><ul>
                 <li><a href="./index.html">Accueil</a></li>
                 <li><a href="./archives.html">Archives</a></li>
+                    <li ><a href="./pages/gpg-public-key.html">gpg public key</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
@@ -32,7 +33,132 @@
         
      <section id="content" class="body">
         <aside id="featured"><article>
-                <h1 class="entry-title"><a href="./liaison-securisee-avec-openvpn.html">Liaison sécurisée avec openvpn</a></h1> 
+                <h1 class="entry-title"><a href="./etude-de-consul.html">Etude de Consul</a></h1> 
+                <footer class="post-info">
+                        <abbr class="published" title="2020-04-24T19:20:00+02:00">
+                                Publié le 24/04/2020 &agrave; 19:20
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                <p>Dans <a href="./category/it.html">IT</a>. </p>
+<p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/admin.html">Admin</a><a href="./tag/cloud.html">Cloud</a></p></p>                </footer><!-- /.post-info -->
+                <h1>Introduction</h1>
+<p><a href="https://www.consul.io/">Consul</a> est un outil développé par
+<a href="https://www.hashicorp.com/">HashiCorp</a> pour gérer des services réseaux
+dynamiques. On pourrait résumer l'outil à un serveur DNS dynamique.</p>
+<h1>Tests</h1>
+<h2>Objectifs</h2>
+<p>Comprendre comment fonctionne Consul pour savoir dans quel mesure je peux
+l'utiliser pour déployer des servies accessibles depuis plusieurs sites.</p>
+<h2>Matériel</h2>
+<p>Pur étudier Consul, j'utilise ce que j'ai sous a main.
+- 1 PI3 avec Raspbian (raspbian)
+- 1 PC qui me sert de NAS (CentOS7)
+- 1 PC qui me sert de serveur de Virtualisation (CentOS 8)
+- 1 Portable (Archlinux)</p>
+<h2>Installations</h2>
+<p>J'ai pour habitude de préférer les installations de logiciels présents dans les
+distributions ou procéder à l'installation depuis les sources. Ici, les
+différents OS que j'utilise n'ont pas la même version de consul et je ne
+souhaite pas mettre en place un chaîne de compilation Goland. Aussi j'ai choisi
+la solution container.</p>
+<p>Sur les CentOS, il faut utiliser podman à la place de docker.</p>
+<p># Podman
+   podman pull docker.io/library/consul
+   # docker
+   docker pull consul</p>
+<p># all
+   useradd -s /sbin/nologin -r -u 100 -g 100 -M -c 'Consul server' -d /var/lib/consul consul
+   mkdir -p /var/lib/consul/{config,data}
+   echo '{"skip_leave_on_interrupt": true, "enable_local_script_checks": true}' &gt; /var/lib/consul/config/local.json
+   chmod -R 700 /var/lib/consul
+   chown -R consul:consul /var/lib/consul
+   # CentOS avec selinux
+   chcon -R system_u:object_r:container_file_t:s0 /var/lib/consul/{config,data}</p>
+<p># COnfiguration fw</p>
+<h2>Exécution</h2>
+<p>Étant en phase de découverte, j'utilise l'option -dev de consul. Cette option
+active plusieurs fonctionnalités peu sécurisées, comme par exemple
+l'utilisation d'un CA autonome. Il ne faut pas utiliser cette option et
+production.</p>
+<p>Par ce qu'il faut commencer par une machine, j'en choisi une qui sera la
+première :</p>
+<p>podman run --rm -d --net=host --name=dev-consul  \
+       -v /var/lib/consul/data:/consul/data \
+       -v /var/lib/consul/config:/consul/config  \
+       docker.io/library/consul agent -server -bind=<IP_MACHINE_COURANTE> -dev --datacenter=dc-cagou
+   # ou
+   docker run --rm -d --net=host --name=dev-consul  \
+       -v /var/lib/consul/data:/consul/data \
+       -v /var/lib/consul/config:/consul/config  \
+       consul agent -server -bind=<IP_MACHINE_COURANTE> -dev --datacenter=dc-cagou</p>
+<p>Sur les autres machines, il faut simplement lancer la même commande en ajoutant
+l'option </p>
+<p>-join <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#64;&#73;&#80;&#95;&#80;&#82;&#69;&#77;&#73;&#69;&#82;&#69;&#95;&#77;&#65;&#67;&#72;&#73;&#78;&#69;">&#64;&#73;&#80;&#95;&#80;&#82;&#69;&#77;&#73;&#69;&#82;&#69;&#95;&#77;&#65;&#67;&#72;&#73;&#78;&#69;</a></p>
+<p>Quand on a des dns locaux, il est aussi possible d'ajouter plusieurs fois
+l'option -recursor <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#64;&#105;&#112;&#95;&#68;&#78;&#83;">&#64;&#105;&#112;&#95;&#68;&#78;&#83;</a>.</p>
+<p>tips: récupérer ceux de la machne courante.</p>
+        </article></aside><!-- /#featured -->
+                <h1>Autres articles</h1>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="./rhel8-virtualization-server.html" rel="bookmark" title="Permalien vers «RHEL8 Virtualization Server»">RHEL8 Virtualization Server</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+                        <abbr class="published" title="2020-03-20T11:06:00+01:00">
+                                Publié le 20/03/2020 &agrave; 11:06
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">fccagou</a>
+                        </address>
+                        <p> Dans <a href="./category/draft.html">Draft</a></p>
+<p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/redhat.html">RedHat</a><a href="./tag/system.html">System</a><a href="./tag/french.html">French</a><a href="./tag/irtualization.html">irtualization</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
+                <!-- vim-markdown-toc GFM -->
+
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#points-dattention-sur-la-sécurité">Points d'attention sur la sécurité</a></li>
+<li><a href="#installation-du-serveur">Installation du serveur</a><ul>
+<li><a href="#création-dune-clé-usb-bootable">Création d'une clé usb bootable</a></li>
+<li><a href="#installation-du-système-de-base">Installation du système de base</a><ul>
+<li><a href="#installation-de-base">Installation de base</a></li>
+<li><a href="#service-cockpit">Service cockpit</a></li>
+</ul>
+</li>
+<li><a href="#configuration-du-réseau">Configuration du réseau</a></li>
+</ul>
+</li>
+<li><a href="#annexes">Annexes</a><ul>
+<li><a href="#kickstart-serveur-virtualisation">Kickstart serveur virtualisation</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+
+<h1>Description</h1>
+<p>Je note ici l'ensemble des actions que je mène pour mettre en place un
+hyperviseur sous CentOS 8 …</p>
+                <a class="readmore" href="./rhel8-virtualization-server.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="./liaison-securisee-avec-openvpn.html" rel="bookmark" title="Permalien vers «Liaison sécurisée avec openvpn»">Liaison sécurisée avec openvpn</a></h1>
+                </header>
+                
+                <div class="entry-content">
                 <footer class="post-info">
                         <abbr class="published" title="2019-05-25T19:00:00+02:00">
                                 Publié le 25/05/2019 &agrave; 19:00
@@ -41,8 +167,9 @@
                         <address class="vcard author">
                                 Par <a class="url fn" href="#">fccagou</a>
                         </address>
-                <p>Dans <a href="./category/draft.html">Draft</a>. </p>
-<p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/vpn.html">VPN</a><a href="./tag/security.html">Sécurity</a><a href="./tag/openvpn.html">Openvpn</a></p></p>                </footer><!-- /.post-info -->
+                        <p> Dans <a href="./category/draft.html">Draft</a></p>
+<p>tags: <a href="./tag/linux.html">Linux</a><a href="./tag/vpn.html">VPN</a><a href="./tag/security.html">Sécurity</a><a href="./tag/openvpn.html">Openvpn</a></p></p>                    <p></p>
+                </footer><!-- /.post-info -->
                 <h1>Objectif</h1>
 <p>Créer liaison réseau sécurisée entre un système Linux et une passerelle d'accès
 à un réseau distant.</p>
@@ -50,106 +177,10 @@
 <p>Le réseau distant est un réseau local d'un derrière une box d'un FAI. La
 passerelle VPN est un <a href="https://www.raspberrypi.org/">Raspberry PI</a> sur lequel
 est installé <a href="https://www.raspberrypi.org/downloads/raspbian/">raspbian</a>.</p>
-<p>Parmi les serveur VPN disponibles, j'ai choisi
-<a href="https://openvpn.net/community-resources/how-to">openvpn</a>.</p>
-<p>Côté client, un poste Linux avec le client openvpn. </p>
-<h1>Mise en œuvre</h1>
-<h2>Synoptique</h2>
-<ul>
-<li>Mise en place d'une PKI</li>
-<li>Installation et configuration du serveur</li>
-<li>Installation et configuration du client</li>
-<li>Tests de connexion</li>
-<li>Routage et firewall sur le serveur</li>
-</ul>
-<h2>Mise en place d'une PKI</h2>
-<p>L'échange entre le client et le serveur se fait à l'aide de TLS pour lequel il
-faut créer les certificats serveur et client.</p>
-<p>Il est possible de mettre en place des certifiatc auto signés mais l'idéal est
-de créer une PKI indépendante pour générer les certificats.</p>
-<p>Cela se fait avec openssl que l'on trouve sur toutes les distribution linux. Il
-suffit de l'installer à coup de xi<code>apt</code>, <code>pacman</code>, <code>yum</code> ...</p>
-<p>Pour la documentation, <code>man ca</code> explique bien les choses. </p>
-<p>L'idéal est de créer sa PKI sur un système non connecté à internet pour
-protéger la clé privée du CA. On peut aussi utiliser des tocken. Le projet 
-<a href="https://github.com/sloonz/yubikey-ca">yubikey-ca</a> est un exemple de mise en
-œuvre avec une <a href="https://www.yubico.com/">yubikey</a>.</p>
-<p>Le Net regorge de documentation sur le sujet. Parmi elles, <a href="https://pki-tutorial.readthedocs.io/en/latest/">pki
-tutorial</a> est plutôt bien
-documentée.</p>
-<h2>Installation et configuration du serveur</h2>
-<h3>Installation</h3>
-<p>S'agissant d'une distribution de type <a href="https://www.debian.org">Debian</a>,
-l'installation de openvpn se fait simplement par </p>
-<div class="highlight"><pre><span></span>$ sudo apt install openvpn
-$ sudo systemctl <span class="nb">enable</span> openvpn
-</pre></div>
-
-
-<h3>Configuration</h3>
-<p>Sur les système avec systemd, le service openvpn est un template, ce qui permet
-d'exécuter plusieurs serveurs. Le nom du service passé en paramètre est utilisé
-dans le service pour choisir le fichier de configuration associé <em>(%i)</em>.</p>
-<div class="highlight"><pre><span></span><span class="err">$</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="k">system</span><span class="o">/</span><span class="n">openvpn</span><span class="err">@</span><span class="p">.</span><span class="n">service</span><span class="w"></span>
-<span class="o">[</span><span class="n">Unit</span><span class="o">]</span><span class="w"></span>
-<span class="n">Description</span><span class="o">=</span><span class="n">OpenVPN</span><span class="w"> </span><span class="k">connection</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">%</span><span class="n">i</span><span class="w"></span>
-<span class="n">PartOf</span><span class="o">=</span><span class="n">openvpn</span><span class="p">.</span><span class="n">service</span><span class="w"></span>
-<span class="n">ReloadPropagatedFrom</span><span class="o">=</span><span class="n">openvpn</span><span class="p">.</span><span class="n">service</span><span class="w"></span>
-
-<span class="o">[</span><span class="n">Service</span><span class="o">]</span><span class="w"></span>
-<span class="n">Type</span><span class="o">=</span><span class="n">forking</span><span class="w"></span>
-<span class="n">ExecStart</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">openvpn</span><span class="w"> </span><span class="c1">--daemon ovpn-%i --status /run/openvpn/%i.status 10 --cd /etc/openvpn --config /etc/openvpn/%i.conf</span>
-<span class="n">ExecReload</span><span class="o">=/</span><span class="n">bin</span><span class="o">/</span><span class="k">kill</span><span class="w"> </span><span class="o">-</span><span class="n">HUP</span><span class="w"> </span><span class="err">$</span><span class="n">MAINPID</span><span class="w"></span>
-<span class="n">WorkingDirectory</span><span class="o">=/</span><span class="n">etc</span><span class="o">/</span><span class="n">openvpn</span><span class="w"></span>
-
-<span class="o">[</span><span class="n">Install</span><span class="o">]</span><span class="w"></span>
-<span class="n">WantedBy</span><span class="o">=</span><span class="n">multi</span><span class="o">-</span><span class="k">user</span><span class="p">.</span><span class="n">target</span><span class="w"></span>
-</pre></div>
-
-
-<p>Aussi, pour créer un service vpn ayant pour nom <code>monvpn1</code>, il faut créer le
-fichier de configuration <code>/etc/openvpn/monvpn1.conf</code> et lancer le service
-<code>openvpn@monvpn1.service</code></p>
-<p>Voici un exemple de fichier de configuration générique.</p>
-<div class="highlight"><pre><span></span><span class="err">port 1194</span>
-<span class="err">proto udp</span>
-<span class="err">dev tun</span>
-<span class="err">ca ca.crt</span>
-<span class="err">cert server.crt</span>
-<span class="err">key server.key  # This file should be kept secret</span>
-<span class="err">dh dh4096.pem</span>
-<span class="err">server 10.8.0.0 255.255.255.0</span>
-<span class="err">ifconfig-pool-persist ipp.txt</span>
-<span class="err">push &quot;redirect-gateway def1 bypass-dhcp&quot;</span>
-<span class="err">keepalive 10 120</span>
-<span class="err">tls-auth ta.key 0 # This file is secret</span>
-<span class="err">cipher AES-256-CBC</span>
-<span class="err">user nobody</span>
-<span class="err">group nobody</span>
-<span class="err">persist-key</span>
-<span class="err">persist-tun</span>
-<span class="err">status openvpn-status.log</span>
-<span class="err">verb 3</span>
-<span class="err">explicit-exit-notify 1</span>
-</pre></div>
-
-
-<h3>Création des éléments de chiffrement</h3>
-<p>Création de la clé de chiffrement</p>
-<div class="highlight"><pre><span></span><span class="err">openssl</span>
-</pre></div>
-
-
-<p>Création de la demande de signature du certificat
-Signature du certificat
-Mise en place des certificats</p>
-<h2>Installation et configuration du client</h2>
-<h2>Tests de connexion</h2>
-<h2>Routage et firewall sur le serveur</h2>
-        </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>Parmi les serveur VPN disponibles, j'ai choisi …</p>
+                <a class="readmore" href="./liaison-securisee-avec-openvpn.html">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
         
  
         <li><article class="hentry">    

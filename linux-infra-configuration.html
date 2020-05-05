@@ -21,10 +21,11 @@
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="./index.html">The Cagou's Blog</a></h1>
+                <h1><a href="./index.html">The Cagou's Blog </a></h1>
                 <nav><ul>
                 <li><a href="./index.html">Accueil</a></li>
                 <li><a href="./archives.html">Archives</a></li>
+                    <li ><a href="./pages/gpg-public-key.html">gpg public key</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
@@ -84,18 +85,18 @@ access.</p>
 
 <span class="n">logging</span> <span class="err">{</span>
     <span class="n">channel</span> <span class="n">vers_fichier</span> <span class="err">{</span>
-        <span class="n">file</span> <span class="ss">&quot;/somewhere/local/named/log/named.log&quot;</span> <span class="n">versions</span> <span class="mi">50</span> <span class="k">size</span> <span class="mi">100</span><span class="n">m</span><span class="p">;</span>
+        <span class="n">file</span> <span class="ss">&quot;/somewhere/local/named/log/named.log&quot;</span> <span class="k">versions</span> <span class="mi">50</span> <span class="k">size</span> <span class="mi">100</span><span class="n">m</span><span class="p">;</span>
         <span class="n">severity</span> <span class="k">dynamic</span><span class="p">;</span>
         <span class="n">print</span><span class="o">-</span><span class="n">category</span> <span class="n">yes</span><span class="p">;</span>
         <span class="n">print</span><span class="o">-</span><span class="n">severity</span> <span class="n">yes</span><span class="p">;</span>
-        <span class="n">print</span><span class="o">-</span><span class="n">time</span> <span class="n">yes</span><span class="p">;</span>
+        <span class="n">print</span><span class="o">-</span><span class="k">time</span> <span class="n">yes</span><span class="p">;</span>
     <span class="err">}</span><span class="p">;</span>
     <span class="n">channel</span> <span class="n">vers_syslog</span> <span class="err">{</span>
         <span class="n">syslog</span> <span class="n">local2</span><span class="p">;</span>
         <span class="n">severity</span> <span class="n">info</span><span class="p">;</span>
         <span class="n">print</span><span class="o">-</span><span class="n">category</span> <span class="n">yes</span><span class="p">;</span>
         <span class="n">print</span><span class="o">-</span><span class="n">severity</span> <span class="n">yes</span><span class="p">;</span>
-        <span class="n">print</span><span class="o">-</span><span class="n">time</span> <span class="n">yes</span><span class="p">;</span>
+        <span class="n">print</span><span class="o">-</span><span class="k">time</span> <span class="n">yes</span><span class="p">;</span>
     <span class="err">}</span><span class="p">;</span>
 
 
